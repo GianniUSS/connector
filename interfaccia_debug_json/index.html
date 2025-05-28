@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Import & Lista Progetti Rentman</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 2em; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 2em; border-radius:10px;
+                 box-shadow:0 0 10px rgba(0,0,0,0.1); }
+    .layout { display: flex; gap: 1.5em; }
+    .form-section { flex: 1; }
+    .list-section { flex: 1; }
+    label { display: block; margin-top:1em; }
+    input, button { width:100%; padding:0.5em; margin-top:0.3em; }
+    button { background:#4CAF50; color:#fff; border:none; border-radius:5px; font-weight:bold; }
+    table { width:100%; border-collapse:collapse; margin-top:1em; }
+    th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+    th { background:#eee; }
+    pre { background:#000; color:#0f0; padding:10px; height:150px; overflow:auto; margin-top:1em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Import Ore & Lista Progetti Rentman</h2>
+    <div class="layout">
+      <div class="form-section">
+        <form id="importForm">
+          <label for="projectId">Project ID Rentman</label>
+          <input type="text" id="projectId" required>
+          <label for="fromDate">Da Data</label>
+          <input type="date" id="fromDate" required>
+          <label for="toDate">A Data</label>
+          <input type="date" id="toDate" required>
+          <button type="submit">Avvia Importazione Ore</button>
+        </form>
+        <button id="listProjectsBtn" style="margin-top:1em;">Recupera Progetti</button>
+        <label for="terminal">Output:</label>
+        <pre id="terminal"></pre>
+      </div>
+      <div class="list-section">
+        <table id="projectList">
+          <thead>
+            <tr><th>Codice Progetto</th><th>Nome Progetto</th><th>Stato</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById("importForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const pid = document.getElementById("projectId").value;
+      const from = document.getElementById("fromDate").value;
+      const to   = document.getElementById("toDate").value;
+      const term = document.getElementById("terminal");
+      term.textContent = "Avvio import ore...";
+      fetch("/avvia-importazione", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ projectId:pid, fromDate:from, toDate:to })
+      })
+      .then(r=>r.json())
+      .then(js=> term.textContent = js.output || js.message)
+      .catch(err=> term.textContent = "Errore: "+err);
+    });
+    document.getElementById("listProjectsBtn").addEventListener("click", () => {
+      const from = document.getElementById("fromDate").value;
+      const to   = document.getElementById("toDate").value;
+      const tbody = document.querySelector("#projectList tbody");
+      const term = document.getElementById("terminal");
+      tbody.innerHTML = "";
+      term.textContent = "Caricamento progetti...";
+      fetch("/lista-progetti", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ fromDate:from, toDate:to })
+      })
+      .then(r=>r.json())
+      .then(js=>{
+        if(js.error){
+          term.textContent = "Errore: " + js.error;
+          return;
+        }
+        term.textContent = "Progetti caricati: " + js.projects.length;
+        js.projects.forEach(p => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${p.id}</td><td>${p.name}</td><td>${p.status}</td>`;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(err=> term.textContent = "Errore: "+err);
+    });
+  </script>
+</body>
+</html>

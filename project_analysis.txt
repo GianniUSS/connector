@@ -1,0 +1,136 @@
+🔍 Recupero dati per il progetto 3683...
+
+✅ RISULTATO COMPLETO:
+{
+  "project": {
+    "custom": {
+      "custom_38": "1",
+      "custom_5": "0",
+      "custom_6": "2",
+      "custom_13": "2025-05-07"
+    },
+    "id": 3683,
+    "created": "2025-05-05T17:48:22+02:00",
+    "modified": "2025-05-05T18:17:58+02:00",
+    "creator": "/crew/1900",
+    "displayname": "07May25 PRO_Stella Enterprises Ltd_La Biennale di Venezia_Venezia ",
+    "location": "/contacts/9587",
+    "refundabledeposit": 0,
+    "deposit_status": "no_deposit_paid",
+    "customer": "/contacts/9586",
+    "loc_contact": null,
+    "cust_contact": null,
+    "project_type": "/projecttypes/107",
+    "name": "07May25 PRO_Stella Enterprises Ltd_La Biennale di Venezia_Venezia ",
+    "reference": "",
+    "number": 3707,
+    "account_manager": "/crew/1813",
+    "color": "56ff6b",
+    "conditions": "<p>100% advance payment upon order confirmation.</p>",
+    "project_total_price": 3550,
+    "project_total_price_cancelled": 0,
+    "project_rental_price": 1600,
+    "project_sale_price": 0,
+    "project_crew_price": 1950,
+    "project_transport_price": 0,
+    "project_other_price": 0,
+    "project_insurance_price": 0,
+    "already_invoiced": 3550,
+    "tags": "",
+    "usageperiod_start": "2025-05-06T00:00:00+02:00",
+    "usageperiod_end": "2025-05-08T08:00:00+02:00",
+    "planperiod_start": "2025-05-06T00:00:00+02:00",
+    "planperiod_end": "2025-05-08T08:00:00+02:00",
+    "weight": 0,
+    "power": 0,
+    "current": 0,
+    "equipment_period_from": "2025-05-06T00:00:00+02:00",
+    "equipment_period_to": "2025-05-08T08:00:00+02:00",
+    "purchasecosts": 0,
+    "volume": 0,
+    "updateHash": "68675f3b1c4579e72d34d1f6a72abd3f"
+  },
+  "customer": {
+    "custom": {
+      "custom_8": null,
+      "custom_37": null
+    },
+    "id": 9586,
+    "created": "2025-05-05T17:47:46+02:00",
+    "modified": "2025-05-05T17:47:46+02:00",
+    "creator": "/crew/1900",
+    "displayname": "Stella Enterprises Ltd ",
+    "folder": "/folders/47",
+    "type": "company",
+    "ext_name_line": "",
+    "firstname": "",
+    "distance": 0,
+    "travel_time": 0,
+    "surfix": "",
+    "surname": "",
+    "longitude": 0,
+    "latitude": 0,
+    "code": "5641",
+    "accounting_code": "",
+    "name": "Stella Enterprises Ltd ",
+    "gender": "",
+    "mailing_city": "",
+    "mailing_street": "10-14 Lonsdale Road London NW6 6RD",
+    "mailing_number": "",
+    "mailing_postalcode": "",
+    "mailing_state": "",
+    "mailing_country": "it",
+    "visit_city": "",
+    "visit_street": "10-14 Lonsdale Road London NW6 6RD",
+    "visit_number": "",
+    "visit_postalcode": "",
+    "visit_state": "",
+    "country": "it",
+    "invoice_city": "",
+    "invoice_street": "10-14 Lonsdale Road London NW6 6RD",
+    "invoice_number": "",
+    "invoice_postalcode": "",
+    "invoice_state": "",
+    "invoice_country": "it",
+    "phone_1": "",
+    "phone_2": "",
+    "email_1": "",
+    "email_2": "",
+    "website": "",
+    "VAT_code": "",
+    "fiscal_code": "",
+    "commerce_code": "",
+    "purchase_number": "",
+    "bic": "",
+    "bank_account": "",
+    "default_person": null,
+    "admin_contactperson": null,
+    "discount_crew": 0,
+    "discount_transport": 0,
+    "discount_rental": 0,
+    "discount_sale": 0,
+    "discount_total": 0,
+    "projectnote": "",
+    "projectnote_title": "",
+    "contact_warning": "",
+    "discount_subrent": 0,
+    "tags": "",
+    "updateHash": "5f358d9b3aea1d82d14911f1e02f6150"
+  }
+}
+
+💰 CAMPI RELATIVI AL VALORE:
+  - project_total_price: 3550
+  - project_total_price_cancelled: 0
+  - project_rental_price: 1600
+  - project_sale_price: 0
+  - project_crew_price: 1950
+  - project_transport_price: 0
+  - project_other_price: 0
+  - project_insurance_price: 0
+  - purchasecosts: 0
+
+🔍 CONTROLLO SPECIFICO:
+  - Campo 'price': None (tipo: NoneType)
+  - Campo 'project_total_price': 3550 (tipo: int)
+  - Campo 'project_total_price_cancelled': 0 (tipo: int)

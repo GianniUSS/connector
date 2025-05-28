@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rentman Project Manager</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 0.5rem;
+    }
+    
+    .container { 
+      display: flex;
+      flex-direction: rotr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
+              '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
+              '<td><code>' + finalNumber + '</code></td>' +
+              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' + (p.name || 'N/A') + '</td>' +
+              '<td>' + statusBadge + '</td>' +
+              '<td>' + (typeof p.project_value !== 'undefined' && p.project_value !== null && p.project_value !== '' && p.project_value !== '0.00' ? ('€ ' + p.project_value) : 'N/A') + '</td>';
+     max-width: 1800px;
+      margin: 0 auto;
+      align-items: flex-start;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 0 1rem 0 1rem;
+      margin-bottom: 0;
+      text-align: center;
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header p {
+      opacity: 0.8;
+      font-size: 1rem;
+    }
+    
+    .token-status {
+      margin-top: 10px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .token-valid {
+      background-color: #27ae60;
+    }
+    
+    .token-invalid {
+      background-color: #e67e22;
+    }
+    
+    .token-error {
+      background-color: #e74c3c;
+    }
+    
+    .content {
+      padding: 0.1rem 0 0.2rem 0;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    
+    .btn {
+      padding: 0.6rem 1rem;
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #2196F3 0%, #21CBF3 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 6px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .stats-item {
+      text-align: center;
+    }
+    
+    .stats-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+    
+    .stats-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .table-container { 
+      height: 700px; 
+      overflow-y: auto; 
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      background: white;
+      margin-top: 0.2rem;
+    }
+    
+    table { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0; 
+      font-size: 0.9rem; 
+    }
+    
+    th, td { 
+      padding: 0.5rem 0.4rem;
+      text-align: left; 
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    th { 
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      font-weight: 600;
+      color: #495057;
+      position: sticky; 
+      top: 0; 
+      z-index: 10;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+    
+    tbody tr {
+      transition: all 0.2s ease;
+    }
+    
+    tbody tr:hover { 
+      background-color: #f8f9fa;
+    }
+    
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+      accent-color: #667eea;
+    }
+    
+    th:first-child, td:first-child {
+      width: 50px;
+      text-align: center;
+    }
+    
+    .selected-row {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+      border-left: 4px solid #2196F3;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badge-success { background: #d4edda; color: #155724; }
+    .badge-warning { background: #fff3cd; color: #856404; }
+    .badge-info { background: #d1ecf1; color: #0c5460; }
+    .badge-secondary { background: #e2e3e5; color: #383d41; }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 0.2rem;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .config-section {
+        padding: 1.5rem;
+      }
+      
+      .config-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .btn-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .sidebar-config {
+        padding: 0.5rem 0.3rem;
+        height: auto;
+        min-height: unset;
+      }
+      
+      .header {
+        padding: 0.1rem 0.5rem 0.1rem 0.5rem;
+      }
+    }
+    
+    /* Sidebar configurazione: tutta altezza viewport */
+    .sidebar-config {
+      width: 340px;
+      min-width: 280px;
+      max-width: 400px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 12px;
+      border: 1px solid #e9ecef;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-right: 1rem;
+      padding: 1rem 0.7rem;
+      position: sticky;
+      top: 0.5rem;
+      height: calc(100vh - 1rem);
+      min-height: calc(100vh - 1rem);
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar configurazione -->
+    <aside class="sidebar-config" style="width: 340px; min-width: 280px; max-width: 400px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 12px; border: 1px solid #e9ecef; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-right: 1rem; padding: 1rem 0.7rem; height: fit-content; align-self: flex-start;">
+      <h3 style="color: #2c3e50; margin-bottom: 1.5rem; font-weight: 500; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">⚙️ Configurazione Sistema</h3>
+      <form id="importForm">
+        <div class="config-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label for="fromDate" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">📅 Data Inizio</label>
+            <input type="date" id="fromDate" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
+          </div>
+          <div>
+            <label for="toDate" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">📅 Data Fine</label>
+            <input type="date" id="toDate" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
+          </div>
+        </div>
+        <div class="btn-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+          <button id="listProjectsBtn" class="btn btn-secondary" type="button"><span>📋</span> Recupera Lista Progetti</button>
+          <button type="submit" class="btn btn-primary"><span>🔄</span> Avvia Importazione Ore</button>
+          <button id="processSelectedBtn" class="btn btn-success" disabled><span>⚡</span> Elabora Selezionati (<span id="selectedCount">0</span>)</button>
+        </div>
+      </form>
+    </aside>
+    <!-- Main content: stats + tabella -->
+    <main style="flex: 1 1 0; min-width: 0;">
+      <div class="header">
+        <h1>🚀 Rentman Project Manager</h1>
+        <p>Gestione Professionale Progetti e Importazione Ore</p>
+        <div id="token-status" class="token-status">Verifica token in corso...</div>
+      </div>
+      <div class="content" style="padding: 2rem 0 2rem 0;">
+        <div class="stats">
+          <div class="stats-item">
+            <div class="stats-number" id="totalProjects">0</div>
+            <div class="stats-label">Progetti Totali</div>
+          </div>
+          <div class="stats-item">
+            <div class="stats-number" id="selectedProjects">0</div>
+            <div class="stats-label">Selezionati</div>
+          </div>
+          <div class="stats-item">
+            <div class="stats-number" id="activeProjects">0</div>
+            <div class="stats-label">Attivi</div>
+          </div>
+        </div>
+        <div class="table-container" style="height: 700px;">
+          <table id="projectList">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" title="Seleziona tutti"></th>
+                <th>Codice</th>
+                <th>Numero</th>
+                <th>Nome Progetto</th>
+                <th>Stato</th>
+                <th>Valore</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="6" style="text-align: center; color: #6c757d; font-style: italic; padding: 3rem;">
+                  📊 Clicca "Recupera Progetti" per iniziare
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/js/token-status.js"></script>
+  <script>
+    // Imposta data odierna
+    function setDefaultDates() {
+      const today = new Date();
+      const todayString = today.toISOString().split('T')[0];
+      document.getElementById("fromDate").value = todayString;
+      document.getElementById("toDate").value = todayString;
+    }
+
+    // Funzioni utility
+    function getStatusBadge(status) {
+      const badges = {
+        'Confermato': 'badge-success',
+        'In location': 'badge-info',
+        'Pronto': 'badge-warning',
+        'Rientrato': 'badge-secondary',
+        'Annullato': 'badge-secondary',
+        'Concept': 'badge-warning',
+        'In opzione': 'badge-info'
+      };
+      
+      const badgeClass = badges[status] || 'badge-secondary';
+      return '<span class="badge ' + badgeClass + '">' + (status || 'N/A') + '</span>';
+    }
+    
+    function updateStats(total, selected, active) {
+      document.getElementById('totalProjects').textContent = total || 0;
+      document.getElementById('selectedProjects').textContent = selected || 0;
+      document.getElementById('activeProjects').textContent = active || 0;
+    }
+
+    function updateSelectedCount() {
+      const checkboxes = document.querySelectorAll('.project-checkbox:checked');
+      const count = checkboxes.length;
+      document.getElementById('selectedCount').textContent = count;
+      document.getElementById('processSelectedBtn').disabled = count === 0;
+      
+      const totalProjects = parseInt(document.getElementById('totalProjects').textContent) || 0;
+      const activeProjects = parseInt(document.getElementById('activeProjects').textContent) || 0;
+      updateStats(totalProjects, count, activeProjects);
+    }
+    
+    function attachCheckboxEvents() {
+      document.querySelectorAll('.project-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+          const row = this.closest('tr');
+          if (this.checked) {
+            row.classList.add('selected-row');
+          } else {
+            row.classList.remove('selected-row');
+          }
+          updateSelectedCount();
+        });
+      });
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      setDefaultDates();
+      
+      // Form importazione ORE
+      document.getElementById("importForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        
+        if (!from || !to) {
+          alert('❌ Seleziona le date');
+          return;
+        }
+        
+        // Chiedi il nome dell'employee per le ore
+        const employeeName = prompt('👤 Inserisci il nome dell employee per le ore:', 'GINUDDO');
+        if (!employeeName) {
+          alert('❌ Nome employee richiesto per importare le ore');
+          return;
+        }
+        
+        const confirmed = confirm('🕐 Importare ore per tutti i progetti dal ' + from + ' al ' + to + '?\n\n👤 Employee: ' + employeeName + '\n\n⚠️ L operazione potrebbe richiedere diversi minuti.');
+        if (!confirmed) return;
+        
+        // Disabilita il pulsante durante l'importazione
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span> Importazione in corso...';
+        
+        fetch("/avvia-importazione", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ fromDate: from, toDate: to, employeeName: employeeName })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(js) {
+          // Riabilita il pulsante
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          
+          if (js.success) {
+            alert('✅ ' + (js.message || "Importazione ore completata con successo"));
+          } else {
+            alert('❌ Errore importazione ore: ' + (js.error || js.message || 'Errore sconosciuto'));
+          }
+          
+          // Log dettagliato
+          if (js.output) {
+            console.log('📄 Output importazione ore:', js.output);
+          }
+        })
+        .catch(function(err) {
+          // Riabilita il pulsante
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          alert('❌ Errore: ' + err);
+        });
+      });
+
+      // Lista progetti
+      document.getElementById("listProjectsBtn").addEventListener("click", function() {
+        console.log("🚀 INIZIO - Pulsante cliccato");
+        
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const tbody = document.querySelector("#projectList tbody");
+        
+        console.log("📅 Date selezionate:", { from: from, to: to });
+        
+        if (!from || !to) {
+          console.log("❌ Date mancanti");
+          alert('❌ Seleziona le date per recuperare i progetti');
+          return;
+        }
+        
+        console.log("⏳ Inizio caricamento...");
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem;">⏳ Caricamento...</td></tr>';
+        
+        console.log("🌐 Invio richiesta al server...");
+        fetch("/lista-progetti", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ fromDate: from, toDate: to })
+        })
+        .then(function(r) {
+          console.log("📡 Risposta ricevuta, status:", r.status);
+          return r.json();
+        })
+        .then(function(js) {
+          console.log("📥 RICEVUTO DAL SERVER - Risposta completa:", js);
+          
+          // 🔍 DEBUG: Stampa i primi progetti ricevuti
+          if (js.projects && js.projects.length > 0) {
+            console.log("📥 RICEVUTO DAL SERVER - Debug primi 3 progetti:");
+            js.projects.slice(0, 3).forEach(function(p, i) {
+              console.log('  Progetto ' + (i+1) + ':');
+              console.log('    ID: ' + p.id + ' (tipo: ' + typeof p.id + ')');
+              console.log('    NUMBER: ' + p.number + ' (tipo: ' + typeof p.number + ')');
+              console.log('    NAME: ' + p.name + ' (tipo: ' + typeof p.name + ')');
+              console.log('    STATUS: ' + p.status + ' (tipo: ' + typeof p.status + ')');
+              console.log('    Oggetto completo:', p);
+            });
+          } else {
+            console.log("⚠️ Nessun progetto nell'array o array vuoto");
+          }
+          
+          if (js.error) {
+            console.log("❌ Errore dal server:", js.error);
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #dc3545; padding: 3rem;">⚠️ Errore nel caricamento</td></tr>';
+            alert('❌ Errore: ' + js.error);
+            return;
+          }
+          
+          if (!js.projects || js.projects.length === 0) {
+            console.log("📋 Nessun progetto trovato");
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6c757d; padding: 3rem;">📋 Nessun progetto trovato</td></tr>';
+            updateStats(0, 0, 0);
+            return;
+          }
+          
+          console.log("🔨 INIZIO RENDERING di", js.projects.length, "progetti");
+          tbody.innerHTML = "";
+          let activeCount = 0;
+          
+          console.log("🔨 CREAZIONE RIGHE - Debug rendering:");
+          js.projects.forEach(function(p, index) {
+            // 🔍 DEBUG: Per ogni progetto durante il rendering
+            if (index < 3) {
+              console.log('  🔨 Rendering progetto ' + (index + 1) + ':');
+              console.log('    p.id: ' + p.id);
+              console.log('    p.number: ' + p.number);
+              console.log('    p.number || "N/A": ' + (p.number || 'N/A'));
+              console.log('    Condizione (p.number || "N/A"): ' + (p.number || 'N/A'));
+            }
+            
+            if (p.status && !['Annullato', 'Rientrato'].includes(p.status)) {
+              activeCount++;
+            }
+            
+            const statusBadge = getStatusBadge(p.status);
+            const tr = document.createElement("tr");
+            
+            // 🔍 DEBUG: Valore finale che finisce nell'HTML
+            const finalNumber = p.number || 'N/A';
+            if (index < 3) {
+              console.log('    💻 Valore finale nell HTML: "' + finalNumber + '"');
+            }
+            
+            tr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
+              '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
+              '<td><code>' + finalNumber + '</code></td>' +
+              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' + (p.name || 'N/A') + '</td>' +
+              '<td>' + statusBadge + '</td>' +
+              '<td style="text-align: right;">' + (p.valore ? p.valore.toFixed(2).replace('.', ',') + ' €' : 'N/A') + '</td>';
+            tbody.appendChild(tr);
+          });
+          
+          console.log("📊 Aggiornamento statistiche...");
+          updateStats(js.projects.length, 0, activeCount);
+          
+          console.log("🔗 Collegamento eventi checkbox...");
+          attachCheckboxEvents();
+          
+          console.log("✅ COMPLETATO rendering di", js.projects.length, "progetti");
+        })
+        .catch(function(err) {
+          console.error("💥 ERRORE nella richiesta:", err);
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #dc3545; padding: 3rem;">🔌 Errore connessione</td></tr>';
+          alert('❌ Errore di connessione');
+        });
+      });
+
+      // Seleziona tutti
+      document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.project-checkbox');
+        const rows = document.querySelectorAll('#projectList tbody tr');
+        
+        checkboxes.forEach(function(checkbox, index) {
+          checkbox.checked = this.checked;
+          if (this.checked) {
+            rows[index].classList.add('selected-row');
+          } else {
+            rows[index].classList.remove('selected-row');
+          }
+        }.bind(this));
+        updateSelectedCount();
+      });
+
+      // Elabora selezionati (SOLO FATTURE)
+      document.getElementById('processSelectedBtn').addEventListener('click', function() {
+        const selectedCheckboxes = document.querySelectorAll('.project-checkbox:checked');
+        const selectedProjects = Array.from(selectedCheckboxes).map(function(checkbox) {
+          return {
+            id: checkbox.dataset.projectId,
+            name: checkbox.dataset.projectName
+          };
+        });
+        
+        if (selectedProjects.length === 0) {
+          alert('⚠️ Nessun progetto selezionato!');
+          return;
+        }
+        
+        const projectList = selectedProjects.map(function(p) {
+          return '• ' + p.name + ' (ID: ' + p.id + ')';
+        }).join('\n');
+        
+        const confirmed = confirm('💰 Elaborare FATTURE per ' + selectedProjects.length + ' progetti selezionati?\n\n' + projectList + '\n\n📝 Nota: Questa operazione crea solo Customer/Sub-customer e Fatture.\nPer importare le ore, usa "Avvia Importazione Ore".\n\n⚠️ L operazione potrebbe richiedere diversi minuti.');
+        
+        if (confirmed) {
+          // Disabilita il pulsante durante l'elaborazione
+          const btn = document.getElementById('processSelectedBtn');
+          const originalText = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = '<span>⏳</span> Elaborazione fatture...';
+          
+          console.log('💰 Invio richiesta elaborazione fatture:', selectedProjects);
+          
+          fetch('/elabora-selezionati', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              selectedProjects: selectedProjects
+            })
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(response) {
+            console.log('📥 Risposta elaborazione fatture:', response);
+            
+            // Riabilita il pulsante
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            
+            if (response.success) {
+              // Mostra risultati dettagliati
+              const summary = response.summary;
+              let message = '✅ Elaborazione fatture completata!\n\n';
+              message += '📊 Risultati:\n';
+              message += '   • Totali: ' + summary.total + '\n';
+              message += '   • Successi: ' + summary.success + '\n';
+              
+              // Mostra anche il numero di operazioni simulate se presenti
+              if (summary.simulated && summary.simulated > 0) {
+                message += '   • Simulati: ' + summary.simulated + ' (token scaduto)\n';
+              }
+              
+              message += '   • Errori: ' + summary.errors + '\n';
+              message += '   • Timeout: ' + summary.timeouts + '\n\n';
+              
+              if (summary.simulated && summary.simulated > 0) {
+                message += '⚠️ ATTENZIONE: Alcune fatture sono state simulate perché il token QuickBooks è scaduto.\n';
+                message += 'Per creare le fatture reali, aggiorna il token seguendo le istruzioni in AGGIORNAMENTO_TOKEN_QUICKBOOKS.md.\n\n';
+              }
+              
+              if (summary.errors > 0 || summary.timeouts > 0) {
+                message += '⚠️ Controlla la console del server per dettagli sugli errori.\n\n';
+              }
+              
+              message += '💡 Per importare le ore, usa "Avvia Importazione Ore"';
+              
+              alert(message);
+              
+              // Log dettagliato in console
+              console.log('📋 Risultati dettagliati per progetto:');
+              response.results.forEach(function(result, index) {
+                let statusText = result.status.toUpperCase();
+                
+                // Aggiungi indicatore per operazioni simulate
+                if (result.status === 'success_simulated') {
+                  statusText = 'SIMULATO';
+                }
+                
+                console.log('  ' + (index + 1) + '. ' + result.project_name + ' (' + result.project_id + '): ' + statusText);
+                if (result.message) {
+                  console.log('     ℹ️ ' + result.message);
+                }
+                if (result.error) {
+                  console.error('     ❌ Errore: ' + result.error);
+                }
+              });
+            } else {
+              alert('❌ Errore durante l elaborazione fatture: ' + (response.error || 'Errore sconosciuto'));
+            }
+          })
+          .catch(function(err) {
+            console.error('💥 Errore nella richiesta:', err);
+            // Riabilita il pulsante
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert('❌ Errore di connessione durante l elaborazione fatture');
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
