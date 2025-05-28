@@ -23,7 +23,19 @@
       flex-direction: rotr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
               '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
               '<td><code>' + finalNumber + '</code></td>' +
-              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' + (p.name || 'N/A') + '</td>' +
+              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' +
+                (p.name || 'N/A') +
+                ((p.equipment_period_from && p.equipment_period_to) ?
+                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
+                    p.equipment_period_from + ' → ' + p.equipment_period_to +
+                  '</span>' :
+                  '') +
+                (p.project_type_name ?
+                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
+                    p.project_type_name +
+                  '</span>' :
+                  '') +
+              '</td>' +
               '<td>' + statusBadge + '</td>' +
               '<td>' + (typeof p.project_value !== 'undefined' && p.project_value !== null && p.project_value !== '' && p.project_value !== '0.00' ? ('€ ' + p.project_value) : 'N/A') + '</td>';
      max-width: 1800px;
@@ -572,9 +584,21 @@
             tr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
               '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
               '<td><code>' + finalNumber + '</code></td>' +
-              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' + (p.name || 'N/A') + '</td>' +
+              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' +
+                (p.name || 'N/A') +
+                ((p.equipment_period_from && p.equipment_period_to) ?
+                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
+                    p.equipment_period_from + ' → ' + p.equipment_period_to +
+                  '</span>' :
+                  '') +
+                (p.project_type_name ?
+                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
+                    p.project_type_name +
+                  '</span>' :
+                  '') +
+              '</td>' +
               '<td>' + statusBadge + '</td>' +
-              '<td style="text-align: right;">' + (p.valore ? p.valore.toFixed(2).replace('.', ',') + ' €' : 'N/A') + '</td>';
+              '<td style="text-align: right;">' + (p.project_value && p.project_value !== '0.00' ? ('€ ' + p.project_value) : 'N/A') + '</td>';
             tbody.appendChild(tr);
           });
           
