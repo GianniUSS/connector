@@ -325,4 +325,4 @@ if __name__ == '__main__':
     print("🔗 Import diretti:", 
           "✅ Fatture" if INVOICE_IMPORT_SUCCESS else "❌ Fatture (subprocess)", 
           "✅ Ore" if HOURS_IMPORT_SUCCESS else "❌ Ore (subprocess)")
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

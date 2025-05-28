@@ -2658,3 +2658,69 @@
 2025-05-28 17:33:34,006 INFO 127.0.0.1 - - [28/May/2025 17:33:34] "[36mGET /static/js/token-status.js HTTP/1.1[0m" 304 -
 2025-05-28 17:33:35,021 INFO 127.0.0.1 - - [28/May/2025 17:33:35] "GET /api/token-status HTTP/1.1" 200 -
 2025-05-28 17:33:38,613 INFO 127.0.0.1 - - [28/May/2025 17:33:38] "POST /lista-progetti HTTP/1.1" 200 -
+2025-05-28 17:36:06,514 INFO 127.0.0.1 - - [28/May/2025 17:36:06] "GET /?id=cb698229-d855-44cb-ac52-014e5988633d&vscodeBrowserReqId=1748446566448 HTTP/1.1" 200 -
+2025-05-28 17:36:06,565 INFO 127.0.0.1 - - [28/May/2025 17:36:06] "[36mGET /static/js/token-status.js HTTP/1.1[0m" 304 -
+2025-05-28 17:36:07,819 INFO 127.0.0.1 - - [28/May/2025 17:36:07] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:36:10,667 INFO 127.0.0.1 - - [28/May/2025 17:36:10] "POST /lista-progetti HTTP/1.1" 200 -
+2025-05-28 17:36:39,283 INFO 127.0.0.1 - - [28/May/2025 17:36:39] "GET / HTTP/1.1" 200 -
+2025-05-28 17:36:39,430 INFO 127.0.0.1 - - [28/May/2025 17:36:39] "[36mGET /static/js/token-status.js HTTP/1.1[0m" 304 -
+2025-05-28 17:36:39,660 INFO 127.0.0.1 - - [28/May/2025 17:36:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 17:36:40,547 INFO 127.0.0.1 - - [28/May/2025 17:36:40] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:36:49,513 INFO 127.0.0.1 - - [28/May/2025 17:36:49] "POST /lista-progetti HTTP/1.1" 200 -
+2025-05-28 17:41:07,588 INFO 127.0.0.1 - - [28/May/2025 17:41:07] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:41:40,568 INFO 127.0.0.1 - - [28/May/2025 17:41:40] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:46:07,603 INFO 127.0.0.1 - - [28/May/2025 17:46:07] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:46:40,592 INFO 127.0.0.1 - - [28/May/2025 17:46:40] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:48:25,736 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 17:48:26,200 INFO  * Restarting with stat
+2025-05-28 17:48:29,891 WARNING  * Debugger is active!
+2025-05-28 17:48:29,908 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:49:02,420 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 17:49:02,593 INFO  * Restarting with stat
+2025-05-28 17:49:04,563 WARNING  * Debugger is active!
+2025-05-28 17:49:04,563 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:50:00,739 INFO 127.0.0.1 - - [28/May/2025 17:50:00] "[36mGET / HTTP/1.1[0m" 304 -
+2025-05-28 17:50:00,813 INFO 127.0.0.1 - - [28/May/2025 17:50:00] "[36mGET /static/js/token-status.js HTTP/1.1[0m" 304 -
+2025-05-28 17:50:02,028 INFO 127.0.0.1 - - [28/May/2025 17:50:02] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:50:09,080 INFO 127.0.0.1 - - [28/May/2025 17:50:09] "POST /lista-progetti HTTP/1.1" 200 -
+2025-05-28 17:51:06,924 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 17:51:07,149 INFO  * Restarting with stat
+2025-05-28 17:51:09,199 WARNING  * Debugger is active!
+2025-05-28 17:51:09,220 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:51:18,312 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.1.12:5000
+2025-05-28 17:51:18,312 INFO [33mPress CTRL+C to quit[0m
+2025-05-28 17:51:18,312 INFO  * Restarting with stat
+2025-05-28 17:51:20,286 WARNING  * Debugger is active!
+2025-05-28 17:51:20,309 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:51:30,055 INFO 192.168.1.12 - - [28/May/2025 17:51:30] "GET / HTTP/1.1" 200 -
+2025-05-28 17:51:30,200 INFO 192.168.1.12 - - [28/May/2025 17:51:30] "GET /static/js/token-status.js HTTP/1.1" 200 -
+2025-05-28 17:51:30,450 INFO 192.168.1.12 - - [28/May/2025 17:51:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-28 17:51:31,421 INFO 192.168.1.12 - - [28/May/2025 17:51:31] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:51:35,935 INFO 192.168.1.12 - - [28/May/2025 17:51:35] "POST /lista-progetti HTTP/1.1" 200 -
+2025-05-28 17:51:53,150 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 17:51:53,249 INFO  * Restarting with stat
+2025-05-28 17:51:53,919 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 17:51:53,981 INFO  * Restarting with stat
+2025-05-28 17:51:55,661 WARNING  * Debugger is active!
+2025-05-28 17:51:55,676 WARNING  * Debugger is active!
+2025-05-28 17:51:55,676 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:51:55,676 INFO  * Debugger PIN: 708-196-647
+2025-05-28 17:55:02,632 INFO 127.0.0.1 - - [28/May/2025 17:55:02] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 17:56:31,827 INFO 192.168.1.12 - - [28/May/2025 17:56:31] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 18:00:02,674 INFO 127.0.0.1 - - [28/May/2025 18:00:02] "GET /api/token-status HTTP/1.1" 200 -
+2025-05-28 18:01:01,298 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 18:01:01,298 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 18:01:01,672 INFO  * Restarting with stat
+2025-05-28 18:01:01,699 INFO  * Restarting with stat
+2025-05-28 18:01:05,138 WARNING  * Debugger is active!
+2025-05-28 18:01:05,138 WARNING  * Debugger is active!
+2025-05-28 18:01:05,140 INFO  * Debugger PIN: 708-196-647
+2025-05-28 18:01:15,279 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 18:01:15,284 INFO  * Detected change in 'E:\\AppConnettor\\app.py', reloading
+2025-05-28 18:01:15,343 INFO  * Restarting with stat
+2025-05-28 18:01:15,343 INFO  * Restarting with stat
+2025-05-28 18:01:17,058 WARNING  * Debugger is active!
+2025-05-28 18:01:17,058 WARNING  * Debugger is active!
+2025-05-28 18:01:17,083 INFO  * Debugger PIN: 708-196-647
+2025-05-28 18:01:17,086 INFO  * Debugger PIN: 708-196-647
