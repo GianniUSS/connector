@@ -151,6 +151,25 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
             formatted_value = '{:.2f}'.format(float(project_value))
         except (ValueError, TypeError):
             formatted_value = '0.00'
+
+        # --- Recupero dati responsabile progetto ---
+        manager_name = None
+        manager_email = None
+        account_manager_path = p.get('account_manager')
+        if account_manager_path:
+            manager_id = extract_id_from_path(account_manager_path)
+            if manager_id:
+                try:
+                    crew_url = f"{config.REN_BASE_URL}/crew/{manager_id}"
+                    crew_resp = requests.get(crew_url, headers=headers, timeout=5)
+                    if crew_resp.ok:
+                        crew_data = crew_resp.json().get('data', {})
+                        manager_name = crew_data.get('name') or crew_data.get('displayname')
+                        manager_email = crew_data.get('email') or crew_data.get('email_1')
+                except Exception as e:
+                    print(f"[WARN] Errore recuperando responsabile progetto {manager_id}: {e}")
+
+        project_type_name = get_projecttype_name_cached(project_type_id, headers) if project_type_id else ""
         return {
             "id": project_id,
             "number": converted_number,
@@ -159,8 +178,10 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
             "equipment_period_from": period_start[:10] if period_start else None,
             "equipment_period_to": period_end[:10] if period_end else None,
             "project_type_id": project_type_id,
-            "project_type_name": "",
-            "project_value": formatted_value
+            "project_type_name": project_type_name,
+            "project_value": formatted_value,
+            "manager_name": manager_name,
+            "manager_email": manager_email
         }
     except Exception as e:
         print(f"Errore processando progetto {p.get('id', 'unknown')}: {e}")

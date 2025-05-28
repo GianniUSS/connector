@@ -157,6 +157,9 @@ def lista_progetti():
         print("[INFO] Richiesta lista progetti ricevuta")
         progetti = list_projects_by_date(data.get('fromDate'), data.get('toDate'))
         print(f"[INFO] Progetti restituiti all'utente: {len(progetti)}")
+        # Escludi sempre i progetti con status 'IN OPZIONE' (case insensitive)
+        progetti = [p for p in progetti if (p.get('status') or '').strip().upper() != 'IN OPZIONE']
+        print(f"[INFO] Progetti dopo esclusione 'IN OPZIONE': {len(progetti)}")
         output = [{
             'id': p.get('id'),
             'number': p.get('number'),
@@ -165,7 +168,9 @@ def lista_progetti():
             'equipment_period_from': p.get('equipment_period_from'),
             'equipment_period_to': p.get('equipment_period_to'),
             'project_type_name': p.get('project_type_name'),
-            'project_value': p.get('project_value')
+            'project_value': p.get('project_value'),
+            'manager_name': p.get('manager_name'),
+            'manager_email': p.get('manager_email')
         } for p in progetti]
         return jsonify({'projects': output})
     except Exception as e:
@@ -319,6 +324,15 @@ def elabora_selezionati():
             'timeouts': timeout_count
         }
     })
+
+@app.route('/dettaglio-progetto/<int:project_id>', methods=['GET'])
+def dettaglio_progetto(project_id):
+    try:
+        from rentman_api import get_project_and_customer
+        data = get_project_and_customer(project_id)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     print("🚀 Avvio Rentman Project Manager...")

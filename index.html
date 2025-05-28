@@ -20,25 +20,8 @@
     
     .container { 
       display: flex;
-      flex-direction: rotr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
-              '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
-              '<td><code>' + finalNumber + '</code></td>' +
-              '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' +
-                (p.name || 'N/A') +
-                ((p.equipment_period_from && p.equipment_period_to) ?
-                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
-                    p.equipment_period_from + ' → ' + p.equipment_period_to +
-                  '</span>' :
-                  '') +
-                (p.project_type_name ?
-                  '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
-                    p.project_type_name +
-                  '</span>' :
-                  '') +
-              '</td>' +
-              '<td>' + statusBadge + '</td>' +
-              '<td>' + (typeof p.project_value !== 'undefined' && p.project_value !== null && p.project_value !== '' && p.project_value !== '0.00' ? ('€ ' + p.project_value) : 'N/A') + '</td>';
-     max-width: 1800px;
+      flex-direction: row;
+      max-width: 1800px;
       margin: 0 auto;
       align-items: flex-start;
     }
@@ -358,6 +341,7 @@
                 <th>Numero</th>
                 <th>Nome Progetto</th>
                 <th>Stato</th>
+                <th>Responsabile</th>
                 <th>Valore</th>
               </tr>
             </thead>
@@ -372,6 +356,15 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Aggiungi modale per payload progetto -->
+  <div id="projectModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;max-width:800px;width:90vw;max-height:90vh;overflow:auto;padding:2em 1.5em 1.5em 1.5em;border-radius:10px;position:relative;">
+      <button id="closeProjectModal" style="position:absolute;top:10px;right:10px;font-size:1.2em;">&times;</button>
+      <h3 style="margin-top:0">Dettaglio Progetto</h3>
+      <pre id="projectPayload" style="background:#222;color:#0f0;padding:1em;overflow:auto;font-size:0.95em;"></pre>
+    </div>
   </div>
 
   <script src="/static/js/token-status.js"></script>
@@ -585,7 +578,7 @@
               '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
               '<td><code>' + finalNumber + '</code></td>' +
               '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' +
-                (p.name || 'N/A') +
+                '<a href="#" class="project-link" data-project-id="' + p.id + '">' + (p.name || 'N/A') + '</a>' +
                 ((p.equipment_period_from && p.equipment_period_to) ?
                   '<br><span style="font-size: 0.8em; color: #888; font-style: italic;">' +
                     p.equipment_period_from + ' → ' + p.equipment_period_to +
@@ -598,15 +591,49 @@
                   '') +
               '</td>' +
               '<td>' + statusBadge + '</td>' +
+              '<td>' + (
+                (p.manager_name ?
+                  '<strong>' + p.manager_name + '</strong>' +
+                  (p.manager_email ? '<br><span style="font-size:0.85em;color:#555;">' + p.manager_email + '</span>' : '')
+                : 'N/A')
+              ) + '</td>' +
               '<td style="text-align: right;">' + (p.project_value && p.project_value !== '0.00' ? ('€ ' + p.project_value) : 'N/A') + '</td>';
             tbody.appendChild(tr);
           });
           
+          // 🔗 Collegamento eventi checkbox...
+          attachCheckboxEvents();
+          
+          // 🔗 Collegamento eventi click sui link progetto per modale payload
+          document.querySelectorAll('.project-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const projectId = this.dataset.projectId;
+              const modal = document.getElementById('projectModal');
+              const pre = document.getElementById('projectPayload');
+              pre.textContent = 'Caricamento...';
+              modal.style.display = 'flex';
+              fetch('/dettaglio-progetto/' + encodeURIComponent(projectId))
+                .then(r => r.json())
+                .then(data => {
+                  pre.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(err => {
+                  pre.textContent = 'Errore nel caricamento del payload: ' + err;
+                });
+            });
+          });
+          // Gestione chiusura modale
+          document.getElementById('closeProjectModal').onclick = function() {
+            document.getElementById('projectModal').style.display = 'none';
+          };
+          // Chiudi modale cliccando fuori dal contenuto
+          document.getElementById('projectModal').addEventListener('click', function(e) {
+            if (e.target === this) this.style.display = 'none';
+          });
+
           console.log("📊 Aggiornamento statistiche...");
           updateStats(js.projects.length, 0, activeCount);
-          
-          console.log("🔗 Collegamento eventi checkbox...");
-          attachCheckboxEvents();
           
           console.log("✅ COMPLETATO rendering di", js.projects.length, "progetti");
         })

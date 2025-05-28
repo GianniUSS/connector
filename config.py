@@ -4,8 +4,7 @@ import os
 # QuickBooks
 CLIENT_ID = os.getenv("QBO_CLIENT_ID", "ABjSEkHu5eSVDUk43Yk6HPzMqTIqqwy1UIuvFvt46TJq7ekf3Q")
 CLIENT_SECRET = os.getenv("QBO_CLIENT_SECRET", "3H8yukkptmxZ9JRgbuTgaOPmfbsm5HvSpfDDNQCN")
-# ATTENZIONE: Questo token è scaduto. Aggiornare con un nuovo token da QuickBooks OAuth Playground
-REFRESH_TOKEN = os.getenv("QBO_REFRESH_TOKEN", "RT1-71-H0-1757061804guev0liafmgm3kc0v0d6")
+REFRESH_TOKEN = os.getenv("QBO_REFRESH_TOKEN", "RT1-254-H0-17571813916xu4e41mee4nw6vktdo4")
 
 REALM_ID = os.getenv("QBO_REALM_ID", "9130352047477256")
 REDIRECT_URI = os.getenv("QBO_REDIRECT_URI", "https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl")
