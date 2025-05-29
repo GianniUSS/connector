@@ -9,7 +9,7 @@ REFRESH_TOKEN = os.getenv("QBO_REFRESH_TOKEN", "RT1-254-H0-17571813916xu4e41mee4
 REALM_ID = os.getenv("QBO_REALM_ID", "9130352047477256")
 REDIRECT_URI = os.getenv("QBO_REDIRECT_URI", "https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl")
 TOKEN_URL = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer"
-API_BASE_URL = "https://quickbooks.api.intuit.com/v3/company/"
+API_BASE_URL = "https://quickbooks.api.intuit.com"
 
 
 # Rentman

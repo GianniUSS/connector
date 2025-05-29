@@ -10,6 +10,9 @@ import subprocess
 import sys
 import os
 import tempfile
+from flask import request
+import csv
+import io
 
 # Importiamo direttamente dal file
 import create_or_update_invoice_for_project
@@ -343,7 +346,7 @@ def importa_ore_excel():
     if 'excelFile' not in request.files:
         return jsonify({'success': False, 'error': 'File Excel mancante'}), 400
     file = request.files['excelFile']
-    data_attivita = request.form.get('data_attivita')
+    data_attivita = request.form.get('data_attivivita')
     if not data_attivita:
         return jsonify({'success': False, 'error': 'Data attività mancante'}), 400
     if file.filename == '':
@@ -440,6 +443,75 @@ def trasferisci_ore_qb():
 @app.route('/xml-to-csv.html')
 def xml_to_csv():
     return render_template('xml-to-csv.html')
+
+@app.route('/upload-to-qb', methods=['POST'])
+def upload_to_qb():
+    """Riceve dati CSV dal frontend, li importa su QuickBooks come fatture di acquisto (Bills)"""
+    try:
+        data = request.get_json()
+        csv_data = data.get('csv')
+        if not csv_data:
+            return jsonify({'success': False, 'error': 'Nessun dato CSV ricevuto'}), 400
+
+        # Import funzione per ricerca TaxCodeId
+        from get_quickbooks_taxcodes import get_quickbooks_taxcode_id_by_percent
+
+        # Parsing CSV in memoria
+        f = io.StringIO(csv_data)
+        reader = csv.DictReader(f)
+        bills = []
+        for row in reader:
+            # Estrai percentuale IVA dalla colonna LineTaxCode (es. "22%")
+            line_tax_code = row.get('LineTaxCode', '')
+            percent = None
+            if line_tax_code:
+                import re
+                m = re.search(r'(\d+)', line_tax_code)
+                if m:
+                    percent = m.group(1)
+            taxcode_id = None
+            if percent:
+                taxcode_id = get_quickbooks_taxcode_id_by_percent(percent)
+            # Mappa i campi CSV ai dati richiesti da QuickBooksBillImporter
+            bill = {
+                'vendor_id': row.get('Supplier', '1'),
+                'txn_date': row.get('BillDate', ''),
+                'due_date': row.get('DueDate', ''),
+                'ref_number': row.get('BillNo', ''),
+                'memo': row.get('Memo', ''),
+                'taxcode_id': taxcode_id,
+                'line_items': [{
+                    'amount': float(row.get('LineAmount', '0') or 0),
+                    'description': row.get('LineDescription', ''),
+                    'account_id': '1',
+                    'taxcode_id': taxcode_id  # Passa anche a livello di riga
+                }]
+            }
+            bills.append(bill)
+
+        # Importa le fatture in batch (usa la classe QuickBooksBillImporter)
+        from quickbooks_bill_importer import QuickBooksBillImporter  # Adatta il nome file se necessario
+        from config import API_BASE_URL, REALM_ID
+        from token_manager import TokenManager
+        tm = TokenManager()
+        access_token = tm.get_access_token()
+        importer = QuickBooksBillImporter(API_BASE_URL, REALM_ID, access_token)
+        # Trova o crea il fornitore per ogni bill
+        for bill in bills:
+            supplier_name = bill.get('vendor_id')
+            if supplier_name:
+                vendor_id = importer.find_or_create_vendor(supplier_name)
+                if vendor_id:
+                    bill['vendor_id'] = vendor_id
+                else:
+                    return jsonify({'success': False, 'error': f'Impossibile trovare o creare il fornitore: {supplier_name}'})
+        result = importer.batch_import_bills(bills)
+        # Se ci sono errori, restituisci success False e dettaglio errori
+        if result['error_count'] > 0:
+            return jsonify({'success': False, 'result': result, 'error': result['errors']})
+        return jsonify({'success': True, 'result': result})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
     print("🚀 Avvio Rentman Project Manager...")
