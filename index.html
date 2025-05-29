@@ -292,7 +292,7 @@
     <!-- Sidebar configurazione -->
     <aside class="sidebar-config" style="width: 340px; min-width: 280px; max-width: 400px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 12px; border: 1px solid #e9ecef; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-right: 1rem; padding: 1rem 0.7rem; height: fit-content; align-self: flex-start;">
       <h3 style="color: #2c3e50; margin-bottom: 1.5rem; font-weight: 500; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">⚙️ Configurazione Sistema</h3>
-      <form id="importForm">
+      <form id="importForm" enctype="multipart/form-data">
         <div class="config-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
           <div>
             <label for="fromDate" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">📅 Data Inizio</label>
@@ -303,9 +303,14 @@
             <input type="date" id="toDate" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
           </div>
         </div>
+        <div style="display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 1rem;">
+          <label for="excelFile" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📄 Importa ore da Excel</label>
+          <input type="file" id="excelFile" name="excelFile" accept=".xlsx,.xls" style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; background: white;">
+          <button id="importExcelBtn" class="btn btn-success" type="button" style="white-space:nowrap; min-width:170px; align-self: flex-start;"><span>⬆️</span> Importa Ore da Excel</button>
+        </div>
+        <div id="importExcelMsg" style="margin-bottom:1rem;font-size:1rem;font-weight:600;min-height:24px;"></div>
         <div class="btn-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
           <button id="listProjectsBtn" class="btn btn-secondary" type="button"><span>📋</span> Recupera Lista Progetti</button>
-          <button type="submit" class="btn btn-primary"><span>🔄</span> Avvia Importazione Ore</button>
           <button id="processSelectedBtn" class="btn btn-success" disabled><span>⚡</span> Elabora Selezionati (<span id="selectedCount">0</span>)</button>
         </div>
       </form>
@@ -313,47 +318,46 @@
     <!-- Main content: stats + tabella -->
     <main style="flex: 1 1 0; min-width: 0;">
       <div class="header">
-        <h1>🚀 Rentman Project Manager</h1>
-        <p>Gestione Professionale Progetti e Importazione Ore</p>
+        <h1>🚀 Project integration Manager</h1>
+        <p>importazione  Progetti e Ore su QuickBooks</p>
         <div id="token-status" class="token-status">Verifica token in corso...</div>
       </div>
-      <div class="content" style="padding: 2rem 0 2rem 0;">
-        <div class="stats">
-          <div class="stats-item">
-            <div class="stats-number" id="totalProjects">0</div>
-            <div class="stats-label">Progetti Totali</div>
-          </div>
-          <div class="stats-item">
-            <div class="stats-number" id="selectedProjects">0</div>
-            <div class="stats-label">Selezionati</div>
-          </div>
-          <div class="stats-item">
-            <div class="stats-number" id="activeProjects">0</div>
-            <div class="stats-label">Attivi</div>
-          </div>
+      <!-- Stats e tabella subito sotto header, senza margini -->
+      <div class="stats" style="margin-top:0;">
+        <div class="stats-item">
+          <div class="stats-number" id="totalProjects">0</div>
+          <div class="stats-label">Progetti Totali</div>
         </div>
-        <div class="table-container" style="height: 700px;">
-          <table id="projectList">
-            <thead>
-              <tr>
-                <th><input type="checkbox" id="selectAll" title="Seleziona tutti"></th>
-                <th>Codice</th>
-                <th>Numero</th>
-                <th>Nome Progetto</th>
-                <th>Stato</th>
-                <th>Responsabile</th>
-                <th>Valore</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="6" style="text-align: center; color: #6c757d; font-style: italic; padding: 3rem;">
-                  📊 Clicca "Recupera Progetti" per iniziare
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="stats-item">
+          <div class="stats-number" id="selectedProjects">0</div>
+          <div class="stats-label">Selezionati</div>
         </div>
+        <div class="stats-item">
+          <div class="stats-number" id="activeProjects">0</div>
+          <div class="stats-label">Attivi</div>
+        </div>
+      </div>
+      <div class="table-container" style="height: 700px; margin-top:0;">
+        <table id="projectList">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll" title="Seleziona tutti"></th>
+              <th>Codice</th>
+              <th>Numero</th>
+              <th>Nome Progetto</th>
+              <th>Stato</th>
+              <th>Responsabile</th>
+              <th>Valore</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6" style="text-align: center; color: #6c757d; font-style: italic; padding: 3rem;">
+                📊 Clicca "Recupera Progetti" per iniziare
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </main>
   </div>
@@ -366,6 +370,11 @@
       <pre id="projectPayload" style="background:#222;color:#0f0;padding:1em;overflow:auto;font-size:0.95em;"></pre>
     </div>
   </div>
+
+  <!-- Modale verifica importazione Excel -->
+  <div id="excelImportModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:2rem;"></div>
+
+  <div id="excelImportResult" style="margin:2rem 0 0 0;"></div>
 
   <script src="/static/js/token-status.js"></script>
   <script>
@@ -424,6 +433,144 @@
       });
     }
 
+    // Utility per recuperare dettagli progetto da Rentman
+    async function getProjectDetails(projectId) {
+      try {
+        const resp = await fetch('/dettaglio-progetto/' + encodeURIComponent(projectId));
+        if (!resp.ok) return {};
+        const data = await resp.json();
+        return {
+          subcustomer_name: (data && data.project && data.project.name) ? data.project.name : '',
+          project_number: (data && data.project && data.project.number) ? data.project.number : '',
+          project_end: (data && data.project && data.project.equipment_period_to) ? data.project.equipment_period_to : ''
+        };
+      } catch (e) {
+        return {};
+      }
+    }
+
+    // Mostra la tabella di verifica in una modale, con colonne aggiuntive
+    async function renderExcelImportModal(report) {
+      // Recupera dettagli progetto per ogni riga (solo se non già presenti)
+      for (const r of report) {
+        if (!r.subcustomer_name || !r.project_number || !r.project_end) {
+          const details = await getProjectDetails(r.project_id);
+          r.subcustomer_name = details.subcustomer_name || r.subcustomer_name;
+          r.project_number = details.project_number || '';
+          r.project_end = details.project_end || '';
+        }
+      }
+      let html = '<div style="background:#fff;max-width:900px;width:98vw;max-height:90vh;overflow:auto;padding:2em 1.5em 1.5em 1.5em;border-radius:10px;position:relative;">';
+      html += '<button id="closeExcelImportModal" style="position:absolute;top:10px;right:10px;font-size:1.2em;">&times;</button>';
+      html += '<h3 style="margin-top:0">Verifica dati importati da Excel</h3>';
+      html += '<table style="width:100%;margin-top:1rem;border-collapse:collapse;">';
+      html += '<thead><tr style="background:#f8f9fa;"><th>Project ID</th><th>Numero Progetto</th><th>Fine Progetto</th><th>Sub-customer</th><th>Dipendente</th><th>Ore</th><th>Esito</th><th>Messaggio</th></tr></thead><tbody>';
+      for (const r of report) {
+        html += `<tr style="border-bottom:1px solid #e9ecef;">
+          <td>${r.project_id || ''}</td>
+          <td>${r.project_number || ''}</td>
+          <td>${r.project_end || ''}</td>
+          <td>${r.subcustomer_name || ''}</td>
+          <td>${r.employee_name || ''}</td>
+          <td>${r.ore || ''}</td>
+          <td style="color:${r.esito==='OK'?'#27ae60':'#e74c3c'};font-weight:600;">${r.esito}</td>
+          <td>${r.esito==='OK'?'':(r.esito||'')}</td>
+        </tr>`;
+      }
+      html += '</tbody></table>';
+      html += '<div style="margin-top:2em;text-align:right;">';
+      html += '<button id="closeExcelImportModalBtn" class="btn btn-secondary" style="margin-right:1em;">Chiudi</button>';
+      html += '<button id="openTransferModalBtn" class="btn btn-primary">⬆️ Trasferisci su QuickBooks</button>';
+      html += '</div></div>';
+      const modal = document.getElementById('excelImportModal');
+      modal.innerHTML = html;
+      modal.style.display = 'flex';
+      document.getElementById('closeExcelImportModal').onclick = function() {
+        modal.style.display = 'none';
+      };
+      document.getElementById('closeExcelImportModalBtn').onclick = function() {
+        modal.style.display = 'none';
+      };
+      document.getElementById('openTransferModalBtn').onclick = function() {
+        openTransferModal();
+      };
+    }
+
+    // Modale di conferma trasferimento
+    function openTransferModal() {
+      const okRows = lastExcelImportReport.filter(r => r.esito === 'OK');
+      if (okRows.length === 0) {
+        alert('Nessuna riga valida da trasferire su QuickBooks.');
+        return;
+      }
+      let modalHtml = '<div id="transferModalOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">';
+      modalHtml += '<div style="background:#fff;max-width:700px;width:90vw;max-height:90vh;overflow:auto;padding:2em 1.5em 1.5em 1.5em;border-radius:10px;position:relative;">';
+      modalHtml += '<h3 style="margin-top:0">Conferma trasferimento ore su QuickBooks</h3>';
+      modalHtml += '<p>Vuoi trasferire le seguenti righe su QuickBooks?</p>';
+      modalHtml += '<table style="width:100%;margin-top:1rem;border-collapse:collapse;font-size:0.95em;">';
+      modalHtml += '<thead><tr style="background:#f8f9fa;"><th>Project ID</th><th>Dipendente</th><th>Ore</th></tr></thead><tbody>';
+      for (const r of okRows) {
+        // Mostra ore e minuti in formato HH:MM
+        let oreStr = (typeof r.hours !== 'undefined' && typeof r.minutes !== 'undefined')
+          ? `${r.hours}:${r.minutes.toString().padStart(2, '0')}`
+          : (r.ore || '');
+        modalHtml += `<tr><td>${r.project_id}</td><td>${r.employee_name}</td><td>${oreStr}</td></tr>`;
+      }
+      modalHtml += '</tbody></table>';
+      modalHtml += '<div style="margin-top:2em;text-align:right;">';
+      modalHtml += '<button id="cancelTransferBtn" class="btn btn-secondary" style="margin-right:1em;">Annulla</button>';
+      modalHtml += '<button id="confirmTransferBtn" class="btn btn-primary">OK, trasferisci</button>';
+      modalHtml += '</div></div></div>';
+      let modalDiv = document.createElement('div');
+      modalDiv.innerHTML = modalHtml;
+      document.body.appendChild(modalDiv);
+      document.getElementById('cancelTransferBtn').onclick = function() {
+        document.body.removeChild(modalDiv);
+      };
+      document.getElementById('transferModalOverlay').onclick = function(e) {
+        if (e.target === this) document.body.removeChild(modalDiv);
+      };
+      document.getElementById('confirmTransferBtn').onclick = function() {
+        document.body.removeChild(modalDiv);
+        transferExcelRowsToQb();
+      };
+    }
+
+    // Dopo trasferimento, aggiorna la tabella con i nomi sub-customer
+    function transferExcelRowsToQb() {
+      const okRows = lastExcelImportReport.filter(r => r.esito === 'OK');
+      if (okRows.length === 0) {
+        alert('Nessuna riga valida da trasferire su QuickBooks.');
+        return;
+      }
+      const btn = document.getElementById('transferToQbBtn') || document.getElementById('openTransferModalBtn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Trasferimento in corso...';
+      fetch('/trasferisci-ore-qb', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ rows: okRows })
+      })
+      .then(r => r.json())
+      .then(js => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        if (js.success) {
+          // Aggiorna la modale con i risultati e i nomi sub-customer
+          lastExcelImportReport = js.report;
+          renderExcelImportModal(js.report);
+          alert('✅ Trasferimento completato!');
+        } else {
+          alert('❌ Errore trasferimento: ' + (js.error || js.message || 'Errore sconosciuto'));
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        alert('❌ Errore: ' + err);
+      });
+    }
     // Event Listeners
     document.addEventListener('DOMContentLoaded', function() {
       setDefaultDates();
@@ -764,6 +911,55 @@
             alert('❌ Errore di connessione durante l elaborazione fatture');
           });
         }
+      });
+      
+      // Importazione ore da Excel
+      document.getElementById('importExcelBtn').addEventListener('click', function() {
+        const fileInput = document.getElementById('excelFile');
+        const file = fileInput.files[0];
+        const msgDiv = document.getElementById('importExcelMsg');
+        msgDiv.textContent = '';
+        msgDiv.style.color = '';
+        if (!file) {
+          msgDiv.textContent = '❌ Seleziona un file Excel da importare';
+          msgDiv.style.color = '#e74c3c';
+          return;
+        }
+        const dataAttivita = document.getElementById('toDate').value;
+        if (!dataAttivita) {
+          msgDiv.textContent = '❌ Data attività obbligatoria';
+          msgDiv.style.color = '#e74c3c';
+          return;
+        }
+        const btn = document.getElementById('importExcelBtn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span> Importazione in corso...';
+        const formData = new FormData();
+        formData.append('excelFile', file);
+        formData.append('data_attivita', dataAttivita);
+        fetch('/importa-ore-excel', {
+          method: 'POST',
+          body: formData
+        })
+        .then(r => r.json())
+        .then(js => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (js.success) {
+            msgDiv.textContent = '✅ Importazione completata: ' + js.message;
+            msgDiv.style.color = '#27ae60';
+          } else {
+            msgDiv.textContent = '❌ Errore importazione: ' + (js.error || js.message || 'Errore sconosciuto');
+            msgDiv.style.color = '#e74c3c';
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          msgDiv.textContent = '❌ Errore: ' + err;
+          msgDiv.style.color = '#e74c3c';
+        });
       });
     });
   </script>
