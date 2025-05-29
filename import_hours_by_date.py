@@ -78,10 +78,19 @@ def import_hours_for_period(from_date, to_date, employee_name="GINUDDO", hours_p
                 if not qb_subcustomer:
                     raise Exception("Sub-customer non trovato/creato")
                 
+                # Prendi la data fine del progetto come activity_date
+                activity_date = None
+                if project.get("planperiod_end"):
+                    activity_date = str(project["planperiod_end"])[:10]
+                elif project.get("equipment_period_to"):
+                    activity_date = str(project["equipment_period_to"])[:10]
+                else:
+                    activity_date = to_date  # fallback
+                if not activity_date:
+                    raise Exception("Data fine progetto mancante, impossibile inserire ore")
+                
                 # Inserisci ore per questo progetto
                 project_number = project.get("number", "")
-                activity_date = to_date  # Usa la data finale del periodo
-                
                 result_time_activity = inserisci_ore(
                     employee_name=employee_name,
                     subcustomer_id=qb_subcustomer["Id"],

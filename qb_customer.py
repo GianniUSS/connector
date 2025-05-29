@@ -309,27 +309,18 @@ def trova_o_crea_customer(display_name, customer_data):
 def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
     """
     Trova un sub-cliente esistente in QuickBooks o ne crea uno nuovo
-    
-    Args:
-        display_name (str): Nome visualizzato del sub-cliente
-        parent_id (str): ID del cliente padre
-        subcustomer_data (dict): Dati del sub-cliente da creare/aggiornare
-    
-    Returns:
-        dict: Dati del sub-cliente trovato o creato, None in caso di errore
+    (versione senza query con ParentRef, solo fallback su DisplayName)
     """
     from token_manager import TokenManager
     import logging
     
     try:
-        # Otteniamo il token di accesso
         tm = TokenManager()
         tm.load_refresh_token()
         access_token = tm.get_access_token()
         
         if access_token == "invalid_token_handled_gracefully":
             logging.warning("Token non valido, impossibile interagire con QuickBooks")
-            # Restituiamo un dict fittizio per scopi di test in caso di token non valido
             return {
                 "Id": "789012",
                 "DisplayName": display_name,
@@ -337,63 +328,83 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                 "Active": True
             }
         
-        # Prima cerchiamo se il sub-cliente esiste già
         url_query = f"{config.API_BASE_URL}{config.REALM_ID}/query"
-        query = f"SELECT * FROM Customer WHERE DisplayName = '{display_name}' AND ParentRef = '{parent_id}'"
+        # Query SOLO per DisplayName (ParentRef non è queryable)
+        query = f"SELECT * FROM Customer WHERE DisplayName = '{display_name}'"
         headers = {
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
         params = {"query": query}
         
-        logging.info(f"Ricerca sub-customer con nome: {display_name}")
+        logging.info(f"[QBO] Query sub-customer: {query}")
         resp = requests.get(url_query, headers=headers, params=params)
         
         if resp.status_code == 200:
             data = resp.json()
-            if 'Customer' in data.get('QueryResponse', {}):
-                # Sub-cliente trovato, lo restituiamo
-                logging.info(f"Sub-cliente {display_name} trovato in QBO")
-                return data['QueryResponse']['Customer'][0]
+            customers = data.get('QueryResponse', {}).get('Customer', [])
+            if customers:
+                # Se ce n'è più di uno, logga warning
+                if len(customers) > 1:
+                    logging.warning(f"Trovati {len(customers)} sub-customer con lo stesso DisplayName: {display_name}. Restituisco il primo con ID {customers[0].get('Id')}")
+                else:
+                    logging.info(f"Sub-cliente {display_name} trovato in QBO con ID {customers[0].get('Id')}")
+                return customers[0]
+            else:
+                logging.info(f"Nessun sub-customer trovato per {display_name}")
+        else:
+            logging.error(f"Errore query sub-customer: status {resp.status_code} - {resp.text}")
         
-        # Sub-cliente non trovato, lo creiamo
+        # Creazione sub-cliente
         url_create = f"{config.API_BASE_URL}{config.REALM_ID}/customer"
         headers["Content-Type"] = "application/json"
-          # Assicuriamoci che il ParentRef sia impostato correttamente
         subcustomer_data["ParentRef"] = {"value": parent_id}
-        
-        # Aggiungiamo il campo Job = true per identificare che è un sub-cliente
         subcustomer_data["Job"] = True
-        
-        # Aggiungiamo i campi obbligatori per i custom fields se non sono presenti
         if "CustomField" in subcustomer_data:
             for field in subcustomer_data["CustomField"]:
                 if "DefinitionId" not in field:
-                    field["DefinitionId"] = "1"  # ID generico per i custom fields
-        
+                    field["DefinitionId"] = "1"
         logging.info(f"Payload invio sub-cliente: {subcustomer_data}")
         resp = requests.post(url_create, headers=headers, json=subcustomer_data)
         
         if resp.status_code in (200, 201):
-            logging.info(f"Sub-cliente {display_name} creato in QBO")
-            return resp.json().get('Customer', {})
+            customer = resp.json().get('Customer', {})
+            logging.info(f"Sub-cliente {display_name} creato in QBO con ID {customer.get('Id')}")
+            return customer
         else:
+            try:
+                logging.error(f"Errore creazione sub-customer: status {resp.status_code} - {resp.text}")
+                err_json = resp.json()
+                errors = err_json.get("Fault", {}).get("Error", [])
+                for err in errors:
+                    if (
+                        err.get("code") == "6000"
+                        and "already using this name" in err.get("Detail", "")
+                    ):
+                        logging.warning(f"Sub-customer già esistente con nome {display_name}, provo a recuperarlo solo per DisplayName...")
+                        # Fallback: ricerca solo per DisplayName
+                        resp3 = requests.get(url_query, headers=headers, params=params)
+                        if resp3.status_code == 200:
+                            data3 = resp3.json()
+                            customers3 = data3.get('QueryResponse', {}).get('Customer', [])
+                            if customers3:
+                                if len(customers3) == 1:
+                                    logging.info(f"Sub-customer {display_name} trovato con fallback solo DisplayName, ID {customers3[0].get('Id')}")
+                                    return customers3[0]
+                                elif len(customers3) > 1:
+                                    logging.warning(f"Trovati più sub-customer con lo stesso DisplayName: {display_name}. Restituisco il primo con ID {customers3[0].get('Id')}")
+                                    return customers3[0]
+                                else:
+                                    logging.error(f"Sub-customer duplicato ma non trovato nemmeno con fallback solo DisplayName")
+                            else:
+                                logging.error(f"Sub-customer duplicato ma non trovato nemmeno con fallback solo DisplayName")
+                        else:
+                            logging.error(f"Errore query fallback sub-customer: status {resp3.status_code} - {resp3.text}")
+                        return None
+            except Exception as e2:
+                logging.error(f"Errore parsing errore duplicato sub-customer: {e2}")
             logging.error(f"Errore creazione sub-cliente: {resp.status_code} {resp.text}")
-            
-            # Restituiamo un dict fittizio per scopi di test
-            return {
-                "Id": "789012", 
-                "DisplayName": display_name,
-                "ParentRef": {"value": parent_id},
-                "Active": True
-            }
-    
+            return None
     except Exception as e:
         logging.error(f"Eccezione in trova_o_crea_subcustomer: {e}")
-        # In caso di errore, restituiamo un dict fittizio per scopi di test
-        return {
-            "Id": "789012",
-            "DisplayName": display_name,
-            "ParentRef": {"value": parent_id},
-            "Active": True
-        }
+        return None

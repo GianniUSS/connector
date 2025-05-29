@@ -9,6 +9,10 @@ _projecttype_cache = {}
 _status_cache = {}
 _cache_lock = threading.Lock()
 
+# Cache thread-safe per responsabili
+_manager_cache = {}
+_manager_cache_lock = threading.Lock()
+
 def get_projecttype_name_cached(type_id, headers):
     """ Recupera il nome del tipo progetto con cache """
     if not type_id:
@@ -159,16 +163,28 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
         if account_manager_path:
             manager_id = extract_id_from_path(account_manager_path)
             if manager_id:
-                try:
-                    crew_url = f"{config.REN_BASE_URL}/crew/{manager_id}"
-                    crew_resp = requests.get(crew_url, headers=headers, timeout=5)
-                    if crew_resp.ok:
-                        crew_data = crew_resp.json().get('data', {})
-                        manager_name = crew_data.get('name') or crew_data.get('displayname')
-                        manager_email = crew_data.get('email') or crew_data.get('email_1')
-                except Exception as e:
-                    print(f"[WARN] Errore recuperando responsabile progetto {manager_id}: {e}")
-
+                with _manager_cache_lock:
+                    if manager_id in _manager_cache:
+                        manager_name, manager_email = _manager_cache[manager_id]
+                    else:
+                        try:
+                            crew_url = f"{config.REN_BASE_URL}/crew/{manager_id}"
+                            crew_resp = requests.get(crew_url, headers=headers, timeout=5)
+                            if crew_resp.ok:
+                                crew_data = crew_resp.json().get('data', {})
+                                manager_name = crew_data.get('name') or crew_data.get('displayname')
+                                manager_email = crew_data.get('email') or crew_data.get('email_1')
+                                _manager_cache[manager_id] = (manager_name, manager_email)
+                                if not manager_name or not manager_email:
+                                    print(f"[WARN] Responsabile NON valorizzato per progetto {project_id} (manager_id={manager_id}) - crew_data: {crew_data}")
+                            else:
+                                print(f"[WARN] Errore HTTP recuperando responsabile progetto {project_id} (manager_id={manager_id}): {crew_resp.status_code} - {crew_resp.text}")
+                        except Exception as e:
+                            print(f"[WARN] Errore recuperando responsabile progetto {manager_id}: {e}")
+            else:
+                print(f"[WARN] account_manager_path presente ma manager_id non estratto per progetto {project_id} (path: {account_manager_path})")
+        else:
+            print(f"[WARN] Nessun account_manager per progetto {project_id}")
         project_type_name = get_projecttype_name_cached(project_type_id, headers) if project_type_id else ""
         return {
             "id": project_id,
@@ -205,7 +221,7 @@ def list_projects_by_date(from_date, to_date):
     filtered = []
     debug_count = [0]
     # Ottimizzazione: processa progetti in parallelo
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         futures = [executor.submit(process_project, p, headers, status_map, start_dt, end_dt, debug_count) for p in projects]
         for f in futures:
             result = f.result()

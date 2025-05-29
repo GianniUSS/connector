@@ -1,13 +1,16 @@
-from flask import Flask, request, jsonify, send_from_directory
-
+from flask import Flask, request, jsonify, send_from_directory, render_template
+from rentman_api import list_projects_by_date, get_project_and_customer
+from qb_customer import trova_o_crea_customer, trova_o_crea_subcustomer
+from mapping import map_rentman_to_qbo_customer, map_rentman_to_qbo_subcustomer
+from create_or_update_invoice_for_project import create_or_update_invoice_for_project
+from qb_time_activity import import_ore_da_excel, inserisci_ore
 import threading
 import time
 import subprocess
 import sys
 import os
-from rentman_api import list_projects_by_date
-from qb_customer import trova_o_crea_customer, trova_o_crea_subcustomer
-from mapping import map_rentman_to_qbo_customer, map_rentman_to_qbo_subcustomer
+import tempfile
+
 # Importiamo direttamente dal file
 import create_or_update_invoice_for_project
  
@@ -333,6 +336,110 @@ def dettaglio_progetto(project_id):
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
+@app.route('/importa-ore-excel', methods=['POST'])
+def importa_ore_excel():
+    """Endpoint per importare ore lavorate da file Excel e inserirle in QuickBooks"""
+    if 'excelFile' not in request.files:
+        return jsonify({'success': False, 'error': 'File Excel mancante'}), 400
+    file = request.files['excelFile']
+    data_attivita = request.form.get('data_attivita')
+    if not data_attivita:
+        return jsonify({'success': False, 'error': 'Data attività mancante'}), 400
+    if file.filename == '':
+        return jsonify({'success': False, 'error': 'Nessun file selezionato'}), 400
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
+            file.save(tmp.name)
+            tmp_filepath = tmp.name
+        report = import_ore_da_excel(tmp_filepath, data_attivita)
+        # Rimuovi file temporaneo
+        try:
+            import os
+            os.remove(tmp_filepath)
+        except Exception:
+            pass
+        success_count = sum(1 for r in report if r.get('esito') == 'OK')
+        error_count = len(report) - success_count
+        return jsonify({
+            'success': True,
+            'message': f'Importazione completata: {success_count} OK, {error_count} errori',
+            'report': report
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/trasferisci-ore-qb', methods=['POST'])
+def trasferisci_ore_qb():
+    """Endpoint per trasferire le righe OK su QuickBooks, mostrando anche il nome sub-customer"""
+    data = request.get_json()
+    rows = data.get('rows', [])
+    if not rows:
+        return jsonify({'success': False, 'error': 'Nessuna riga da trasferire'}), 400
+    risultati = []
+    for r in rows:
+        try:
+            # Recupera nome sub-customer da Rentman e dati progetto/cliente
+            project_id = r.get('project_id')
+            subcustomer_name = None
+            qb_customer = None
+            qb_subcustomer = None
+            try:
+                # Ottieni i dati completi da Rentman
+                project_data = get_project_and_customer(project_id)
+                project = project_data['project']
+                customer = project_data['customer']
+                subcustomer_name = project.get('name')
+                # Mapping dati
+                from mapping import map_rentman_to_qbo_customer, map_rentman_to_qbo_subcustomer
+                customer_data = map_rentman_to_qbo_customer(customer)
+                subcustomer_data = map_rentman_to_qbo_subcustomer(project)
+                # Trova/crea customer e subcustomer in QB
+                from qb_customer import trova_o_crea_customer, trova_o_crea_subcustomer
+                qb_customer = trova_o_crea_customer(customer_data["DisplayName"], customer_data)
+                if not qb_customer or not qb_customer.get("Id"):
+                    raise Exception("Customer non trovato/creato")
+                qb_subcustomer = trova_o_crea_subcustomer(subcustomer_data["DisplayName"], qb_customer["Id"], subcustomer_data)
+                if not qb_subcustomer or not qb_subcustomer.get("Id"):
+                    raise Exception("Sub-customer non trovato/creato")
+                # Estrai la data di fine progetto (planperiod_end) da Rentman
+                activity_date = project.get("planperiod_end")
+                if activity_date:
+                    activity_date = str(activity_date)[:10]
+                else:
+                    risultati.append({**r, 'subcustomer_name': subcustomer_name, 'esito': 'Errore: data fine progetto mancante'})
+                    continue
+            except Exception as e:
+                subcustomer_name = subcustomer_name or None
+                risultati.append({**r, 'subcustomer_name': subcustomer_name, 'esito': f'Errore dati progetto/cliente: {e}'})
+                continue
+            # Effettua la chiamata a QB usando l'ID corretto del sub-customer e la data estratta
+            res = inserisci_ore(
+                employee_name=r.get('employee_name'),
+                subcustomer_id=qb_subcustomer["Id"],
+                hours=int(r.get('hours', 0)),
+                minutes=int(r.get('minutes', 0)),
+                hourly_rate=50,  # Puoi personalizzare
+                activity_date=activity_date,
+                description=f"Attività svolte nel Progetto : {subcustomer_name or project_id}"
+            )
+            if res:
+                risultati.append({**r, 'subcustomer_name': subcustomer_name, 'esito': 'OK'})
+            else:
+                risultati.append({**r, 'subcustomer_name': subcustomer_name, 'esito': 'Errore inserimento'})
+        except Exception as e:
+            risultati.append({**r, 'subcustomer_name': subcustomer_name if 'subcustomer_name' in locals() else None, 'esito': f'Errore: {e}'})
+    success_count = sum(1 for r in risultati if r.get('esito') == 'OK')
+    error_count = len(risultati) - success_count
+    return jsonify({
+        'success': True,
+        'message': f'Trasferimento completato: {success_count} OK, {error_count} errori',
+        'report': risultati
+    })
+
+@app.route('/xml-to-csv.html')
+def xml_to_csv():
+    return render_template('xml-to-csv.html')
 
 if __name__ == '__main__':
     print("🚀 Avvio Rentman Project Manager...")

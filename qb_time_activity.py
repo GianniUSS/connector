@@ -1,8 +1,10 @@
-
 import requests
 import config
 import logging
 from token_manager import TokenManager
+import openpyxl
+import os
+from datetime import datetime
     
 # Crea una sola istanza del TokenManager per tutto il file
 token_manager = TokenManager()
@@ -56,39 +58,81 @@ def create_employee(name, access_token):
 
 def find_existing_time_activity(subcustomer_id, employee_id, activity_date, access_token):
     import logging
-
+    import requests
+    
+    logging.info(f"[find_existing_time_activity] activity_date ricevuta: '{activity_date}' (tipo: {type(activity_date)})")
+    
+    if not activity_date:
+        logging.error("[find_existing_time_activity] activity_date mancante o vuoto: query non eseguita.")
+        return None
+    
+    # Assicurati che la data sia in formato YYYY-MM-DD
+    if isinstance(activity_date, str) and len(activity_date) > 10:
+        activity_date = activity_date[:10]
+    
     url = f"{config.API_BASE_URL}{config.REALM_ID}/query"
-    query = (
-        f"SELECT * FROM TimeActivity WHERE CustomerRef = '{subcustomer_id}' "
-        f"AND TxnDate = '{activity_date}'"
-    )
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
     }
-
-    logging.info(f"[QUERY] Cerco TimeActivity con CustomerRef='{subcustomer_id}', TxnDate='{activity_date}' (filtro EmployeeRef in Python)")
-    response = requests.get(url, headers=headers, params={"query": query})
-    logging.info(f"[RESPONSE] Status: {response.status_code}")
-
+    
+    # Strategia 1: Prova prima con una query semplice per data
+    query_simple = f"SELECT * FROM TimeActivity WHERE TxnDate = '{activity_date}'"
+    
+    logging.info(f"[find_existing_time_activity] Eseguendo query: {query_simple}")
+    
+    response = requests.get(url, headers=headers, params={"query": query_simple})
+    
     if response.status_code == 200:
-        activities = response.json().get("QueryResponse", {}).get("TimeActivity", [])
-        for activity in activities:
-            emp_ref = activity.get("EmployeeRef", {}).get("value")
-            act_id = activity.get("Id")
-            if emp_ref == str(employee_id):
-                logging.info(f"[FOUND] Trovata TimeActivity ID: {act_id} per EmployeeRef='{employee_id}'")
-                return activity
-        logging.info("[NOT FOUND] Nessuna TimeActivity corrispondente trovata per l'employee_id.")
+        data = response.json()
+        activities = data.get("QueryResponse", {}).get("TimeActivity", [])
+        
+        if activities:
+            # Se non è una lista, convertila
+            if not isinstance(activities, list):
+                activities = [activities]
+            
+            # Filtra manualmente per Employee e Customer
+            for activity in activities:
+                # Controlla EmployeeRef
+                employee_ref = activity.get("EmployeeRef", {})
+                emp_id = employee_ref.get("value") if isinstance(employee_ref, dict) else str(employee_ref)
+                
+                # Controlla CustomerRef
+                customer_ref = activity.get("CustomerRef", {})
+                cust_id = customer_ref.get("value") if isinstance(customer_ref, dict) else str(customer_ref)
+                
+                logging.info(f"TimeActivity ID: {activity.get('Id')}, Employee: {emp_id}, Customer: {cust_id}")
+                
+                if str(emp_id) == str(employee_id) and str(cust_id) == str(subcustomer_id):
+                    logging.info(f"Trovata TimeActivity ID: {activity.get('Id')} per Employee='{employee_id}', Customer='{subcustomer_id}', Data='{activity_date}'")
+                    return activity
+        
+        logging.info(f"Nessuna TimeActivity trovata per Employee='{employee_id}', Customer='{subcustomer_id}', Data='{activity_date}'")
+    
     else:
-        err_msg = response.json().get("Fault", {}).get("Error", [{}])[0].get("Message", "Errore sconosciuto")
-        logging.error(f"[ERROR] Errore nella query TimeActivity: {response.status_code} - {err_msg}")
-
+        try:
+            error_data = response.json()
+            err_msg = error_data.get("Fault", {}).get("Error", [{}])[0].get("Message", "Errore sconosciuto")
+            logging.error(f"Errore nella query TimeActivity: {response.status_code} - {err_msg}")
+            logging.error(f"Query utilizzata: {query_simple}")
+        except:
+            logging.error(f"Errore nella query TimeActivity: {response.status_code} - {response.text}")
+    
     return None
 
-def inserisci_ore(employee_name, subcustomer_id, hours, hourly_rate, activity_date, description):
+def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, activity_date, description):
+    from datetime import datetime
     token_manager = TokenManager()
     access_token = token_manager.get_access_token()
+
+    # Normalizza la data nel formato YYYY-MM-DD
+    try:
+        if activity_date:
+            activity_date = datetime.strptime(str(activity_date)[:10], "%Y-%m-%d").strftime("%Y-%m-%d")
+    except Exception as e:
+        logging.warning(f"Data attività non valida: {activity_date}, errore: {e}. Uso la data odierna.")
+        activity_date = datetime.now().strftime("%Y-%m-%d")
 
     logging.info(f"Verifico la presenza dell'employee '{employee_name}' in QuickBooks...")
     employee_id = find_employee_by_name(employee_name, access_token)
@@ -112,7 +156,7 @@ def inserisci_ore(employee_name, subcustomer_id, hours, hourly_rate, activity_da
         "Taxable": False,
         "HourlyRate": hourly_rate,
         "Hours": hours,
-        "Minutes": 0,
+        "Minutes": minutes,
         "Description": description
     }
 
@@ -139,3 +183,44 @@ def inserisci_ore(employee_name, subcustomer_id, hours, hourly_rate, activity_da
     else:
         logging.error(f"Errore durante inserimento ore: {response.status_code}, {response.text}")
         return None
+
+
+def import_ore_da_excel(filepath, data_attivita, hourly_rate=50, descrizione_default="Import ore da Excel"):
+    """
+    Importa ore lavorate da un file Excel con colonne:
+    A: Project ID, B: Nominativo dipendente, C: Ore lavorate (HH:MM)
+    """
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"File non trovato: {filepath}")
+    wb = openpyxl.load_workbook(filepath)
+    ws = wb.active
+    risultati = []
+    for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # Salta header
+        project_id = row[0].value
+        employee_name = row[1].value
+        ore_str = row[2].value
+        if not (project_id and employee_name and ore_str):
+            risultati.append({"row": i, "project_id": project_id, "employee_name": employee_name, "ore": ore_str, "esito": "Dati mancanti"})
+            continue
+        # Conversione ore HH:MM → ore e minuti separati
+        try:
+            if isinstance(ore_str, (int, float)):
+                hours = int(ore_str)
+                minutes = int(round((float(ore_str) - hours) * 60))
+            else:
+                ore_parts = str(ore_str).strip().split(":")
+                hours = int(ore_parts[0])
+                minutes = int(ore_parts[1]) if len(ore_parts) > 1 else 0
+        except Exception as e:
+            risultati.append({"row": i, "project_id": project_id, "employee_name": employee_name, "ore": ore_str, "esito": f"Errore conversione ore: {e}"})
+            continue
+        # NON chiamare inserisci_ore qui! Solo verifica dati, nessuna chiamata a QB
+        risultati.append({
+            "row": i,
+            "project_id": project_id,
+            "employee_name": employee_name,
+            "hours": hours,
+            "minutes": minutes,
+            "esito": "OK"
+        })
+    return risultati
