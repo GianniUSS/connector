@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Convertitore XML a CSV per QuickBooks (Versione Semplice)</title>
+    <title>Convertitore XML a CSV per QuickBooks (Versione Stabile)</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -144,7 +144,7 @@
             min-width: 700px;
             background: #fff;
             margin-top: 8px;
-            font-size: 12px; /* più piccolo */
+            font-size: 12px;
             box-shadow: 0 1px 4px #e1e1e1;
         }
         table.csv-grid th, table.csv-grid td {
@@ -172,6 +172,60 @@
         #csvGridContainer {
             width: 100%;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .modal-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #1a365d;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #e9ecef;
+        }
         @media (max-width: 900px) {
             .main-flex { flex-direction: column; gap: 0; }
             .panel-left, .panel-right { max-width: 100vw; min-width: 0; border-radius: 12px; }
@@ -192,429 +246,472 @@
             <div class="button-row">
                 <button id="convertBtn" class="button" disabled>Converti in CSV</button>
                 <button id="copyBtn" class="button" disabled>Copia negli appunti</button>
-                <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none;">Scarica CSV</a>
-                <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;" disabled>Invia a QuickBooks</button>
+                <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none; text-align:center;">Scarica CSV</a>
+                <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks (Raggruppato)</button>
             </div>
         </div>
         <div class="panel-right">
             <div class="box">
                 <h2>Risultato CSV</h2>
                 <div id="statusMsg"></div>
-                <div class="csv-grid-wrapper"><div id="csvGridContainer"></div></div>
+                <div class="csv-grid-wrapper" style="overflow-y: scroll; max-height: 400px; min-height: 200px;"><div id="csvGridContainer"></div></div>
                 <textarea id="csvOutput" readonly style="width:100%;height:200px;display:none;"></textarea>
             </div>
         </div>
     </div>
-    
     <script>
-        // Elementi DOM
-        const xmlFilesInput = document.getElementById('xmlFiles');
-        const fileInfo = document.getElementById('fileInfo');
-        const convertBtn = document.getElementById('convertBtn');
-        const statusMsg = document.getElementById('statusMsg');
-        const csvOutput = document.getElementById('csvOutput');
-        const copyBtn = document.getElementById('copyBtn');
-        const downloadLink = document.getElementById('downloadLink');
-        const sendToQbBtn = document.getElementById('sendToQbBtn');
-        const csvGridContainer = document.getElementById('csvGridContainer');
-        
-        // Event listeners
-        xmlFilesInput.addEventListener('change', updateFileInfo);
-        convertBtn.addEventListener('click', convertXmlToCsv);
-        copyBtn.addEventListener('click', copyToClipboard);
-        sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
-        
-        // Pulsante per tornare alla pagina principale (index.html)
-        document.getElementById('helpBtn').addEventListener('click', function() {
-            window.location.href = '/';
+// --- FUNZIONI GLOBALI ---
+// Utility: ottieni testo da un elemento XML usando XPath
+function getXPath(xmlDoc, xpath) {
+    try {
+        const result = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.STRING_TYPE, null);
+        return result.stringValue.trim();
+    } catch (e) {
+        console.warn(`Errore XPath ${xpath}:`, e);
+        return "";
+    }
+}
+function getXPathNode(node, tagName) {
+    try {
+        const el = node.getElementsByTagName(tagName)[0];
+        return el ? el.textContent.trim() : "";
+    } catch (e) {
+        console.warn(`Errore recupero tag ${tagName}:`, e);
+        return "";
+    }
+}
+function getNodeXPath(node, xpath) {
+    try {
+        const result = node.ownerDocument.evaluate(xpath, node, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        if (result.singleNodeValue) {
+            return result.singleNodeValue.textContent.trim();
+        }
+    } catch (e) {
+        console.warn(`Errore XPath ${xpath}:`, e);
+    }
+    return "";
+}
+function processXml(xmlString, invoiceNumbers) {
+    try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+            throw new Error("File XML non valido");
+        }
+        const fornitoreNome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Nome") || 
+                             getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome");
+        const fornitoreCognome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome") || 
+                                getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome");
+        let fornitore;
+        if (fornitoreNome && fornitoreCognome) {
+            fornitore = `${fornitoreCognome} ${fornitoreNome}`;
+        } else {
+            fornitore = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione") || 
+                       getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione");
+        }
+        const numeroFattura = getXPath(xmlDoc, "//DatiGeneraliDocumento/Numero") ||
+                             getXPath(xmlDoc, "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero");
+        const dataFattura = getXPath(xmlDoc, "//DatiGeneraliDocumento/Data") ||
+                           getXPath(xmlDoc, "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Data");
+        let numeroFatturaEffettivo = numeroFattura;
+        // Gestione duplicati disabilitata
+        let dataParsed = "";
+        if (dataFattura) {
+            const parts = dataFattura.split("-");
+            if (parts.length === 3) {
+                dataParsed = `${parts[1]}/${parts[2]}/${parts[0]}`;
+            }
+        }
+        const dettagliLineeElements = xmlDoc.querySelectorAll("DettaglioLinee") || 
+                                     xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
+        if (!dettagliLineeElements || dettagliLineeElements.length === 0) {
+            throw new Error("Nessun dettaglio linee trovato nella fattura");
+        }
+        const csvLines = [];
+        Array.from(dettagliLineeElements).forEach((linea, index) => {
+            const descrizione = getXPathNode(linea, "Descrizione") || `Servizio #${index + 1}`;
+            let prezzoUnitario = getXPathNode(linea, "PrezzoUnitario") || "0";
+            const quantita = getXPathNode(linea, "Quantita") || "1";
+            let importo;
+            try {
+                importo = parseFloat(prezzoUnitario.replace(",", ".")) * parseFloat(quantita.replace(",", "."));
+                importo = importo.toFixed(2);
+            } catch (e) {
+                importo = prezzoUnitario;
+            }
+            const csvFields = [
+                `"${numeroFatturaEffettivo}"`,
+                `"${fornitore}"`,
+                `"${dataParsed}"`,
+                `"${dataParsed}"`,
+                `"Net30"`,
+                `""`,
+                `""`,
+                `"Uncategorized Expense"`,
+                `"${descrizione}"`,
+                `"${importo}"`,
+                `"22.00%"`,
+                `"${(parseFloat(importo) * 0.22).toFixed(2)}"`
+            ];
+            csvLines.push(csvFields.join(','));
         });
-        
-        // Gestione selezione file
-        function updateFileInfo() {
-            const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
-            
-            if (files.length === 0) {
-                fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
-                convertBtn.disabled = true;
-            } else {
-                fileInfo.innerHTML = `<p>${files.length} file XML selezionati:</p>`;
-                
-                const list = document.createElement('ul');
-                files.forEach(file => {
-                    const item = document.createElement('li');
-                    item.textContent = file.name;
-                    list.appendChild(item);
-                });
-                
-                fileInfo.appendChild(list);
-                convertBtn.disabled = false;
-            }
-        }
-        
-        // Converti i file XML in CSV
-        async function convertXmlToCsv() {
-            // Ottieni i file XML selezionati
-            const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
-            if (files.length === 0) return;
-            
-            // Mostra messaggio di elaborazione
-            showStatus('Elaborazione in corso...', 'info');
-            
-            // Disabilita il pulsante durante l'elaborazione
-            convertBtn.disabled = true;
-            sendToQbBtn.disabled = true;
-            
-            try {
-                // Intestazione CSV
-                const headers = [
-                    "BillNo",
-                    "Supplier",
-                    "BillDate",
-                    "DueDate",
-                    "Terms",
-                    "Location",
-                    "Memo",
-                    "Account",
-                    "LineDescription",
-                    "LineAmount",
-                    "LineTaxCode",
-                    "LineTaxAmount"
-                ];
-                
-                // Righe del CSV
-                let csvRows = [headers.join(',')];
-                
-                // Registra i numeri di fattura per gestire i duplicati
-                const invoiceNumbers = {};
-                
-                // Elabora ogni file
-                let successCount = 0;
-                let errorCount = 0;
-                
-                for (const file of files) {
-                    try {
-                        const xmlText = await readFile(file);
-                        const fileRows = processXml(xmlText, invoiceNumbers);
-                        
-                        if (fileRows.length > 0) {
-                            csvRows = csvRows.concat(fileRows);
-                            successCount++;
-                        }
-                    } catch (error) {
-                        console.error(`Errore nell'elaborazione di ${file.name}:`, error);
-                        errorCount++;
-                    }
-                }
-                
-                // Crea il CSV completo
-                const csvText = csvRows.join('\n');
-                
-                // Mostra il CSV in grid (tabella)
-                renderCsvGrid(csvText);
-                // Mostra anche nella textarea (nascosta) per copia/download
-                csvOutput.value = csvText;
-                
-                // Abilita pulsanti di download/copia
-                copyBtn.disabled = false;
-                sendToQbBtn.disabled = false;
-                
-                // Crea un URL per il download
-                updateDownloadLink(csvText);
-                
-                // Mostra messaggio di successo
-                showStatus(`Conversione completata: ${successCount} file elaborati con successo${errorCount > 0 ? `, ${errorCount} falliti` : ''}.`, 'success');
-            } catch (error) {
-                // Mostra errore
-                showStatus(`Errore durante la conversione: ${error.message}`, 'error');
-            } finally {
-                // Riattiva il pulsante
-                convertBtn.disabled = false;
-            }
-        }
+        return csvLines;
+    } catch (error) {
+        console.error("Errore nell'elaborazione XML:", error);
+        throw error;
+    }
+}
+// --- FINE FUNZIONI GLOBALI ---
 
-        // Invio CSV a QuickBooks
-        async function sendCsvToQuickBooks() {
-            const csv = csvOutput.value;
-            if (!csv) {
-                showStatus('Nessun CSV da inviare.', 'error');
-                return;
-            }
-            sendToQbBtn.disabled = true;
-            sendToQbBtn.textContent = 'Invio in corso...';
-            try {
-                const response = await fetch('/upload-to-qb', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ csv })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    showStatus('✅ Dati inviati a QuickBooks con successo!', 'success');
-                } else {
-                    showStatus('❌ Errore invio a QuickBooks: ' + (result.error || result.message), 'error');
+document.addEventListener('DOMContentLoaded', function() {
+    // Parser CSV robusto per gestire campi tra virgolette
+    function parseCSVLine(text) {
+        const result = [];
+        let cell = '';
+        let inQuotes = false;
+        let i = 0;
+        
+        while (i < text.length) {
+            const char = text[i];
+            
+            // Gestione virgolette
+            if (char === '"') {
+                // Se troviamo una virgoletta doppia all'interno di un campo già tra virgolette, è un escape
+                if (inQuotes && text[i+1] === '"') {
+                    cell += '"';
+                    i += 2; // Salta il carattere di escape e la virgoletta
+                    continue;
                 }
-            } catch (err) {
-                showStatus('❌ Errore di rete: ' + err, 'error');
-            } finally {
-                sendToQbBtn.disabled = false;
-                sendToQbBtn.textContent = 'Invia a QuickBooks';
+                // Altrimenti entriamo/usciamo dalla modalità virgolette
+                inQuotes = !inQuotes;
+                i++;
+                continue;
             }
+            
+            // Se troviamo una virgola fuori dalle virgolette, è un separatore di campi
+            if (char === ',' && !inQuotes) {
+                result.push(cell);
+                cell = '';
+                i++;
+                continue;
+            }
+            
+            // Altrimenti aggiungiamo il carattere alla cella corrente
+            cell += char;
+            i++;
         }
         
-        // Leggi un file come testo
-        function readFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = (e) => reject(new Error("Errore nella lettura del file"));
-                reader.readAsText(file);
-            });
+        // Aggiungi l'ultima cella
+        result.push(cell);
+        
+        return result;
+    }
+    
+    // Elementi DOM
+    const xmlFilesInput = document.getElementById('xmlFiles');
+    const fileInfo = document.getElementById('fileInfo');
+    const convertBtn = document.getElementById('convertBtn');
+    const statusMsg = document.getElementById('statusMsg');
+    const csvOutput = document.getElementById('csvOutput');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadLink = document.getElementById('downloadLink');
+    const sendToQbBtn = document.getElementById('sendToQbBtn');
+    const csvGridContainer = document.getElementById('csvGridContainer');
+    
+    // Event listeners
+    xmlFilesInput.addEventListener('change', updateFileInfo);
+    convertBtn.addEventListener('click', convertXmlToCsv);
+    copyBtn.addEventListener('click', copyToClipboard);
+    sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
+    
+    // Pulsante per tornare alla pagina principale (index.html)
+    document.getElementById('helpBtn').addEventListener('click', function() {
+        window.location.href = '/';
+    });
+    
+    // Gestione radio per la modalità di invio
+    document.querySelectorAll('input[name="sendMode"]').forEach(radio => {
+        radio.addEventListener('change', e => {
+            // Aggiorna la visualizzazione delle opzioni di raggruppamento
+            const selectedMode = e.target.value;
+            document.getElementById('groupingOptions').style.display = (selectedMode === 'grouped') ? 'block' : 'none';
+            console.log("Modalità cambiata a:", selectedMode);
+        });
+    });
+    
+    // Gestione selezione file
+    function updateFileInfo() {
+        const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
+        
+        if (files.length === 0) {
+            fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
+            convertBtn.disabled = true;
+        } else {
+            fileInfo.innerHTML = `<p>${files.length} file XML selezionati:</p>`;
+            
+            const list = document.createElement('ul');
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const item = document.createElement('li');
+                item.textContent = file.name;
+                list.appendChild(item);
+            }
+            
+            fileInfo.appendChild(list);
+            convertBtn.disabled = false;
         }
+    }
+    
+    // Converti i file XML in CSV
+    async function convertXmlToCsv() {
+        console.log('DEBUG: convertXmlToCsv() è stata chiamata - processXml disponibile:', typeof window.processXml === 'function', window.processXml);
+        if (typeof window.processXml !== 'function') {
+            alert('ERRORE: processXml non è disponibile globalmente!');
+            return;
+        }
+        
+        // Ottieni i file XML selezionati
+        const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
+        if (files.length === 0) return;
+        
+        // Mostra messaggio di elaborazione
+        showStatus('Elaborazione in corso...', 'info');
+        
+        // Disabilita il pulsante durante l'elaborazione
+        convertBtn.disabled = true;
+        sendToQbBtn.disabled = true;
+        
+        try {
+            // Intestazione CSV
+            const headers = [
+                "BillNo",
+                "Supplier",
+                "BillDate",
+                "DueDate",
+                "Terms",
+                "Location",
+                "Memo",
+                "Account",
+                "LineDescription",
+                "LineAmount",
+                "LineTaxCode",
+                "LineTaxAmount"
+            ];
+            
+            // Righe del CSV
+            let csvRows = [headers.join(',')];
+            
+            // Registra i numeri di fattura per gestire i duplicati
+            const invoiceNumbers = {};
+            
+            // Elabora ogni file
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const file of files) {
+                try {
+                    const xmlText = await readFile(file);
+                    console.log(`DEBUG: Elaborazione file ${file.name}`);
+                    
+                    // Usa window.processXml per essere sicuri di usare la versione globale
+                    const fileRows = window.processXml(xmlText, invoiceNumbers);
+                    
+                    if (fileRows.length > 0) {
+                        csvRows = csvRows.concat(fileRows);
+                        successCount++;
+                    }
+                } catch (error) {
+                    console.error(`Errore nell'elaborazione di ${file.name}:`, error);
+                    errorCount++;
+                }
+            }
+            
+            // Crea il CSV completo
+            const csvText = csvRows.join('\n');
+            
+            // Mostra il CSV in grid (tabella)
+            renderCsvGrid(csvText);
+            // Mostra anche nella textarea (nascosta) per copia/download
+            csvOutput.value = csvText;
+            
+            // Abilita pulsanti di download/copia
+            copyBtn.disabled = false;
+            sendToQbBtn.disabled = false;
+            
+            // Crea un URL per il download
+            updateDownloadLink(csvText);
+            
+            // Mostra messaggio di successo
+            showStatus(`Conversione completata: ${successCount} file elaborati con successo${errorCount > 0 ? `, ${errorCount} falliti` : ''}.`, 'success');
+        } catch (error) {
+            // Mostra errore
+            showStatus(`Errore durante la conversione: ${error.message}`, 'error');
+        } finally {
+            // Riattiva il pulsante
+            convertBtn.disabled = false;
+        }
+    }        // Invio CSV a QuickBooks
+    async function sendCsvToQuickBooks() {
+        const csv = csvOutput.value;
+        if (!csv) {
+            showStatus('Nessun CSV da inviare.', 'error');
+            return;
+        }
+        sendToQbBtn.disabled = true;
+        sendToQbBtn.textContent = 'Invio in corso...';
+        try {
+            // Determina la modalità corrente direttamente dai radio button
+            const currentSendMode = document.querySelector('input[name="sendMode"]:checked').value;
+            console.log("Modalità invio selezionata:", currentSendMode);
+            
+            let endpoint = '/upload-to-qb';
+            let body = { csv };
+            if (currentSendMode === 'grouped') {
+                endpoint = '/upload-to-qb-grouped';
+                const mergeAccounts = document.getElementById('mergeAccounts').checked;
+                const maxLines = parseInt(document.getElementById('maxLines').value) || 50;
+                
+                body = {
+                    csv,
+                    group_by_vendor: true,
+                    grouping_rules: {
+                        by_invoice_and_vendor: true,
+                        merge_same_account: mergeAccounts,
+                        max_lines_per_bill: maxLines
+                    }
+                };
+                console.log("Invio raggruppato con parametri:", body.grouping_rules);
+            }
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const result = await response.json();
+            if (result.success) {
+                showStatus('✅ Dati inviati a QuickBooks con successo!', 'success');
+            } else {
+                showStatus('❌ Errore invio a QuickBooks: ' + (result.error || result.message), 'error');
+            }
+        } catch (err) {
+            showStatus('❌ Errore di rete: ' + err, 'error');
+        } finally {
+            sendToQbBtn.disabled = false;
+            sendToQbBtn.textContent = 'Invia a QuickBooks (Raggruppato)';
+        }
+    }
+      // Leggi un file come testo
+    function readFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsText(file);
+        });
+    }
+    
+    // Aggiorna il link di download
+    function updateDownloadLink(csvContent) {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        
+        // Crea URL per il download
+        const url = URL.createObjectURL(blob);
         
         // Aggiorna il link di download
-        function updateDownloadLink(csvContent) {
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            
-            // Crea URL per il download
-            const url = URL.createObjectURL(blob);
-            
-            // Aggiorna il link di download
-            downloadLink.href = url;
-            downloadLink.download = "fatture_quickbooks.csv";
-            downloadLink.style.display = "inline-block";
-            downloadLink.innerHTML = "Scarica CSV";
-        }
+        downloadLink.href = url;
+        downloadLink.download = "fatture_quickbooks.csv";
+        downloadLink.style.display = "inline-block";
+    }
+    
+    // Copia negli appunti
+    function copyToClipboard() {
+        csvOutput.select();
         
-        // Copia negli appunti
-        function copyToClipboard() {
-            csvOutput.select();
-            
-            try {
-                const success = document.execCommand('copy');
-                if (success) {
-                    showStatus('Testo copiato negli appunti!', 'success');
-                } else {
-                    showStatus('Impossibile copiare. Seleziona manualmente il testo e premi Ctrl+C.', 'error');
-                }
-            } catch (error) {
+        try {
+            const success = document.execCommand('copy');
+            if (success) {
+                showStatus('Testo copiato negli appunti!', 'success');
+            } else {
                 showStatus('Impossibile copiare. Seleziona manualmente il testo e premi Ctrl+C.', 'error');
             }
+        } catch (error) {
+            showStatus('Impossibile copiare. Seleziona manualmente il testo e premi Ctrl+C.', 'error');
         }
-        
-        // Mostra un messaggio di stato
-        function showStatus(message, type) {
-            statusMsg.textContent = message;
-            statusMsg.className = `status ${type}`;
+    }
+    
+    // Mostra un messaggio di stato
+    function showStatus(message, type) {
+        statusMsg.textContent = message;
+        statusMsg.className = `status ${type}`;
+    }
+    
+    // Formatta un campo per il CSV (gestisce virgole, virgolette)
+    function formatCsvField(value) {
+        if (typeof value === 'undefined' || value === null) {
+            return '""';
         }
+        value = value.toString().trim();
+        // Gestione virgolette
+        if (value.indexOf('"') !== -1) {
+            value = value.replace(/"/g, '""');
+        }
+        // Aggiungi virgolette esterne se necessario
+        if (value.indexOf(',') !== -1 || value.indexOf('\n') !== -1 || value.indexOf('"') !== -1) {
+            value = `"${value}"`;
+        }
+        return value;
+    }
+    
+    // Visualizza il CSV in una tabella
+    function renderCsvGrid(csvText) {
+        // Pulisci il contenitore
+        csvGridContainer.innerHTML = '';
         
-        // Formatta un campo per il CSV (gestisce virgole, virgolette)
-        function formatCsvField(value) {
-            if (value === null || value === undefined) return '';
+        // Crea un elemento table
+        const table = document.createElement('table');
+        table.className = 'csv-grid';
+        
+        // Suddividi il testo CSV in righe
+        const rows = csvText.split('\n');
+        
+        // Estrai le intestazioni (la prima riga è sempre l'intestazione)
+        const headerRow = document.createElement('tr');
+        const parsedHeaders = parseCSVLine(rows[0]);
+        
+        // Crea l'intestazione della tabella
+        const thead = document.createElement('thead');
+        parsedHeaders.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header.replace(/"/g, ''); // Rimuovi virgolette dalle intestazioni
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        // Crea il corpo della tabella
+        const tbody = document.createElement('tbody');
+        rows.slice(1).forEach(row => {
+            if (!row.trim()) return; // Salta le righe vuote
             
-            const str = String(value);
+            const tr = document.createElement('tr');
+            const parsedCells = parseCSVLine(row);
             
-            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-                return `"${str.replace(/"/g, '""')}"`;
-            }
-            
-            return str;
-        }
-        
-        // Processa un file XML
-        function processXml(xmlString, invoiceNumbers) {
-            try {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-                
-                // Verifica che sia un XML valido
-                if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-                    throw new Error("File XML non valido");
-                }
-                
-                // Estrai i dati dell'intestazione
-                // Estrazione fornitore (nome e cognome o denominazione)
-                const fornitoreNome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Nome") || 
-                                     getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome");
-                                      
-                const fornitoreCognome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome") || 
-                                        getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome");
-                
-                // Combina nome e cognome se disponibili, altrimenti cerca denominazione
-                let fornitore;
-                if (fornitoreNome && fornitoreCognome) {
-                    fornitore = `${fornitoreCognome} ${fornitoreNome}`;
-                } else {
-                    fornitore = getXPath(xmlDoc, "//CedentePrestatore//Denominazione") || 
-                               getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione") ||
-                               getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione") ||
-                               fornitoreNome || fornitoreCognome || "Fornitore";
-                }
-                
-                // Numero della fattura
-                let numeroFattura = getXPath(xmlDoc, "//DatiGenerali/DatiGeneraliDocumento/Numero") || "N/A";
-                
-                // Gestione numeri di fattura duplicati
-                if (invoiceNumbers[numeroFattura]) {
-                    invoiceNumbers[numeroFattura]++;
-                    const lettera = String.fromCharCode(96 + invoiceNumbers[numeroFattura]);  // a, b, c, ...
-                    numeroFattura = numeroFattura + lettera;
-                } else {
-                    invoiceNumbers[numeroFattura] = 1;
-                }
-                
-                // Data fattura nel formato D/M/YYYY
-                let dataFattura = getXPath(xmlDoc, "//DatiGenerali/DatiGeneraliDocumento/Data") || "";
-                if (dataFattura && dataFattura.includes("-")) {
-                    const [anno, mese, giorno] = dataFattura.split("-");
-                    // Rimuovi gli zeri iniziali
-                    const giornoFormattato = giorno.replace(/^0+/, '') || '0';
-                    const meseFormattato = mese.replace(/^0+/, '') || '0';
-                    dataFattura = `${giornoFormattato}/${meseFormattato}/${anno}`;
-                }
-                
-                // Data scadenza (30 giorni dopo la data fattura)
-                let dataScadenza = "";
-                if (dataFattura) {
-                    try {
-                        const [giorno, mese, anno] = dataFattura.split("/").map(Number);
-                        const data = new Date(anno, mese - 1, giorno);
-                        data.setDate(data.getDate() + 30);
-                        
-                        dataScadenza = `${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()}`;
-                    } catch (e) {
-                        dataScadenza = dataFattura;  // Fallback alla data della fattura
-                    }
-                }
-                
-                const righe = [];
-                
-                // Estrai le linee di dettaglio
-                const lineeDettaglio = xmlDoc.evaluate("//DettaglioLinee", xmlDoc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                
-                // Se non ci sono linee di dettaglio, crea una singola riga per la fattura
-                if (lineeDettaglio.snapshotLength === 0) {
-                    const importoTotale = getXPath(xmlDoc, "//DatiGenerali/DatiGeneraliDocumento/ImportoTotaleDocumento") || "0";
-                    
-                    // Salta la fattura se l'importo è negativo
-                    if (parseFloat(importoTotale) < 0) {
-                        console.log(`Saltata fattura con importo negativo: ${numeroFattura}`);
-                        return [];
-                    }
-                    
-                    righe.push([
-                        formatCsvField(numeroFattura),        // BillNo
-                        formatCsvField(fornitore),            // Supplier
-                        formatCsvField(dataFattura),          // BillDate
-                        formatCsvField(dataScadenza),         // DueDate
-                        formatCsvField("Net 30"),             // Terms
-                        formatCsvField(""),                   // Location
-                        formatCsvField(""),                   // Memo
-                        formatCsvField("Uncategorized Expense"), // Account
-                        formatCsvField("Fattura completa"),   // LineDescription
-                        formatCsvField(importoTotale),        // LineAmount
-                        formatCsvField("0%"),                 // LineTaxCode
-                        formatCsvField("0.00")                // LineTaxAmount
-                    ].join(','));
-                } else {
-                    // Elabora ogni linea di dettaglio
-                    for (let i = 0; i < lineeDettaglio.snapshotLength; i++) {
-                        const linea = lineeDettaglio.snapshotItem(i);
-                        
-                        const descrizione = getNodeXPath(linea, "./Descrizione") || `Elemento ${i+1}`;
-                        const quantita = getNodeXPath(linea, "./Quantita") || "1";
-                        const prezzoUnitario = getNodeXPath(linea, "./PrezzoUnitario") || "0";
-                        const aliquotaIVA = getNodeXPath(linea, "./AliquotaIVA") || "0";
-                        
-                        // Calcola importi
-                        const importoLinea = (parseFloat(quantita) * parseFloat(prezzoUnitario)).toFixed(2);
-                        const importoIVA = (parseFloat(importoLinea) * parseFloat(aliquotaIVA) / 100).toFixed(2);
-                        
-                        // Salta righe con importo negativo
-                        if (parseFloat(importoLinea) < 0) {
-                            console.log(`Saltata riga con importo negativo: ${descrizione}`);
-                            continue;
-                        }
-                        
-                        righe.push([
-                            formatCsvField(numeroFattura),        // BillNo
-                            formatCsvField(fornitore),            // Supplier
-                            formatCsvField(dataFattura),          // BillDate
-                            formatCsvField(dataScadenza),         // DueDate
-                            formatCsvField("Net 30"),             // Terms
-                            formatCsvField(""),                   // Location
-                            formatCsvField(""),                   // Memo
-                            formatCsvField("Uncategorized Expense"), // Account
-                            formatCsvField(descrizione),          // LineDescription
-                            formatCsvField(importoLinea),         // LineAmount
-                            formatCsvField(aliquotaIVA + "%"),    // LineTaxCode
-                            formatCsvField(importoIVA)            // LineTaxAmount
-                        ].join(','));
-                    }
-                }
-                
-                return righe;
-            } catch (error) {
-                console.error("Errore nell'elaborazione dell'XML:", error);
-                throw error;
-            }
-        }
-        
-        // Utility: ottieni testo da XPath
-        function getXPath(doc, xpath) {
-            try {
-                const result = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-                if (result.singleNodeValue) {
-                    return result.singleNodeValue.textContent.trim();
-                }
-            } catch (e) {
-                console.warn(`Errore XPath ${xpath}:`, e);
-            }
-            return "";
-        }
-        
-        // Utility: ottieni testo da XPath relativo a un nodo
-        function getNodeXPath(node, xpath) {
-            try {
-                const result = node.ownerDocument.evaluate(xpath, node, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-                if (result.singleNodeValue) {
-                    return result.singleNodeValue.textContent.trim();
-                }
-            } catch (e) {
-                console.warn(`Errore XPath ${xpath}:`, e);
-            }
-            return "";
-        }
-        
-        // Mostra il CSV in grid (tabella)
-        function renderCsvGrid(csvText) {
-            const container = document.getElementById('csvGridContainer');
-            const csvOutput = document.getElementById('csvOutput');
-            container.innerHTML = '';
-            if (!csvText) {
-                csvOutput.style.display = '';
-                return;
-            }
-            const rows = csvText.split(/\r?\n/).filter(r => r.trim().length > 0);
-            if (rows.length === 0) {
-                csvOutput.style.display = '';
-                return;
-            }
-            const table = document.createElement('table');
-            table.className = 'csv-grid';
-            rows.forEach((row, idx) => {
-                const tr = document.createElement('tr');
-                // Splittening CSV respecting quoted fields
-                const cells = row.match(/(?:"[^"]*"|[^,])+/g) || row.split(',');
-                cells.forEach(cell => {
-                    const td = document.createElement(idx === 0 ? 'th' : 'td');
-                    td.textContent = cell.replace(/^"|"$/g, '').replace(/""/g, '"');
-                    tr.appendChild(td);
-                });
-                table.appendChild(tr);
+            parsedCells.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell.replace(/"/g, ''); // Rimuovi virgolette doppie
+                tr.appendChild(td);
             });
-            container.appendChild(table);
-            csvOutput.style.display = 'none';
-        }
+            
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        // Aggiungi la tabella al contenitore
+        csvGridContainer.appendChild(table);
+    }
+    // --- FINE DI TUTTE LE FUNZIONI E LISTENER ---
+    console.log('Script inizializzato correttamente - processXml disponibile:', typeof window.processXml === 'function');
+});
     </script>
 </body>
 </html>
