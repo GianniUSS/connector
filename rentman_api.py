@@ -3,6 +3,9 @@ import config
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 import threading
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s %(message)s')
 
 # Cache globali per ottimizzazione
 _projecttype_cache = {}
@@ -70,23 +73,41 @@ def get_all_statuses(headers):
         print(f"Errore recuperando statuses: {e}")
     return {}
 
-def get_project_subprojects_fast(project_id, headers):
-    """ Recupera i subprojects di un progetto usando il filtro corretto """
+def get_project_subprojects_fast(project_ids, headers):
+    """Recupera i subprojects di uno o più progetti (accodando i parametri project nella query) e logga sinteticamente."""
     url = f"{config.REN_BASE_URL}/subprojects"
-    params = {'project': project_id}
+    # Permetti sia singolo id che lista
+    if isinstance(project_ids, (str, int)):
+        project_ids = [project_ids]
+    params = []
+    for pid in project_ids:
+        params.append(("project", pid))
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=5)
+        response = requests.get(url, headers=headers, params=params, timeout=8)
+        logging.info(f"[SUBPROJECTS] GET {url} params={params} status={response.status_code}")
         if response.ok:
             data = response.json().get('data', [])
             if isinstance(data, dict):
-                return [data]
+                data = [data]
+            logging.info(f"[SUBPROJECTS] Trovati {len(data)} subprojects per {len(project_ids)} progetti")
+            for sub in data:
+                pid = sub.get('project')
+                status = sub.get('status')
+                order = sub.get('order')
+                sub_id = sub.get('id')
+                # Il valore del subproject è project_total_price, non quello del progetto principale
+                value = sub.get('project_total_price')
+                logging.info(f"  - Subproject ID {sub_id} (project {pid}, order {order}): status={status}, value={value}")
             return data
         elif response.status_code == 404:
+            logging.warning(f"[SUBPROJECTS] Nessun subproject trovato per {project_ids}")
             return []
         else:
-            return []  # Silenzioso per velocità
-    except Exception:
-        return []  # Silenzioso per velocità
+            logging.error(f"[SUBPROJECTS] Errore HTTP {response.status_code} per {project_ids}")
+            return []
+    except Exception as e:
+        logging.error(f"[SUBPROJECTS] Exception: {e}")
+        return []
 
 def get_project_status_fast(project_id, headers, status_map, main_project=None):
     """ Recupera lo status del progetto: preferisce il subproject con order più basso, altrimenti quello principale """
@@ -96,12 +117,16 @@ def get_project_status_fast(project_id, headers, status_map, main_project=None):
         subproject_principale = min(subprojects, key=lambda s: s.get('order', 9999))
         status_path = subproject_principale.get('status')
         status_id = extract_id_from_path(status_path)
+        value = subproject_principale.get('project_total_price')
+        logging.info(f"[PROGETTO {project_id}] Subproject principale: status_id={status_id}, value={value}")
         if status_id and status_id in status_map:
             return status_map[status_id]
     # Se nessun subproject valido, prova a usare lo status del progetto principale
     if main_project:
         main_status_path = main_project.get('status')
         status_id = extract_id_from_path(main_status_path)
+        value = main_project.get('project_total_price')
+        logging.info(f"[PROGETTO {project_id}] Nessun subproject valido, status_id principale={status_id}, value principale={value}")
         if status_id and status_id in status_map:
             return status_map[status_id]
     return "Concept"
@@ -125,37 +150,19 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
         raw_number = p.get("number")
         converted_number = str(raw_number) if raw_number is not None else "N/A"
         # Estrazione robusta del valore
-        project_value = p.get('project_total_price')
-        # Se il campo esiste ed è numerico o stringa numerica, usalo
-        if project_value is not None and str(project_value).strip() != '':
-            try:
-                project_value = float(project_value)
-            except (ValueError, TypeError):
-                project_value = 0
-        else:
-            # fallback: fetch dettagliato
-            try:
-                detail_url = f"{config.REN_BASE_URL}/projects/{project_id}"
-                detail_response = requests.get(detail_url, headers=headers, timeout=5)
-                if detail_response.ok:
-                    detail_data = detail_response.json().get('data', {})
-                    detail_value = detail_data.get('project_total_price')
-                    if detail_value is not None and str(detail_value).strip() != '':
-                        try:
-                            project_value = float(detail_value)
-                        except (ValueError, TypeError):
-                            project_value = 0
-                    else:
-                        project_value = 0
-                else:
-                    project_value = 0
-            except Exception:
-                project_value = 0
+        project_value = None
+        subprojects = get_project_subprojects_fast(project_id, headers)
+        if subprojects:
+            subproject_principale = min(subprojects, key=lambda s: s.get('order', 9999))
+            project_value = subproject_principale.get('project_total_price')
+            logging.info(f"[PROGETTO {project_id}] Valore dal subproject principale: {project_value}")
+        if project_value is None or str(project_value).strip() == '':
+            project_value = p.get('project_total_price')
+            logging.info(f"[PROGETTO {project_id}] Valore dal progetto principale: {project_value}")
         try:
             formatted_value = '{:.2f}'.format(float(project_value))
         except (ValueError, TypeError):
             formatted_value = '0.00'
-
         # --- Recupero dati responsabile progetto ---
         manager_name = None
         manager_email = None
@@ -176,15 +183,15 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
                                 manager_email = crew_data.get('email') or crew_data.get('email_1')
                                 _manager_cache[manager_id] = (manager_name, manager_email)
                                 if not manager_name or not manager_email:
-                                    print(f"[WARN] Responsabile NON valorizzato per progetto {project_id} (manager_id={manager_id}) - crew_data: {crew_data}")
+                                    logging.warning(f"[WARN] Responsabile NON valorizzato per progetto {project_id} (manager_id={manager_id}) - crew_data: {crew_data}")
                             else:
-                                print(f"[WARN] Errore HTTP recuperando responsabile progetto {project_id} (manager_id={manager_id}): {crew_resp.status_code} - {crew_resp.text}")
+                                logging.warning(f"[WARN] Errore HTTP recuperando responsabile progetto {project_id} (manager_id={manager_id}): {crew_resp.status_code} - {crew_resp.text}")
                         except Exception as e:
-                            print(f"[WARN] Errore recuperando responsabile progetto {manager_id}: {e}")
+                            logging.warning(f"[WARN] Errore recuperando responsabile progetto {manager_id}: {e}")
             else:
-                print(f"[WARN] account_manager_path presente ma manager_id non estratto per progetto {project_id} (path: {account_manager_path})")
+                logging.warning(f"[WARN] account_manager_path presente ma manager_id non estratto per progetto {project_id} (path: {account_manager_path})")
         else:
-            print(f"[WARN] Nessun account_manager per progetto {project_id}")
+            logging.warning(f"[WARN] Nessun account_manager per progetto {project_id}")
         project_type_name = get_projecttype_name_cached(project_type_id, headers) if project_type_id else ""
         return {
             "id": project_id,
@@ -200,53 +207,19 @@ def process_project(project_data, headers, status_map, start_dt, end_dt, debug_c
             "manager_email": manager_email
         }
     except Exception as e:
-        print(f"Errore processando progetto {p.get('id', 'unknown')}: {e}")
+        logging.error(f"Errore processando progetto {p.get('id', 'unknown')}: {e}")
         return None
 
 def list_projects_by_date(from_date, to_date):
-    print("[INFO] Avvio recupero progetti...")
-    headers = {
-        'Authorization': f'Bearer {config.REN_API_TOKEN}',
-        'Accept': 'application/json'
-    }
-    status_map = get_all_statuses(headers)
-    url = f"{config.REN_BASE_URL}/projects"
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(f"Rentman API Error {response.status_code}: {response.text}")
-    projects = response.json().get('data', [])
-    print(f"[INFO] Progetti totali recuperati: {len(projects)}")
-    start_dt = datetime.strptime(from_date, "%Y-%m-%d").date()
-    end_dt = datetime.strptime(to_date, "%Y-%m-%d").date()
-    filtered = []
-    debug_count = [0]
-    # Ottimizzazione: processa progetti in parallelo
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = [executor.submit(process_project, p, headers, status_map, start_dt, end_dt, debug_count) for p in projects]
-        for f in futures:
-            result = f.result()
-            if result:
-                filtered.append(result)
-    # Filtro: escludi progetti con status 'Annullato', 'Concept' o 'Concetto'
-    filtered = [p for p in filtered if p.get('status') not in ('Annullato', 'Concept', 'Concetto')]
-    print(f"[INFO] Progetti filtrati (esclusi 'Annullato', 'Concept', 'Concetto'): {len(filtered)}")
-    # Recupera project type names in parallelo
-    if filtered:
-        unique_type_ids = set(p['project_type_id'] for p in filtered if p['project_type_id'])
-        with ThreadPoolExecutor(max_workers=5) as executor:
-            type_name_futures = {
-                type_id: executor.submit(get_projecttype_name_cached, type_id, headers)
-                for type_id in unique_type_ids
-            }
-            for project in filtered:
-                type_id = project['project_type_id']
-                if type_id and type_id in type_name_futures:
-                    try:
-                        project['project_type_name'] = type_name_futures[type_id].result(timeout=2)
-                    except:
-                        project['project_type_name'] = ""
-    print(f"[INFO] Completato! Restituiti {len(filtered)} progetti")
-    return filtered
+    """Versione aggiornata: usa la logica robusta di debug_lista_progetti2.py per estrarre la lista progetti, status e valore coerenti con la fast API v2"""
+    from rentman_api_fast_v2 import RentmanFastAPI
+    import config
+    api = RentmanFastAPI(config.REN_API_TOKEN)
+    # Recupera progetti ottimizzati (già filtra per periodo e ID >= 2900)
+    progetti = api.list_projects_by_date_optimized(from_date, to_date)
+    # Adatta output per compatibilità (se serve)
+    print(f"[INFO] Completato! Restituiti {len(progetti)} progetti (via fast_v2)")
+    return progetti
 
 # Funzione per svuotare le cache se necessario
 def clear_cache():

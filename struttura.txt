@@ -1,6 +1,0 @@
-/tuo-progetto/
-├── config.py
-├── token_manager.py
-├── quickbooks_api.py
-├── main.py
-└── requirements.txt

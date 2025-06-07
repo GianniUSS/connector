@@ -1,2 +1,0 @@
-BillNo,Supplier,BillDate,DueDate,Terms,Location,Memo,Account,LineDescription,LineAmount,LineTaxCode,LineTaxAmount
-GCITD0003889579,Google Cloud Italy S.r.l.,31/10/2024,30/11/2024,Net 30,,,Uncategorized Expense,Google Workspace,6.48,22.00%,1.43

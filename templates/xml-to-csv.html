@@ -243,11 +243,21 @@
                 <input type="file" id="xmlFiles" accept=".xml" multiple>
                 <div id="fileInfo"></div>
             </div>
+            <!-- Send mode selection -->
+            <div class="send-mode-section" style="margin: 16px 0;">
+                <h2>Modalità Invio</h2>
+                <label style="margin-right: 12px;"><input type="radio" name="sendMode" value="normal" checked> Standard</label>
+                <label><input type="radio" name="sendMode" value="grouped"> Raggruppato</label>
+            </div>
+            <div id="groupingOptions" style="display:none; margin-bottom: 12px; padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
+                <label style="display:block; margin-bottom:4px;"><input type="checkbox" id="mergeAccounts"> Unisci conti simili</label>
+                <label>Max linee per fattura: <input type="number" id="maxLines" value="50" min="1" style="width:60px;"></label>
+            </div>
             <div class="button-row">
                 <button id="convertBtn" class="button" disabled>Converti in CSV</button>
                 <button id="copyBtn" class="button" disabled>Copia negli appunti</button>
                 <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none; text-align:center;">Scarica CSV</a>
-                <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks (Raggruppato)</button>
+                <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks</button>
             </div>
         </div>
         <div class="panel-right">
@@ -411,44 +421,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const xmlFilesInput = document.getElementById('xmlFiles');
     const fileInfo = document.getElementById('fileInfo');
     const convertBtn = document.getElementById('convertBtn');
-    const statusMsg = document.getElementById('statusMsg');
-    const csvOutput = document.getElementById('csvOutput');
     const copyBtn = document.getElementById('copyBtn');
     const downloadLink = document.getElementById('downloadLink');
+    const statusMsg = document.getElementById('statusMsg');
+    const csvOutput = document.getElementById('csvOutput');
     const sendToQbBtn = document.getElementById('sendToQbBtn');
-    const csvGridContainer = document.getElementById('csvGridContainer');
-    
-    // Event listeners
-    xmlFilesInput.addEventListener('change', updateFileInfo);
-    convertBtn.addEventListener('click', convertXmlToCsv);
-    copyBtn.addEventListener('click', copyToClipboard);
-    sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
-    
-    // Pulsante per tornare alla pagina principale (index.html)
-    document.getElementById('helpBtn').addEventListener('click', function() {
-        window.location.href = '/';
-    });
-    
-    // Gestione radio per la modalità di invio
-    document.querySelectorAll('input[name="sendMode"]').forEach(radio => {
-        radio.addEventListener('change', e => {
-            // Aggiorna la visualizzazione delle opzioni di raggruppamento
-            const selectedMode = e.target.value;
-            document.getElementById('groupingOptions').style.display = (selectedMode === 'grouped') ? 'block' : 'none';
-            console.log("Modalità cambiata a:", selectedMode);
+    if (!xmlFilesInput || !fileInfo || !convertBtn || !copyBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn) {
+        console.error('Elemento DOM mancante durante linizializzazione dei controlli requisiti');
+    } else {
+        appInit();
+    }
+
+    function appInit() {
+        // Event listeners
+        xmlFilesInput.addEventListener('change', updateFileInfo);
+        convertBtn.addEventListener('click', convertXmlToCsv);
+        copyBtn.addEventListener('click', copyToClipboard);
+        sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
+        
+        // Pulsante per tornare alla pagina principale (index.html)
+        document.getElementById('helpBtn').addEventListener('click', function() {
+            window.location.href = '/';
         });
-    });
+        
+        // Gestione radio per la modalità di invio
+        document.querySelectorAll('input[name="sendMode"]').forEach(radio => {
+            radio.addEventListener('change', e => {
+                const selectedMode = e.target.value;
+                const groupingDiv = document.getElementById('groupingOptions');
+                if (groupingDiv) groupingDiv.style.display = (selectedMode === 'grouped') ? 'block' : 'none';
+            });
+        });
+    }
     
     // Gestione selezione file
     function updateFileInfo() {
         const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
-        
         if (files.length === 0) {
             fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
             convertBtn.disabled = true;
         } else {
             fileInfo.innerHTML = `<p>${files.length} file XML selezionati:</p>`;
-            
             const list = document.createElement('ul');
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -456,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.textContent = file.name;
                 list.appendChild(item);
             }
-            
             fileInfo.appendChild(list);
             convertBtn.disabled = false;
         }
@@ -469,7 +481,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('ERRORE: processXml non è disponibile globalmente!');
             return;
         }
-        
         // Ottieni i file XML selezionati
         const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
         if (files.length === 0) return;
@@ -495,7 +506,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 "LineDescription",
                 "LineAmount",
                 "LineTaxCode",
-                "LineTaxAmount"
+                "LineTaxAmount",
+                "Filename"  // nuovo campo filename
             ];
             
             // Righe del CSV
@@ -514,8 +526,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(`DEBUG: Elaborazione file ${file.name}`);
                     
                     // Usa window.processXml per essere sicuri di usare la versione globale
-                    const fileRows = window.processXml(xmlText, invoiceNumbers);
-                    
+                    let fileRows = window.processXml(xmlText, invoiceNumbers);
+                    // Aggiungi nome file a ogni riga CSV
+                    fileRows = fileRows.map(r => `${r},"${file.name}"`);
                     if (fileRows.length > 0) {
                         csvRows = csvRows.concat(fileRows);
                         successCount++;
@@ -552,52 +565,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }        // Invio CSV a QuickBooks
     async function sendCsvToQuickBooks() {
-        const csv = csvOutput.value;
-        if (!csv) {
-            showStatus('Nessun CSV da inviare.', 'error');
-            return;
-        }
-        sendToQbBtn.disabled = true;
-        sendToQbBtn.textContent = 'Invio in corso...';
         try {
-            // Determina la modalità corrente direttamente dai radio button
-            const currentSendMode = document.querySelector('input[name="sendMode"]:checked').value;
-            console.log("Modalità invio selezionata:", currentSendMode);
-            
+            console.log('[QuickBooks] Inizio invio dati...');
+            if (!csvOutput) throw new Error('csvOutput non trovato');
+            const csv = csvOutput.value;
+            if (!csv) {
+                showStatus('Nessun CSV da inviare.', 'error');
+                return;
+            }
+            const sendBtn = document.getElementById('sendToQbBtn');
+            if (!sendBtn) throw new Error('sendToQbBtn non trovato');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Invio in corso...';
+
+            const modeRadio = document.querySelector('input[name="sendMode"]:checked');
+            const currentSendMode = modeRadio ? modeRadio.value : 'normal';
+            console.log('[QuickBooks] Modalità invio selezionata:', currentSendMode);
+
             let endpoint = '/upload-to-qb';
             let body = { csv };
             if (currentSendMode === 'grouped') {
                 endpoint = '/upload-to-qb-grouped';
-                const mergeAccounts = document.getElementById('mergeAccounts').checked;
-                const maxLines = parseInt(document.getElementById('maxLines').value) || 50;
-                
-                body = {
-                    csv,
-                    group_by_vendor: true,
-                    grouping_rules: {
-                        by_invoice_and_vendor: true,
-                        merge_same_account: mergeAccounts,
-                        max_lines_per_bill: maxLines
-                    }
-                };
-                console.log("Invio raggruppato con parametri:", body.grouping_rules);
+                const mergeEl = document.getElementById('mergeAccounts');
+                const maxEl = document.getElementById('maxLines');
+                const mergeAccounts = mergeEl ? mergeEl.checked : false;
+                const maxLines = maxEl ? (parseInt(maxEl.value) || 50) : 50;
+                body = { csv, group_by_vendor: true, grouping_rules: { by_file: true, merge_same_account: mergeAccounts, max_lines_per_bill: maxLines } };
+                console.log('[QuickBooks] Regole di raggruppamento:', body.grouping_rules);
             }
+
+            console.log('[QuickBooks] Endpoint:', endpoint);
+            console.log('[QuickBooks] Payload:', body);
+
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(body)
             });
             const result = await response.json();
-            if (result.success) {
-                showStatus('✅ Dati inviati a QuickBooks con successo!', 'success');
-            } else {
-                showStatus('❌ Errore invio a QuickBooks: ' + (result.error || result.message), 'error');
+            console.log('[QuickBooks] Risposta ricevuta:', result);
+            if (result.result) {
+                if (result.result.created) console.log(`[QuickBooks] Fatture create:`, result.result.created);
+                if (result.result.skipped) console.log(`[QuickBooks] Fatture saltate (già esistenti):`, result.result.skipped);
+                if (result.result.errors) console.log(`[QuickBooks] Errori:`, result.result.errors);
             }
+            if (result.success) showStatus('✅ Dati inviati a QuickBooks con successo!', 'success'); else showStatus('❌ Errore invio a QuickBooks: ' + (result.error || result.message), 'error');
         } catch (err) {
-            showStatus('❌ Errore di rete: ' + err, 'error');
+            console.error('[QuickBooks] Errore:', err);
+            showStatus('❌ Errore di esecuzione: ' + err.message, 'error');
         } finally {
-            sendToQbBtn.disabled = false;
-            sendToQbBtn.textContent = 'Invia a QuickBooks (Raggruppato)';
+            const sendBtn = document.getElementById('sendToQbBtn');
+            if (sendBtn) {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Invia a QuickBooks';
+            }
         }
     }
       // Leggi un file come testo

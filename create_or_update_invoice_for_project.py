@@ -6,17 +6,15 @@ Modulo per la creazione o l'aggiornamento di fatture in QuickBooks.
 import requests
 import config
 import logging
-from token_manager import TokenManager
+from token_manager import token_manager
 import json
 
 # Esportiamo esplicitamente la funzione principale
 __all__ = ['create_or_update_invoice_for_project']
 
 def get_access_token():
-    """Ottiene il token di accesso per l'API QuickBooks"""
-    tm = TokenManager()
-    tm.load_refresh_token()
-    return tm.get_access_token()
+    token_manager.load_refresh_token()
+    return token_manager.get_access_token()
 
 def find_invoice_by_number(invoice_number):
     """Cerca una fattura in QuickBooks in base al numero documento"""
@@ -27,7 +25,7 @@ def find_invoice_by_number(invoice_number):
         logging.warning(f"Token non valido, impossibile cercare fattura {invoice_number} in QuickBooks")
         return None
     
-    url = f"{config.API_BASE_URL}{config.REALM_ID}/query"
+    url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/query"
     query = f"SELECT * FROM Invoice WHERE DocNumber = '{invoice_number}'"
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -140,12 +138,12 @@ def create_or_update_invoice_for_project(
         invoice_payload["Id"] = invoice["Id"]
         invoice_payload["SyncToken"] = invoice["SyncToken"]
         invoice_payload["sparse"] = True
-        url = f"{config.API_BASE_URL}{config.REALM_ID}/invoice?operation=update"
+        url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/invoice?operation=update"
         logging.info(f"Aggiorno la invoice esistente (DocNumber={invoice_number})")
         resp = requests.post(url, headers=headers, json=invoice_payload)
         logging.info(f"Invoice aggiornata (DocNumber={invoice_number}) - Status: {resp.status_code}")
     else:
-        url = f"{config.API_BASE_URL}{config.REALM_ID}/invoice"
+        url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/invoice"
         logging.info(f"Creo una nuova invoice per il progetto {project_number} (DocNumber={invoice_number})")
         resp = requests.post(url, headers=headers, json=invoice_payload)
         logging.info(f"Invoice creata (DocNumber={invoice_number}) - Status: {resp.status_code}")

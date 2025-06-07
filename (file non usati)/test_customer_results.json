@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-06-06T13:05:40.935443",
+  "progetti_totali": 116,
+  "progetti_con_cliente": 20,
+  "progetti_senza_cliente": 0,
+  "campioni_progetti": [
+    {
+      "id": 3475,
+      "number": "3499",
+      "name": "11May25 EXO_Casa Freda_Foggia (Fg) ",
+      "contact_displayname": "MPC EVENTI S.R.L.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3477,
+      "number": "3501",
+      "name": "21Apr25EXO - Macramè Monopoli - Antonio Cobascio",
+      "contact_displayname": "Purple Beach s.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3478,
+      "number": "3502",
+      "name": "11May25 PRO_Domenica D'alba_Rutigliano (Ba)",
+      "contact_displayname": "ENOTECA TERRA E VINO DI ROMAGNO GIUSEPPE",
+      "ha_cliente": true
+    },
+    {
+      "id": 3487,
+      "number": "3511",
+      "name": "17-19May25 EXO_Arsenale Hospitality_Hotel Santaven",
+      "contact_displayname": "Arsenale hospitality s.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3488,
+      "number": "3512",
+      "name": "14Jun25 EXO_Arsenale Hospitaliry_Hotel Santavenere",
+      "contact_displayname": "Arsenale hospitality s.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3489,
+      "number": "3513",
+      "name": "20Jun25 EXO_Arsenale Hospitaliry_Hotel Santavenere",
+      "contact_displayname": "Arsenale hospitality s.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3490,
+      "number": "3514",
+      "name": "27Jun25 EXO_Arsenale Hospitaliry_Hotel Santavenere",
+      "contact_displayname": "Arsenale hospitality s.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3493,
+      "number": "3517",
+      "name": "07Jun25 EXO_Tarim Contin_Arcugnano (Vi)",
+      "contact_displayname": "Tarim Contin-Kennedy",
+      "ha_cliente": true
+    },
+    {
+      "id": 3494,
+      "number": "3518",
+      "name": "01Jun25 EXO_Matteo_Masseria Casavola_Martina Franc",
+      "contact_displayname": "Matteo  Sergio Angelone",
+      "ha_cliente": true
+    },
+    {
+      "id": 3497,
+      "number": "3521",
+      "name": "23May25 PRO_Chiara_Palazzo Tamborrino Cezzi_Lecce ",
+      "contact_displayname": "Alexander Adamson",
+      "ha_cliente": true
+    },
+    {
+      "id": 3501,
+      "number": "3525",
+      "name": "06Sep25 EXO_Arsenale Hospitality_Hotel Sanatavener",
+      "contact_displayname": "ARSENALE Hospitality",
+      "ha_cliente": true
+    },
+    {
+      "id": 3508,
+      "number": "3532",
+      "name": "04Jun25 PRO_Merilin Kook_Palazzo Maresgallo_Lecce ",
+      "contact_displayname": "White Pegasus Ltd.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3516,
+      "number": "3540",
+      "name": "25May25 PRO_Pasquale Gentile_Crovace Catering_Vill",
+      "contact_displayname": "Eredi di Crovace Oronzo",
+      "ha_cliente": true
+    },
+    {
+      "id": 3522,
+      "number": "3546",
+      "name": "Masseria Pistola (Federica Barnaba Coordinator) We",
+      "contact_displayname": "Masseria Pistola (Federica Barnaba Coordinator)",
+      "ha_cliente": true
+    },
+    {
+      "id": 3536,
+      "number": "3560",
+      "name": "CSEXO25 Framari -Domenico Semeraro ",
+      "contact_displayname": "FraMari  Nature & Beach bar  Di Semeraro Domenico ",
+      "ha_cliente": true
+    },
+    {
+      "id": 3540,
+      "number": "3564",
+      "name": "25May25 EXO_Caroline & Gary_Masseria San Giovanni_",
+      "contact_displayname": "Gary Hasson",
+      "ha_cliente": true
+    },
+    {
+      "id": 3543,
+      "number": "3567",
+      "name": "Viva festival 2025 ",
+      "contact_displayname": "Turne' S.r.l.",
+      "ha_cliente": true
+    },
+    {
+      "id": 3558,
+      "number": "3582",
+      "name": "21May25 PRO_Dolores Lacatena_ Yor wedding in Pugli",
+      "contact_displayname": "Yor wedding in Puglia",
+      "ha_cliente": true
+    },
+    {
+      "id": 3564,
+      "number": "3588",
+      "name": "16May25PRO_Federica_Masseria Pistola_Fasano",
+      "contact_displayname": "Natassja Westover",
+      "ha_cliente": true
+    },
+    {
+      "id": 3569,
+      "number": "3593",
+      "name": "31May25_PRO_Neillie Butler_BORGO EGNAZIA_Fasano(BR",
+      "contact_displayname": "Marièe Ami, LLC",
+      "ha_cliente": true
+    }
+  ]
+}

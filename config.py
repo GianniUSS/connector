@@ -4,7 +4,7 @@ import os
 # QuickBooks
 CLIENT_ID = os.getenv("QBO_CLIENT_ID", "ABjSEkHu5eSVDUk43Yk6HPzMqTIqqwy1UIuvFvt46TJq7ekf3Q")
 CLIENT_SECRET = os.getenv("QBO_CLIENT_SECRET", "3H8yukkptmxZ9JRgbuTgaOPmfbsm5HvSpfDDNQCN")
-REFRESH_TOKEN = os.getenv("QBO_REFRESH_TOKEN", "RT1-254-H0-17571813916xu4e41mee4nw6vktdo4")
+REFRESH_TOKEN = os.getenv("QBO_REFRESH_TOKEN", "RT1-131-H0-1757945597pfq3q3wkopxg9dbkj1io")
 
 REALM_ID = os.getenv("QBO_REALM_ID", "9130352047477256")
 REDIRECT_URI = os.getenv("QBO_REDIRECT_URI", "https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl")

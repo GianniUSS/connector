@@ -1,0 +1,19 @@
+{
+  "customer": null,
+  "equipment_period_from": "2025-01-01",
+  "equipment_period_to": "2025-06-15",
+  "id": 3488,
+  "manager_email": "Stefania@itinerapro.com",
+  "manager_name": "Stefania Laguardia",
+  "name": "14Jun25 EXO_Arsenale Hospitaliry_Hotel Santavenere_Maratea",
+  "number": "3512",
+  "project_total_price": null,
+  "project_type_name": "Noleggio con installazione",
+  "project_value": "0.00",
+  "qb_import": {
+    "message": null,
+    "status": "not_found"
+  },
+  "real_status": null,
+  "status": "Concept"
+}

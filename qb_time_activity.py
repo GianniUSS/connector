@@ -1,17 +1,17 @@
 import requests
 import config
 import logging
-from token_manager import TokenManager
+from token_manager import token_manager
 import openpyxl
 import os
 from datetime import datetime
     
-# Crea una sola istanza del TokenManager per tutto il file
-token_manager = TokenManager()
+# Rimuovi la creazione locale di TokenManager
+# token_manager = TokenManager()
 access_token = token_manager.get_access_token()    
 
 def find_employee_by_name(name, access_token):
-    url = f"{config.API_BASE_URL}{config.REALM_ID}/query"
+    url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/query"
     query = f"SELECT * FROM Employee WHERE DisplayName = '{name}'"
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -28,7 +28,7 @@ def find_employee_by_name(name, access_token):
 def create_employee(name, access_token):
     import logging
 
-    url = f"{config.API_BASE_URL}{config.REALM_ID}/employee"
+    url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/employee"
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json",
@@ -70,7 +70,7 @@ def find_existing_time_activity(subcustomer_id, employee_id, activity_date, acce
     if isinstance(activity_date, str) and len(activity_date) > 10:
         activity_date = activity_date[:10]
     
-    url = f"{config.API_BASE_URL}{config.REALM_ID}/query"
+    url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/query"
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
@@ -123,7 +123,8 @@ def find_existing_time_activity(subcustomer_id, employee_id, activity_date, acce
 
 def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, activity_date, description):
     from datetime import datetime
-    token_manager = TokenManager()
+    # Rimuovi la creazione locale di TokenManager
+    # token_manager = TokenManager()
     access_token = token_manager.get_access_token()
 
     # Normalizza la data nel formato YYYY-MM-DD

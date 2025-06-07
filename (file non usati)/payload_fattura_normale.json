@@ -1,0 +1,61 @@
+{
+  "VendorRef": {
+    "value": "56"
+  },
+  "CurrencyRef": {
+    "value": "EUR",
+    "name": "Euro"
+  },
+  "APAccountRef": {
+    "value": "37",
+    "name": "Accounts Payable"
+  },
+  "ExchangeRate": 1.0,
+  "PaymentType": "Cash",
+  "GlobalTaxCalculation": "TaxExcluded",
+  "Line": [
+    {
+      "Id": "1",
+      "LineNum": 1,
+      "Amount": 100.0,
+      "DetailType": "AccountBasedExpenseLineDetail",
+      "AccountBasedExpenseLineDetail": {
+        "AccountRef": {
+          "value": "54"
+        },
+        "BillableStatus": "NotBillable",
+        "TaxCodeRef": {
+          "value": "2"
+        }
+      },
+      "Description": "Servizio Test 1"
+    },
+    {
+      "Id": "2",
+      "LineNum": 2,
+      "Amount": 200.0,
+      "DetailType": "AccountBasedExpenseLineDetail",
+      "AccountBasedExpenseLineDetail": {
+        "AccountRef": {
+          "value": "55"
+        },
+        "BillableStatus": "NotBillable",
+        "TaxCodeRef": {
+          "value": "2"
+        }
+      },
+      "Description": "Servizio Test 2"
+    }
+  ],
+  "TxnDate": "2025-05-31",
+  "DueDate": "2025-06-30",
+  "DocNumber": "TEST-001",
+  "PrivateNote": "Fattura di test",
+  "TxnTaxDetail": {
+    "TxnTaxCodeRef": {
+      "value": "2"
+    },
+    "TotalTax": 0.0
+  },
+  "TotalAmt": 300.0
+}

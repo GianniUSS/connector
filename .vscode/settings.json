@@ -3,5 +3,24 @@
   "cSpell.words": [
     "Passo",
     "progetto"
-  ]
+  ],
+  "editor.quickSuggestions": {
+    "other": false,
+    "comments": false,
+    "strings": false
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.wordBasedSuggestions": "off",
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.venv": true,
+    "**/__pycache__": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.venv": true,
+    "**/__pycache__": true
+  }
 }

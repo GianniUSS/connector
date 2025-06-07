@@ -1,0 +1,20 @@
+{
+  "customer": "Arsenale hospitality s.r.l.",
+  "equipment_period_from": "2025-01-01",
+  "equipment_period_to": "2025-10-23",
+  "id": 3120,
+  "manager_email": "Stefania@itinerapro.com",
+  "manager_name": "Stefania Laguardia",
+  "name": "10Apr-22Oct25 PRO Nicola Loiodice_Arsenale Hospitality_Hotel Santavenere_Matera",
+  "number": "3143",
+  "project_total_price": 48700,
+  "project_type_name": "",
+  "project_value": "48700.00",
+  "qb_import": {
+    "message": "",
+    "status": "success",
+    "timestamp": "2025-06-05T09:14:11"
+  },
+  "real_status": "In location",
+  "status": "In location"
+}

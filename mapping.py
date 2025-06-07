@@ -1,10 +1,16 @@
 def map_rentman_to_qbo_customer(customer):
     """
     Mappa i dati di un cliente Rentman in customer QBO.
-    Adatta i campi qui sotto ai veri nomi dei tuoi dati Rentman!
+    - Usa 'displayname' se presente, altrimenti 'name'.
+    - NON fa escape degli apostrofi qui: l'escape va fatto solo nella query SQL verso QuickBooks.
+    - Il payload JSON deve contenere il nome originale, con apostrofi singoli se presenti.
     """
+    displayname = customer.get("displayname")
+    if not displayname:
+        displayname = customer.get("name", "Cliente senza nome")
+    # NESSUN escape qui: l'escape va fatto solo nella query SQL, non nel payload JSON
     return {
-        "DisplayName": customer.get("name", "Cliente senza nome"),
+        "DisplayName": displayname,
         "CompanyName": customer.get("company", customer.get("name", "")),
         "PrimaryEmailAddr": {"Address": customer.get("email", "no@email.it")},
         "PrimaryPhone": {"FreeFormNumber": customer.get("phone", "")},

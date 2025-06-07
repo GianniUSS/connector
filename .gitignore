@@ -1,2 +1,81 @@
-# Ignora file di log
+# 🚀 Configurazione Git per Progetto Organizzato
+
+# ===== FILE DI SVILUPPO E TEST =====
+# Escludi l'intera cartella tests_and_debug dal deploy
+tests_and_debug/
+
+# File di test sparsi (se rimasti)
+*test*.py
+*debug*.py
+
+# ===== CACHE E TEMPORANEI =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+
+# ===== LOG E OUTPUT =====
+*.log
+debug_*.json
+equipment_analysis_*.json
+anteprima_*.json
+
+# File di log specifici
 integration_log.txt
+
+# ===== CONFIGURAZIONI LOCALI =====
+.env
+.venv
+config_local.py
+local_settings.py
+
+# ===== BACKUP E TEMPORANEI =====
+*.backup
+*.bak
+*.tmp
+*~
+
+# ===== EDITOR E IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== SISTEMA OPERATIVO =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== DIPENDENZE =====
+node_modules/
+venv/
+env/
+
+# ===== DATI SENSIBILI =====
+credentials.json
+secrets.py
+api_keys.py
+
+# ===== OUTPUT BUILD =====
+dist/
+build/
+*.egg-info/
+
+# ===== FILE DI PROGETTO SPECIFICI =====
+qb_import_status.json
+struttura.txt
+
+# ===== DOCUMENTAZIONE TEMPORANEA =====
+TEMP_*.md
+temp_*.py
+~$*.docx
+
+# ===== INCLUDE ESPLICITI (File Importanti) =====
+# Assicurati che questi NON vengano ignorati
+!README.md
+!requirements.txt
+!config.py
+!app.py
+!index.html
