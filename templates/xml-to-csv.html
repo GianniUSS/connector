@@ -349,6 +349,14 @@ function processXml(xmlString, invoiceNumbers) {
             } catch (e) {
                 importo = prezzoUnitario;
             }
+            // Estrai aliquota IVA dalla linea
+            let aliquotaIva = getXPathNode(linea, "AliquotaIVA") || "22.00";
+            // Normalizza formato (es: 22.00 → 22.00%)
+            if (!aliquotaIva.endsWith("%")) {
+                aliquotaIva = aliquotaIva.replace(",", ".").replace(/\s+/, "").replace(/%$/, "");
+                aliquotaIva = aliquotaIva ? `${aliquotaIva}%` : "22.00%";
+            }
+            const descrizioneSanificata = descrizione.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
             const csvFields = [
                 `"${numeroFatturaEffettivo}"`,
                 `"${fornitore}"`,
@@ -358,10 +366,10 @@ function processXml(xmlString, invoiceNumbers) {
                 `""`,
                 `""`,
                 `"Uncategorized Expense"`,
-                `"${descrizione}"`,
+                `"${descrizioneSanificata}"`,
                 `"${importo}"`,
-                `"22.00%"`,
-                `"${(parseFloat(importo) * 0.22).toFixed(2)}"`
+                `"${aliquotaIva}"`,
+                `"${(parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2)}"`
             ];
             csvLines.push(csvFields.join(','));
         });

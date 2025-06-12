@@ -3,11 +3,15 @@ from rentman_api import get_project_and_customer
 from qb_customer import set_qb_import_status, get_qb_import_status
 from create_or_update_invoice_for_project import create_or_update_invoice_for_project
 from qb_time_activity import import_ore_da_excel, inserisci_ore
-# 🚀 NUOVO MODULO UNIFICATO per progetti
-from rentman_projects import (
+# 🚀 NUOVO MODULO UNIFICATO per progetti - FIXED CLEAN VERSION
+from rentman_projects_fixed_clean import (
     list_projects_by_date_unified,
-    list_projects_by_date_paginated_full_unified
+    list_projects_by_date_paginated_full_unified,
+    list_projects_by_date_paginated_unified,  # 🚀 AGGIUNTO per endpoint ottimizzato
+    filter_projects_by_status,
+    list_projects_by_number_full_unified  # <--- aggiunto import
 )
+import rentman_project_utils
 import time
 import subprocess
 import os
@@ -18,6 +22,8 @@ import re
 from quickbooks_taxcode_cache import get_taxcode_id
 import logging
 from token_manager import token_manager
+import requests
+import config
 
 # 🚀 PERFORMANCE OPTIMIZATIONS
 from performance_optimizations import (
@@ -26,8 +32,8 @@ from performance_optimizations import (
     performance_monitor
 )
 
-# Configura logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+# Configura logging - TEMPORANEAMENTE DEBUG per vedere i log project_type_name
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
  
 
 # Import diretti delle funzioni invece di subprocess
@@ -166,52 +172,129 @@ def avvia_importazione_ore():
             'error': str(e)
         })
 
-@app.route('/lista-progetti', methods=['POST'])
+@app.route('/api/lista-progetti', methods=['GET', 'POST'])
 def lista_progetti():
-    data = request.json
-    try:
-        import time
-        start_time = time.time()
-        
-        print("[INFO] 🚀 UNIFIED: Richiesta lista progetti ricevuta")
-        
-        # 🚀 NUOVO: Usa modulo unificato per eliminare duplicazioni
-        progetti = list_projects_by_date_unified(data.get('fromDate'), data.get('toDate'), mode="normal")
-        print(f"[INFO] Progetti base recuperati: {len(progetti)}")
-        
-        # 🚀 OTTIMIZZAZIONE: Caricamento batch degli stati QB invece di chiamate singole
-        from performance_optimizations import optimize_project_list_loading, performance_monitor
-        progetti_ottimizzati = optimize_project_list_loading(progetti)
-        
-        print(f"[INFO] Progetti totali ottimizzati: {len(progetti_ottimizzati)}")
-        
-        # Formatta output finale
-        output = [{
+    """
+    Endpoint che restituisce i progetti per la grid web, con logica identica allo script standalone:
+    - Recupera tutti i progetti dalla collection /projects (paginazione)
+    - Filtra in locale per data
+    - Recupera dettagli progetto (cliente, responsabile, tipo, valore, email)
+    - Filtra per stato
+    - Restituisce i dati per la grid
+    """
+    if request.method == 'GET':
+        from_date = request.args.get('date') or request.args.get('fromDate')
+    else:
+        data = request.get_json(force=True, silent=True) or {}
+        from_date = data.get('fromDate')
+    stati_interesse = ["In location", "Rientrato", "Confermato", "Pronto"]
+    headers = {
+        'Authorization': f'Bearer {os.environ.get("REN_API_TOKEN", "")}',
+        'Accept': 'application/json'
+    }
+    base_url = getattr(config, 'REN_BASE_URL', 'https://api.rentman.net')
+    # 1. Scarica tutti i progetti grezzi con paginazione
+    url = f"{base_url}/projects"
+    params = {
+        'sort': '+id',
+        'id[gt]': 2900,
+        'fields': 'id,name,number,planperiod_start,planperiod_end',
+        'limit': 150,
+        'offset': 0
+    }
+    all_projects = []
+    while True:
+        resp = requests.get(url, headers=headers, params=params, timeout=15)
+        if not resp.ok:
+            break
+        page_projects = resp.json().get('data', [])
+        all_projects.extend(page_projects)
+        if len(page_projects) < params['limit']:
+            break
+        params['offset'] += params['limit']
+    # 2. Filtro locale per data
+    filtered_projects = rentman_project_utils.filter_projects_by_date(all_projects, from_date)
+    # 3. Recupera dettagli progetto
+    detailed_projects = []
+    for p in filtered_projects:
+        project_id = p.get('id')
+        project_url = f"{base_url}/projects/{project_id}"
+        resp = requests.get(project_url, headers=headers, timeout=10)
+        if not resp.ok:
+            continue
+        data = resp.json().get('data', {})
+        # Cliente
+        customer_name = ""
+        customer_path = data.get('customer')
+        if customer_path:
+            customer_id = rentman_project_utils.extract_id_from_path(customer_path)
+            if customer_id:
+                customer_url = f"{base_url}/contacts/{customer_id}"
+                cust_resp = requests.get(customer_url, headers=headers, timeout=10)
+                if cust_resp.ok:
+                    cust_data = cust_resp.json().get('data', {})
+                    customer_name = cust_data.get('displayname') or cust_data.get('name', '')
+        # Responsabile
+        manager_name = None
+        manager_email = None
+        account_manager_path = data.get('account_manager')
+        if account_manager_path:
+            manager_id = rentman_project_utils.extract_id_from_path(account_manager_path)
+            if manager_id:
+                crew_url = f"{base_url}/crew/{manager_id}"
+                crew_resp = requests.get(crew_url, headers=headers, timeout=10)
+                if crew_resp.ok:
+                    crew_data = crew_resp.json().get('data', {})
+                    manager_name = crew_data.get('name') or crew_data.get('displayname')
+                    manager_email = crew_data.get('email') or crew_data.get('email_1')
+        # Tipo progetto
+        project_type_name = ""
+        project_type_path = data.get('project_type')
+        if project_type_path:
+            project_type_id = rentman_project_utils.extract_id_from_path(project_type_path)
+            if project_type_id:
+                type_url = f"{base_url}/projecttypes/{project_type_id}"
+                type_resp = requests.get(type_url, headers=headers, timeout=10)
+                if type_resp.ok:
+                    type_data = type_resp.json().get('data', {})
+                    project_type_name = type_data.get('name', '')
+        # Valore progetto
+        valore = data.get('project_total_price')
+        try:
+            valore = round(float(valore), 2) if valore is not None else None
+        except Exception:
+            valore = None
+        detailed_projects.append({
+            'id': project_id,
+            'name': p.get('name', ''),
+            'number': p.get('number', ''),
+            'period_from': p.get('planperiod_start', '')[:10] if p.get('planperiod_start') else '',
+            'period_to': p.get('planperiod_end', '')[:10] if p.get('planperiod_end') else '',
+            'cliente': customer_name,
+            'manager_name': manager_name,
+            'manager_email': manager_email,
+            'project_type_name': project_type_name,
+            'value': valore
+        })
+    # 4. Filtro per stato
+    progetti_stato = rentman_project_utils.filter_projects_by_status(detailed_projects, headers, stati_interesse, base_url)
+    # 5. Output per grid
+    output = []
+    for p, status_name in progetti_stato:
+        output.append({
             'id': p.get('id'),
             'number': p.get('number'),
             'name': p.get('name'),
-            'status': p.get('status'),
-            'equipment_period_from': p.get('equipment_period_from'),
-            'equipment_period_to': p.get('equipment_period_to'),
-            'project_type_name': p.get('project_type_name'),
-            'project_value': p.get('project_value'),
+            'status': status_name,
+            'period_from': p.get('period_from'),
+            'period_to': p.get('period_to'),
+            'cliente': p.get('cliente'),
             'manager_name': p.get('manager_name'),
-            'manager_email': p.get('manager_email'),            'project_total_price': p.get('project_total_price'),  # nuovo campo
-            'real_status': p.get('real_status'),  # nuovo campo
-            'contact_displayname': p.get('contact_displayname'),  # 🚀 RISOLTO: Nome cliente per griglia
-            'qb_import': p.get('qb_import')  # 🚀 OTTIMIZZATO: precaricato in batch
-        } for p in progetti_ottimizzati]
-        
-        # Registra performance
-        duration = time.time() - start_time
-        performance_monitor.record_project_loading(len(progetti), duration)
-        
-        print(f"[INFO] ✅ OPTIMIZED: Lista progetti completata in {duration:.2f}s (vs ~{len(progetti) * 0.1:.1f}s precedente)")
-        
-        return jsonify({'projects': output})
-    except Exception as e:
-        print(f"[ERRORE] {e}")
-        return jsonify({'error': str(e)}), 200
+            'manager_email': p.get('manager_email'),
+            'project_type_name': p.get('project_type_name'),
+            'value': p.get('value')
+        })
+    return jsonify({'projects': output})
 
 @app.route('/elabora-selezionati', methods=['POST'])
 def elabora_selezionati():
@@ -345,7 +428,7 @@ def elabora_selezionati():
     print(f"   ❌ Errori: {error_count}")
     print(f"   ⏰ Timeout: {timeout_count}")
     
-    message = f'Elaborazione fatture completata: {success_count} successi'
+    message
     if simulated_count > 0:
         message += f', {simulated_count} simulati (token scaduto)'
     message += f', {error_count} errori, {timeout_count} timeout'
@@ -681,62 +764,54 @@ def reset_performance_metrics():
 
 @app.route('/lista-progetti-paginati', methods=['POST'])
 def lista_progetti_paginati():
-    """Endpoint con paginazione per il caricamento progetti"""
+    """Endpoint robusto: restituisce tutti i progetti che coprono il periodo richiesto, anche se più lento"""
     data = request.json
     try:
         import time
         start_time = time.time()
-        
-        page_size = data.get('pageSize', 20)  # Default 20 progetti per pagina
+        page_size = min(data.get('pageSize', 20), 50)
         from_date = data.get('fromDate')
         to_date = data.get('toDate')
-        
-        print(f"[INFO] 🚀 UNIFIED PAGINATO: Richiesta lista progetti con pageSize={page_size}")
-        
-        # 🚀 NUOVO: Usa modulo unificato per eliminare duplicazioni
-        progetti = list_projects_by_date_paginated_full_unified(from_date, to_date, page_size)
-        print(f"[INFO] Progetti totali recuperati con paginazione unificata: {len(progetti)}")
-        
-        # Applica ottimizzazioni come nell'endpoint originale
-        from performance_optimizations import optimize_project_list_loading, performance_monitor
-        progetti_ottimizzati = optimize_project_list_loading(progetti)
-        print(f"[INFO] Progetti totali ottimizzati: {len(progetti_ottimizzati)}")
-        
-        # Formatta output finale (stesso formato dell'endpoint originale)
-        output = [{
-            'id': p.get('id'),
-            'number': p.get('number'),
-            'name': p.get('name'),
-            'status': p.get('status'),
-            'equipment_period_from': p.get('equipment_period_from'),
-            'equipment_period_to': p.get('equipment_period_to'),
-            'project_type_name': p.get('project_type_name'),
-            'project_value': p.get('project_value'),
-            'manager_name': p.get('manager_name'),
-            'manager_email': p.get('manager_email'),
-            'project_total_price': p.get('project_total_price'),
-            'real_status': p.get('real_status'),
-            'customer': p.get('customer'),
-            'qb_import': p.get('qb_import')
-        } for p in progetti_ottimizzati]
-        
-        # Registra performance
+        project_number = data.get('projectNumber')
+        print(f"[INFO] Robust: pageSize={page_size} {from_date} → {to_date} | projectNumber={project_number}")
+        output = []
+        if project_number:
+            # Ricerca per numero progetto (ignora date)
+            progetti = list_projects_by_number_full_unified(project_number)
+        else:
+            # Ricerca per data (default)
+            progetti = list_projects_by_date_paginated_full_unified(from_date, to_date, page_size)
+        print(f"[INFO] Progetti trovati: {len(progetti)}")
+        for p in progetti:
+            output.append({
+                'id': p.get('id') or 'N/A',
+                'number': p.get('number') or 'N/A',
+                'name': p.get('name') or 'N/A',
+                'cliente': p.get('contact_displayname') or '-',
+                'manager_name': p.get('manager_name') or '-',
+                'manager_email': p.get('manager_email') or '-',
+                'project_value': p.get('project_value') or '0.00',
+                'status': p.get('status') or 'UNKNOWN',
+                'qb_import': p.get('qb_import') or '-',
+                'equipment_period_from': p.get('equipment_period_from') or '-',
+                'equipment_period_to': p.get('equipment_period_to') or '-',
+                'project_type_name': p.get('project_type_name') or '-',
+                'project_total_price': p.get('project_total_price') or '0.00'
+            })
         duration = time.time() - start_time
-        performance_monitor.record_project_loading(len(progetti), duration)
-        
-        print(f"[INFO] ✅ PAGINATO: Lista progetti completata in {duration:.2f}s con {page_size} progetti/pagina")
-        
-        return jsonify({
-            'projects': output,
-            'pagination': {
-                'total_projects': len(progetti),
-                'page_size': page_size,
-                'duration': round(duration, 2)
+        print(f"[INFO] ✅ ROBUST: Completato in {duration:.2f}s - {len(output)} progetti")
+        response_data = {
+            "projects": output,
+            "pagination": {
+                "page_size": page_size,
+                "current_page": 1,
+                "total_in_page": len(output),
             }
-        })
+        }
+        return jsonify(response_data)
     except Exception as e:
-        print(f"[ERRORE] Endpoint paginato: {e}")
-        return jsonify({'error': str(e)}), 200
+        print(f"[ERROR] {e}")
+        return jsonify({"error": str(e)}), 500
     
 if __name__ == '__main__':
     print("🚀 Avvio Rentman Project Manager...")

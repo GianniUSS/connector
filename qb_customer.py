@@ -85,19 +85,24 @@ def get_all_statuses(headers):
         if _status_cache:
             return _status_cache
     
-    url = f"{config.REN_BASE_URL}/statuses"
-    try:
-        response = requests.get(url, headers=headers, timeout=5)
-        if response.ok:
-            data = response.json().get('data', [])
-            status_map = {status['id']: status['name'] for status in data}
-            with _cache_lock:
-                _status_cache.update(status_map)
-            return status_map
-        else:
-            print(f"Errore endpoint statuses: {response.status_code}")
-    except Exception as e:
-        print(f"Errore recuperando statuses: {e}")
+    # Prova prima l'endpoint specifico per project status
+    for endpoint in ["/projects/status", "/statuses"]:
+        url = f"{config.REN_BASE_URL}{endpoint}"
+        try:
+            response = requests.get(url, headers=headers, timeout=5)
+            if response.ok:
+                data = response.json().get('data', [])
+                status_map = {status['id']: status['name'] for status in data}
+                with _cache_lock:
+                    _status_cache.update(status_map)
+                log_debug(f"✅ Caricati {len(status_map)} status da {endpoint}")
+                return status_map
+            else:
+                log_debug(f"⚠️ Endpoint {endpoint} fallito: {response.status_code}")
+        except Exception as e:
+            log_debug(f"⚠️ Errore endpoint {endpoint}: {e}")
+    
+    log_error("❌ Nessun endpoint status funzionante trovato!")
     return {}
 
 def get_project_subprojects_fast(project_ids, headers):
@@ -185,8 +190,10 @@ def process_project_paginated(project_data, headers, status_map, start_dt, end_d
         pe = datetime.fromisoformat(period_end[:10]).date()
         
         if pe < start_dt or ps > end_dt:
+            # Log esclusione per filtro data
+            log_debug(f"[FILTRO DATA] ❌ ESCLUSO - Progetto {p.get('id')} ('{p.get('name','N/A')}') periodo {period_start[:10]} → {period_end[:10]} FUORI da range {start_dt} → {end_dt}")
             return None
-            
+        
         project_type_path = p.get('project_type')
         project_type_id = extract_id_from_path(project_type_path)
         
@@ -284,8 +291,7 @@ def list_projects_by_date(from_date, to_date):
         'Authorization': f'Bearer {config.REN_API_TOKEN}',
         'Accept': 'application/json'
     }
-    
-    # Recupera status map
+      # Recupera status map
     status_map = get_all_statuses(headers)
     log_debug(f"📊 Status map caricata: {len(status_map)} status")
     
@@ -297,29 +303,11 @@ def list_projects_by_date(from_date, to_date):
     
     if not response.ok:
         raise Exception(f"Rentman API Error {response.status_code}: {response.text}")
-    
     standard_projects = response.json().get('data', [])
-    log_debug(f"📄 Progetti standard recuperati: {len(standard_projects)}")    # Aggiungi progetti mancanti noti con chiamate dirette
-    missing_project_ids = [3120, 3299]  # IDs per numeri 3143 e 3322
-    additional_projects = []
-    log_debug(f"🔍 Recupero progetti mancanti: {missing_project_ids}")
-    for project_id in missing_project_ids:
-        try:
-            project_url = f"{config.REN_BASE_URL}/projects/{project_id}"
-            response = requests.get(project_url, headers=headers)
-            
-            if response.ok:
-                project = response.json().get('data', {})
-                if project:
-                    additional_projects.append(project)
-                    log_debug(f"  ✅ Aggiunto progetto {project_id} (numero {project.get('number')})")
-            else:
-                log_debug(f"  ❌ Progetto {project_id} non trovato: {response.status_code}")
-        except Exception as e:
-            log_debug(f"  ❌ Errore progetto {project_id}: {e}")
+    log_debug(f"📄 Progetti standard recuperati: {len(standard_projects)}")
     
-    projects = standard_projects + additional_projects
-    log_debug(f"📊 Progetti totali: {len(projects)} (standard: {len(standard_projects)}, aggiunti: {len(additional_projects)})")
+    projects = standard_projects
+    log_debug(f"📊 Progetti totali: {len(projects)}")
     log_debug(f"📋 Progetti totali recuperati: {len(projects)}")
     
     start_dt = datetime.strptime(from_date, "%Y-%m-%d").date()
@@ -377,8 +365,7 @@ def list_projects_by_date_paginated(from_date, to_date, page_size=20):
         'Authorization': f'Bearer {config.REN_API_TOKEN}',
         'Accept': 'application/json'
     }
-    
-    # Recupera status map (una volta sola)
+      # Recupera status map (una volta sola)
     status_map = get_all_statuses(headers)
     log_debug(f"📊 Status map caricata: {len(status_map)} status")
     
@@ -390,32 +377,11 @@ def list_projects_by_date_paginated(from_date, to_date, page_size=20):
     
     if not response.ok:
         raise Exception(f"Rentman API Error {response.status_code}: {response.text}")
-    
     standard_projects = response.json().get('data', [])
     log_debug(f"📄 Progetti standard recuperati: {len(standard_projects)}")
     
-    # Aggiungi progetti mancanti noti con chiamate dirette
-    missing_project_ids = [3120, 3299]  # IDs per numeri 3143 e 3322
-    additional_projects = []
-    
-    log_debug(f"🔍 Recupero progetti mancanti: {missing_project_ids}")
-    for project_id in missing_project_ids:
-        try:
-            project_url = f"{config.REN_BASE_URL}/projects/{project_id}"
-            response = requests.get(project_url, headers=headers)
-            
-            if response.ok:
-                project = response.json().get('data', {})
-                if project:
-                    additional_projects.append(project)
-                    log_debug(f"  ✅ Aggiunto progetto {project_id} (numero {project.get('number')})")
-            else:
-                log_debug(f"  ❌ Progetto {project_id} non trovato: {response.status_code}")
-        except Exception as e:
-            log_debug(f"  ❌ Errore progetto {project_id}: {e}")
-    
-    all_projects = standard_projects + additional_projects
-    log_debug(f"📊 Progetti totali: {len(all_projects)} (standard: {len(standard_projects)}, aggiunti: {len(additional_projects)})")
+    all_projects = standard_projects
+    log_debug(f"📊 Progetti totali: {len(all_projects)}")
     
     start_dt = datetime.strptime(from_date, "%Y-%m-%d").date()
     end_dt = datetime.strptime(to_date, "%Y-%m-%d").date()
@@ -500,17 +466,13 @@ def list_projects_by_date_paginated_full(from_date, to_date, page_size=20):
         log_debug(f"📊 Progresso: {page_data['total_processed']} progetti caricati...")
 
     # Applica filtro stati DOPO il processamento - ALLINEATO con modalità normale (SOLO stati validi)
-    log_debug(f"⏳ Applicando filtro stati finale su {len(all_projects)} progetti processati...")
-
-    # CRITERI SPECIFICI: solo stati dei 9 progetti mostrati in Rentman (05/06/2025)
+    log_debug(f"⏳ Applicando filtro stati finale su {len(all_projects)} progetti processati...")    # CRITERI SPECIFICI: solo stati dei 9 progetti mostrati in Rentman (05/06/2025)
     stati_validi = {
         # Stati confermati/operativi (dai progetti mostrati)
         'confermato', 'confirmed', 
         'in location', 'on location',
         'rientrato', 'returned',
-        # Stati speciali per progetti 3143 e 3322 (combinati)
-        'in location / annullato', 'on location / cancelled',
-        'rientrato / concept', 'returned / concept'
+        'concept'  # 🔧 TEMP: Aggiunto per debug progetto 3120
     }
     
     # Debug: mostra stati prima del filtro
@@ -1101,12 +1063,20 @@ def save_qb_import_status(status_dict):
 def set_qb_import_status(project_id, status, message=None):
     """Aggiorna lo stato di importazione per un progetto."""
     status_dict = load_qb_import_status()
-    status_dict[str(project_id)] = {
+    new_status_data = {
         'status': status,
         'message': message or '',
         'timestamp': datetime.now().isoformat(timespec='seconds')
     }
+    status_dict[str(project_id)] = new_status_data
     save_qb_import_status(status_dict)
+    
+    # Aggiorna anche la cache per rendere immediatamente disponibile il nuovo stato
+    try:
+        from performance_optimizations import qb_status_cache
+        qb_status_cache.update_single_status(project_id, new_status_data)
+    except Exception as e:
+        logging.warning(f"Errore aggiornamento cache QB per progetto {project_id}: {e}")
 
 def get_qb_import_status(project_id):
     """Restituisce lo stato di importazione per un progetto."""

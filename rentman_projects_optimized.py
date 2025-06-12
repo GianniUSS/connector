@@ -13,66 +13,6 @@ import requests
 import config
 from datetime import datetime
 
-def get_multiple_project_values_batch(project_ids, headers, max_workers=3):
-    """
-    🚀 OTTIMIZZAZIONE: Recupera valori di multipli progetti in batch
-    
-    Args:
-        project_ids: Lista di ID progetti
-        headers: Headers per API Rentman  
-        max_workers: Numero massimo di thread (default: 3 per evitare rate limiting)
-        
-    Returns:
-        dict: Mappa project_id -> valore
-    """
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-    import time
-    
-    if not project_ids:
-        return {}
-    
-    log_debug(f"[BATCH] Recuperando {len(project_ids)} progetti...")
-    
-    def fetch_single_project_value(project_id):
-        """Funzione helper per fetch singolo progetto"""
-        url = f"{config.REN_BASE_URL}/projects/{project_id}"
-        try:
-            response = requests.get(url, headers=headers, timeout=8)
-            if response.ok:
-                project_data = response.json().get('data', {})
-                value = project_data.get('project_total_price')
-                return project_id, value
-            else:
-                log_warning(f"[BATCH] Errore HTTP {response.status_code} per progetto {project_id}")
-                return project_id, None
-        except Exception as e:
-            log_warning(f"[BATCH] Errore progetto {project_id}: {e}")
-            return project_id, None
-    
-    result_values = {}
-    
-    # Esecuzione batch con ThreadPoolExecutor
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Suddividi in batch per evitare troppi thread
-        batch_size = 5
-        for i in range(0, len(project_ids), batch_size):
-            batch = project_ids[i:i + batch_size]
-            
-            # Piccola pausa tra batch per rate limiting
-            if i > 0:
-                time.sleep(0.3)
-            
-            # Avvia fetch per questo batch
-            futures = {executor.submit(fetch_single_project_value, pid): pid for pid in batch}
-            
-            # Raccogli risultati
-            for future in as_completed(futures):
-                project_id, value = future.result()
-                result_values[project_id] = value
-    
-    log_debug(f"[BATCH] Completato: {len(result_values)} valori totali")
-    return result_values
-
 def list_projects_by_date_unified_optimized(from_date, to_date, mode="normal"):
     """
     🚀 VERSIONE OTTIMIZZATA per recuperare progetti per data
@@ -165,20 +105,15 @@ def list_projects_by_date_unified_optimized(from_date, to_date, mode="normal"):
     
     # Filtro date
     start_dt = datetime.strptime(from_date, "%Y-%m-%d").date()
-    end_dt = datetime.strptime(to_date, "%Y-%m-%d").date()    # Pre-filtra progetti per date
-    date_filtered_projects = []
-    target_ids = [3120, 3205, 3438]  # IDs target importanti
+    end_dt = datetime.strptime(to_date, "%Y-%m-%d").date()
     
+    # Pre-filtra progetti per date
+    date_filtered_projects = []
     for p in projects:
         period_start = p.get('planperiod_start')
         period_end = p.get('planperiod_end')
-        project_id = p.get('id')
         
-        # 🔧 FIX: Gestisci progetti senza periodo (come progetti target)
         if not period_start or not period_end:
-            if project_id in target_ids:
-                log_debug(f"[PROGETTO {project_id}] Incluso senza periodo (target ID)")
-                date_filtered_projects.append(p)
             continue
             
         try:
@@ -220,19 +155,16 @@ def list_projects_by_date_unified_optimized(from_date, to_date, mode="normal"):
             for project in processed_projects:
                 type_id = project['project_type_id']
                 if type_id and type_id in type_name_futures:
-                    try:                        project['project_type_name'] = type_name_futures[type_id].result(timeout=2)
+                    try:
+                        project['project_type_name'] = type_name_futures[type_id].result(timeout=2)
                     except:
                         project['project_type_name'] = ""
     
     # 💰 RECUPERA VALORI CON STRATEGIA A 3 LIVELLI
     log_debug(f"💰 Recuperando valori progetti con strategia ottimizzata...")
     
-    # Estrai ID progetti che necessitano di valori (incluso 0 e '0.00')
-    project_ids_for_values = []
-    for p in processed_projects:
-        project_value = p.get('project_value')
-        if project_value in [None, 'N/A', 0, '0', '0.00']:
-            project_ids_for_values.append(p['id'])
+    # Estrai ID progetti che necessitano di valori
+    project_ids_for_values = [p['id'] for p in processed_projects if p.get('project_value') in [None, 'N/A', 0]]
     
     if project_ids_for_values:
         log_debug(f"🔍 {len(project_ids_for_values)} progetti necessitano recupero valori")
@@ -244,13 +176,8 @@ def list_projects_by_date_unified_optimized(from_date, to_date, mode="normal"):
         for project in processed_projects:
             project_id = project['id']
             if project_id in project_values and project_values[project_id] is not None:
-                try:
-                    new_value = float(project_values[project_id])
-                    if new_value > 0:
-                        project['project_value'] = f"{new_value:.2f}"
-                        log_debug(f"💰 Progetto {project_id}: valore aggiornato a {new_value:.2f}")
-                except (ValueError, TypeError):
-                    log_debug(f"💰 Progetto {project_id}: valore non valido {project_values[project_id]}")
+                project['project_value'] = project_values[project_id]
+                log_debug(f"💰 Progetto {project_id}: valore aggiornato a {project_values[project_id]}")
     
     log_info(f"🎉 Recupero completato: {len(processed_projects)} progetti processati")
     

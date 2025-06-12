@@ -302,6 +302,10 @@
             <label for="toDate" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">📅 Data Fine</label>
             <input type="date" id="toDate" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
           </div>
+          <div>
+            <label for="projectNumber" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">🔎 Numero Progetto (opzionale)</label>
+            <input type="text" id="projectNumber" placeholder="Inserisci numero progetto" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
+          </div>
         </div>
         <div style="display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 1rem;">
           <label for="excelFile" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📄 Importa ore da Excel</label>
@@ -309,18 +313,12 @@
           <button id="importExcelBtn" class="btn btn-success" type="button" style="white-space:nowrap; min-width:170px; align-self: flex-start;"><span>⬆️</span> Importa Ore da Excel</button>
         </div>        <div id="importExcelMsg" style="margin-bottom:1rem;font-size:1rem;font-weight:600;min-height:24px;"></div>
         
-        <!-- Opzioni caricamento progetti -->
+        <!-- Opzioni caricamento progetti (semplificata: solo paginata) -->
         <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
-          <label style="font-weight: 600; color: #495057; margin-bottom: 0.5rem; display: block;">🚀 Modalità Caricamento:</label>          <div style="display: flex; gap: 1rem; align-items: center;">
-            <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
-              <input type="radio" name="loadingMode" value="normal" id="normalMode" checked style="margin: 0;">
-              <span>📋 Normale</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
-              <input type="radio" name="loadingMode" value="paginated" id="paginatedMode" style="margin: 0;">
-              <span>⚡ Paginato</span>
-            </label>
-            <select id="pageSize" style="margin-left: auto; padding: 0.25rem; opacity: 0.5;" disabled>
+          <label style="font-weight: 600; color: #495057; margin-bottom: 0.5rem; display: block;">🚀 Modalità Caricamento:</label>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <span style="font-weight:600;color:#2196F3;">⚡ Paginata</span>
+            <select id="pageSize" style="margin-left: auto; padding: 0.25rem; opacity: 1; min-width: 120px;">
               <option value="10">10 per pagina</option>
               <option value="20" selected>20 per pagina</option>
               <option value="50">50 per pagina</option>
@@ -753,27 +751,18 @@
         console.log("🚀 INIZIO - Pulsante cliccato");
         
         const from = document.getElementById("fromDate").value;
-        const to = document.getElementById("toDate").value;        const tbody = document.querySelector("#projectList tbody");
+        const to = document.getElementById("toDate").value;
+        const tbody = document.querySelector("#projectList tbody");
         
         console.log("📅 Date selezionate:", { from: from, to: to });
         
-        if (!from || !to) {
-          console.log("❌ Date mancanti");
-          alert('❌ Seleziona le date per recuperare i progetti');
-          return;
-        }
+        // Modalità solo paginata
+        const endpoint = '/lista-progetti-paginati';
+        const pageSize = parseInt(document.getElementById('pageSize').value);
         
-        // Determina modalità e endpoint
-        const loadingMode = document.querySelector('input[name="loadingMode"]:checked').value;
-        const isPaginated = loadingMode === 'paginated';
-        const endpoint = isPaginated ? '/lista-progetti-paginati' : '/lista-progetti';
-        const pageSize = isPaginated ? parseInt(document.getElementById('pageSize').value) : null;
-        
-        console.log(`🚀 Modalità caricamento: ${loadingMode} (endpoint: ${endpoint})`);
-        if (isPaginated) {
-          console.log(`📄 Page size: ${pageSize}`);
-        }
-          console.log("⏳ Inizio caricamento...");
+        console.log(`🚀 Modalità caricamento: paginata (endpoint: ${endpoint})`);
+        console.log(`📄 Page size: ${pageSize}`);
+        console.log("⏳ Inizio caricamento...");
         tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem;">⏳ Caricamento...</td></tr>';
         
         // Reset performance info e statistiche durante il caricamento
@@ -782,10 +771,19 @@
         
         console.log("🌐 Invio richiesta al server...");
         
-        // Prepara payload in base alla modalità
-        const requestBody = isPaginated 
-          ? { fromDate: from, toDate: to, pageSize: pageSize }
-          : { fromDate: from, toDate: to };
+        // Prepara payload
+        const projectNumber = document.getElementById("projectNumber") ? document.getElementById("projectNumber").value.trim() : "";
+        let requestBody;
+        if (projectNumber) {
+          requestBody = { projectNumber: projectNumber, pageSize: pageSize };
+        } else {
+          if (!from || !to) {
+            console.log("❌ Date mancanti");
+            alert('❌ Seleziona le date per recuperare i progetti');
+            return;
+          }
+          requestBody = { fromDate: from, toDate: to, pageSize: pageSize };
+        }
         
         const startTime = performance.now();
         
@@ -799,6 +797,16 @@
           return r.json();
         })
         .then(function(js) {
+          // Ordina i progetti per id crescente
+          if (js.projects && Array.isArray(js.projects)) {
+            js.projects.sort(function(a, b) {
+              // Se id è numerico, ordina come numero, altrimenti come stringa
+              if (!isNaN(a.id) && !isNaN(b.id)) {
+                return Number(a.id) - Number(b.id);
+              }
+              return (a.id + '').localeCompare(b.id + '');
+            });
+          }
           const endTime = performance.now();
           const clientDuration = ((endTime - startTime) / 1000).toFixed(2);
           
@@ -808,14 +816,14 @@
           const projectCount = js.projects ? js.projects.length : 0;
           const serverDuration = js.pagination ? js.pagination.duration : 'N/A';
           
-          console.log(`⚡ PERFORMANCE (${loadingMode}):`);
+          console.log(`⚡ PERFORMANCE (Paginata):`);
           console.log(`   📊 Progetti: ${projectCount}`);
           console.log(`   ⏱️ Tempo client: ${clientDuration}s`);
           console.log(`   🖥️ Tempo server: ${serverDuration}s`);
           if (projectCount > 0) {
             console.log(`   📈 Velocità: ${(projectCount / parseFloat(clientDuration)).toFixed(1)} progetti/sec`);
           }
-          if (isPaginated && js.pagination) {
+          if (js.pagination) {
             console.log(`   📄 Page size: ${js.pagination.page_size}`);
           }
           
@@ -849,7 +857,7 @@
               loadTime: clientDuration,
               projects: 0,
               speed: 0,
-              mode: loadingMode === 'paginated' ? 'Paginata' : 'Normale'
+              mode: 'Paginata'
             };
             
             updateStats(0, 0, 0, performanceData);
@@ -871,6 +879,9 @@
               console.log('    Condizione (p.number || "N/A"): ' + (p.number || 'N/A'));
             }
             
+            // DEBUG: Mostra tutto l'oggetto progetto ricevuto
+            console.log('DEBUG PAYLOAD PROGETTO:', p);
+            
             if (p.status && !['Annullato', 'Rientrato'].includes(p.status)) {
               activeCount++;
             }
@@ -886,7 +897,7 @@
             
             tr.innerHTML = '<td><input type="checkbox" class="project-checkbox" data-project-id="' + p.id + '" data-project-name="' + p.name + '"></td>' +
               '<td><strong>' + (p.id || 'N/A') + '</strong></td>' +
-              '<td><code>' + finalNumber + '</code></td>' +
+              '<td><code>' + (p.number || 'N/A') + '</code></td>' +
               '<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="' + (p.name || 'N/A') + '">' +
                 '<a href="#" class="project-link" data-project-id="' + p.id + '">' + (p.name || 'N/A') + '</a>' +
                 ((p.equipment_period_from && p.equipment_period_to) ?
@@ -900,15 +911,35 @@
                   '</span>' :
                   '') +
               '</td>' +
-              '<td' + (!p.customer || p.customer === '-' ? ' style="background:#b71c1c;color:#fff;font-weight:bold;"' : '') + '>' + (p.customer ? p.customer : '-') + '</td>' +
+              // Cliente
+              '<td title="Valore grezzo: ' + String(p.cliente) + '"' +
+                ((!p.cliente || p.cliente === '-' || p.cliente === '' || p.cliente === 'N/A') ? ' style="background:#ffcccc;color:#b71c1c;font-weight:bold;"' : '') +
+                '>' + (p.cliente ? p.cliente : '-') + '</td>' +
+              // Stato
               '<td>' + statusBadge + '</td>' +
+              // Responsabile
               '<td>' + (
-                (p.manager_name ?
+                p.manager_name ?
                   '<strong>' + p.manager_name + '</strong>' +
                   (p.manager_email ? '<br><span style="font-size:0.85em;color:#555;">' + p.manager_email + '</span>' : '')
-                : 'N/A')
-              ) + '</td>' +
-              '<td style="text-align: right;' + ((p.project_value === 'N/A' || !p.project_value || p.project_value === '0.00') ? ' background:#b71c1c;color:#fff;font-weight:bold;' : '') + '">' + (p.project_value && p.project_value !== '0.00' ? ('€ ' + p.project_value) : '<span style="color:#fff;">N/A</span>') + '</td>' +
+                : 'N/A') + '</td>' +
+              // Valore
+              (function() {
+                let valore_grezzo = (p.project_total_price && p.project_total_price !== '0.00' && p.project_total_price !== 'N/A') ? p.project_total_price : p.project_value;
+                let is_sospetto = (!valore_grezzo || valore_grezzo === '0.00' || valore_grezzo === 'N/A');
+                let valore_formattato = '';
+                if (valore_grezzo && valore_grezzo !== '0.00') {
+                  let numero = parseFloat(valore_grezzo);
+                  if (!isNaN(numero)) {
+                    valore_formattato = '€ ' + numero.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                  } else {
+                    valore_formattato = '€ ' + valore_grezzo;
+                  }
+                } else {
+                  valore_formattato = '<span style="color:#999;">N/A</span>';
+                }
+                return '<td style="text-align: right;' + (is_sospetto ? ' background:#ffcccc;color:#b71c1c;font-weight:bold;' : '') + '" title="Valore grezzo: ' + String(valore_grezzo) + '">' + valore_formattato + '</td>';
+              })() +
               '<td>' + renderQbImportStatus(p.qb_import) + '</td>';
             tbody.appendChild(tr);
           });
@@ -949,7 +980,7 @@
             loadTime: clientDuration,
             projects: js.projects.length,
             speed: js.projects.length > 0 ? (js.projects.length / parseFloat(clientDuration)).toFixed(1) : 0,
-            mode: loadingMode === 'paginated' ? 'Paginata' : 'Normale'
+            mode: 'Paginata'
           };
           
           updateStats(js.projects.length, 0, activeCount, performanceData);

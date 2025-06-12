@@ -110,17 +110,27 @@ def get_project_subprojects_fast(project_ids, headers):
         return []
 
 def get_project_status_fast(project_id, headers, status_map, main_project=None):
-    """ Recupera lo status del progetto: preferisce il subproject con order più basso, altrimenti quello principale """
+    """ 
+    Recupera lo status del progetto: preferisce il primo subproject con in_financial=True,
+    altrimenti usa quello principale
+    """
     subprojects = get_project_subprojects_fast(project_id, headers)
-    # Se ci sono subprojects, cerca quello con order più basso con uno status valido
+    # Se ci sono subprojects, cerca il primo con in_financial=True
     if subprojects:
-        subproject_principale = min(subprojects, key=lambda s: s.get('order', 9999))
-        status_path = subproject_principale.get('status')
-        status_id = extract_id_from_path(status_path)
-        value = subproject_principale.get('project_total_price')
-        logging.info(f"[PROGETTO {project_id}] Subproject principale: status_id={status_id}, value={value}")
-        if status_id and status_id in status_map:
-            return status_map[status_id]
+        # 🎯 FIX: Filtra solo subprojects con in_financial=True
+        financial_subs = [s for s in subprojects if s.get('in_financial') is True]
+        
+        if financial_subs:
+            # Seleziona quello con order più basso tra quelli finanziari
+            subproject_principale = min(financial_subs, key=lambda s: s.get('order', 9999))
+            status_path = subproject_principale.get('status')
+            status_id = extract_id_from_path(status_path)
+            value = subproject_principale.get('project_total_price')
+            logging.info(f"[PROGETTO {project_id}] Subproject finanziario: status_id={status_id}, value={value}, order={subproject_principale.get('order')}")
+            if status_id and status_id in status_map:
+                return status_map[status_id]
+        else:
+            logging.info(f"[PROGETTO {project_id}] Nessun subproject con in_financial=True trovato")
     # Se nessun subproject valido, prova a usare lo status del progetto principale
     if main_project:
         main_status_path = main_project.get('status')

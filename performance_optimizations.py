@@ -19,6 +19,46 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Any, Optional
 import logging
+import os
+
+def setup_logging():
+    """
+    🚀 SETUP LOGGING OTTIMIZZATO per performance
+    Configura logging con livelli controllabili via environment variables
+    """
+    # Determina livello logging da environment
+    log_level = os.getenv('RENTMAN_LOG_LEVEL', 'INFO').upper()
+    verbose_mode = log_level == 'DEBUG'
+    
+    # Configura logging base
+    logging.basicConfig(
+        level=getattr(logging, log_level, logging.INFO),
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        datefmt='%H:%M:%S'
+    )
+    
+    # Funzioni logging ottimizzate
+    def log_info(message):
+        if verbose_mode:
+            print(f"ℹ️ {message}")
+    
+    def log_debug(message):
+        if verbose_mode:
+            print(f"🔍 {message}")
+    
+    def log_warning(message):
+        print(f"⚠️ {message}")
+    
+    def log_error(message):
+        print(f"❌ {message}")
+    
+    return {
+        'verbose_mode': verbose_mode,
+        'log_info': log_info,
+        'log_debug': log_debug,
+        'log_warning': log_warning,
+        'log_error': log_error
+    }
 
 # Configurazione ottimizzata
 OPTIMAL_THREAD_COUNT = 10  # Bilanciato per CPU e I/O
@@ -82,6 +122,31 @@ class QBImportStatusCache:
             # Fallback: stati vuoti
             for pid in project_ids:
                 self._cache[str(pid)] = {'status': 'not_found', 'message': None}
+
+    def invalidate_cache(self):
+        """Invalida completamente la cache forzando il ricaricamento al prossimo accesso"""
+        with self._lock:
+            self._last_update = None
+            self._cache.clear()
+            logging.info("🔄 Cache QB import status invalidata")
+    
+    def update_single_status(self, project_id: str, status_data: Dict[str, Any]):
+        """Aggiorna lo stato di un singolo progetto nella cache"""
+        with self._lock:
+            self._cache[str(project_id)] = status_data
+            logging.info(f"📝 Cache QB aggiornata per progetto {project_id}: {status_data.get('status', 'unknown')}")
+    
+    def force_reload(self):
+        """Forza il ricaricamento completo della cache dal file"""
+        with self._lock:
+            try:
+                from qb_customer import load_qb_import_status
+                all_status = load_qb_import_status()
+                self._cache = all_status.copy()
+                self._last_update = time.time()
+                logging.info(f"🔄 Cache QB ricaricata con {len(self._cache)} progetti")
+            except Exception as e:
+                logging.warning(f"Errore nel ricaricamento forzato cache QB: {e}")
 
 # Cache globale
 qb_status_cache = QBImportStatusCache()

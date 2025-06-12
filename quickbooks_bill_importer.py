@@ -284,8 +284,8 @@ class QuickBooksBillImporter:
         """
         url = f"{self.base_url}/v3/company/{self.realm_id}/query"
         if name:
-            # QuickBooks Online richiede l'apostrofo escapato come \' nelle query
-            safe_name = name.replace("'", "\\'")
+            # QuickBooks Online richiede l'apostrofo escapato come \\' nelle query
+            safe_name = name.replace("'", "\\'" )
             query = f"SELECT * FROM Vendor WHERE DisplayName = '{safe_name}'"
         else:
             query = "SELECT * FROM Vendor"
