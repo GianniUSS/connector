@@ -252,11 +252,12 @@
             <div id="groupingOptions" style="display:none; margin-bottom: 12px; padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
                 <label style="display:block; margin-bottom:4px;"><input type="checkbox" id="mergeAccounts"> Unisci conti simili</label>
                 <label>Max linee per fattura: <input type="number" id="maxLines" value="50" min="1" style="width:60px;"></label>
-            </div>
-            <div class="button-row">
+            </div>            <div class="button-row">
                 <button id="convertBtn" class="button" disabled>Converti in CSV</button>
+                <button id="convertQtyBtn" class="button" disabled style="background: #8e44ad; color: #fff; border: 2px solid #7d3c98;">Converti CSV + Quantità</button>
                 <button id="copyBtn" class="button" disabled>Copia negli appunti</button>
                 <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none; text-align:center;">Scarica CSV</a>
+                <button id="saveToDbBtn" class="button" style="background: #27ae60; color: #fff; border: 2px solid #229954;" disabled>Salva in Database</button>
                 <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks</button>
             </div>
         </div>
@@ -300,6 +301,87 @@ function getNodeXPath(node, xpath) {
         console.warn(`Errore XPath ${xpath}:`, e);
     }
     return "";
+}
+function processXmlWithQuantity(xmlString, invoiceNumbers) {
+    try {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+            throw new Error("File XML non valido");
+        }
+        const fornitoreNome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Nome") || 
+                             getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome");
+        const fornitoreCognome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome") || 
+                                getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Cognome");
+        let fornitore;
+        if (fornitoreNome && fornitoreCognome) {
+            fornitore = `${fornitoreCognome} ${fornitoreNome}`;
+        } else {
+            fornitore = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione") || 
+                       getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Denominazione");
+        }
+        const numeroFattura = getXPath(xmlDoc, "//DatiGeneraliDocumento/Numero") ||
+                             getXPath(xmlDoc, "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Numero");
+        const dataFattura = getXPath(xmlDoc, "//DatiGeneraliDocumento/Data") ||
+                           getXPath(xmlDoc, "//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/Data");
+        let numeroFatturaEffettivo = numeroFattura;
+        // Gestione duplicati disabilitata
+        let dataParsed = "";
+        if (dataFattura) {
+            const parts = dataFattura.split("-");
+            if (parts.length === 3) {
+                dataParsed = `${parts[1]}/${parts[2]}/${parts[0]}`;
+            }
+        }
+        const dettagliLineeElements = xmlDoc.querySelectorAll("DettaglioLinee") || 
+                                     xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
+        if (!dettagliLineeElements || dettagliLineeElements.length === 0) {
+            throw new Error("Nessun dettaglio linee trovato nella fattura");
+        }
+        const csvLines = [];
+        Array.from(dettagliLineeElements).forEach((linea, index) => {
+            const descrizione = getXPathNode(linea, "Descrizione") || `Servizio #${index + 1}`;
+            let prezzoUnitario = getXPathNode(linea, "PrezzoUnitario") || "0";
+            const quantita = getXPathNode(linea, "Quantita") || "1";
+            let importo;
+            try {
+                importo = parseFloat(prezzoUnitario.replace(",", ".")) * parseFloat(quantita.replace(",", "."));
+                importo = importo.toFixed(2);
+            } catch (e) {
+                importo = prezzoUnitario;
+            }
+            // Estrai aliquota IVA dalla linea
+            let aliquotaIva = getXPathNode(linea, "AliquotaIVA") || "22.00";
+            // Normalizza formato (es: 22.00 → 22.00%)
+            if (!aliquotaIva.endsWith("%")) {
+                aliquotaIva = aliquotaIva.replace(",", ".").replace(/\s+/, "").replace(/%$/, "");
+                aliquotaIva = aliquotaIva ? `${aliquotaIva}%` : "22.00%";
+            }
+            const descrizioneSanificata = descrizione.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
+            // CSV con quantità inclusa come colonna separata
+            const csvFields = [
+                `"${numeroFatturaEffettivo}"`,
+                `"${fornitore}"`,
+                `"${dataParsed}"`,
+                `"${dataParsed}"`,
+                `"Net30"`,
+                `""`,
+                `""`,
+                `"Uncategorized Expense"`,
+                `"${descrizioneSanificata}"`,
+                `"${quantita}"`,  // Quantità come colonna separata
+                `"${prezzoUnitario}"`,  // Prezzo unitario
+                `"${importo}"`,
+                `"${aliquotaIva}"`,
+                `"${(parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2)}"`
+            ];
+            csvLines.push(csvFields.join(','));
+        });
+        return csvLines;
+    } catch (error) {
+        console.error("Errore nell'elaborazione XML:", error);
+        throw error;
+    }
 }
 function processXml(xmlString, invoiceNumbers) {
     try {
@@ -432,9 +514,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = document.getElementById('copyBtn');
     const downloadLink = document.getElementById('downloadLink');
     const statusMsg = document.getElementById('statusMsg');
-    const csvOutput = document.getElementById('csvOutput');
-    const sendToQbBtn = document.getElementById('sendToQbBtn');
-    if (!xmlFilesInput || !fileInfo || !convertBtn || !copyBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn) {
+    const csvOutput = document.getElementById('csvOutput');    const sendToQbBtn = document.getElementById('sendToQbBtn');
+    const saveToDbBtn = document.getElementById('saveToDbBtn');
+    const convertQtyBtn = document.getElementById('convertQtyBtn');
+    if (!xmlFilesInput || !fileInfo || !convertBtn || !copyBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn || !saveToDbBtn || !convertQtyBtn) {
         console.error('Elemento DOM mancante durante linizializzazione dei controlli requisiti');
     } else {
         appInit();
@@ -443,9 +526,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function appInit() {
         // Event listeners
         xmlFilesInput.addEventListener('change', updateFileInfo);
-        convertBtn.addEventListener('click', convertXmlToCsv);
+        convertBtn.addEventListener('click', convertXmlToCsv);        
+        convertQtyBtn.addEventListener('click', convertXmlToCsvWithQuantity);
         copyBtn.addEventListener('click', copyToClipboard);
         sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
+        saveToDbBtn.addEventListener('click', saveCsvToDatabase);
         
         // Pulsante per tornare alla pagina principale (index.html)
         document.getElementById('helpBtn').addEventListener('click', function() {
@@ -468,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (files.length === 0) {
             fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
             convertBtn.disabled = true;
+            convertQtyBtn.disabled = true;
         } else {
             fileInfo.innerHTML = `<p>${files.length} file XML selezionati:</p>`;
             const list = document.createElement('ul');
@@ -479,6 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             fileInfo.appendChild(list);
             convertBtn.disabled = false;
+            convertQtyBtn.disabled = false;
         }
     }
     
@@ -495,10 +582,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Mostra messaggio di elaborazione
         showStatus('Elaborazione in corso...', 'info');
-        
-        // Disabilita il pulsante durante l'elaborazione
+          // Disabilita il pulsante durante l'elaborazione
         convertBtn.disabled = true;
         sendToQbBtn.disabled = true;
+        saveToDbBtn.disabled = true;
         
         try {
             // Intestazione CSV
@@ -554,10 +641,10 @@ document.addEventListener('DOMContentLoaded', function() {
             renderCsvGrid(csvText);
             // Mostra anche nella textarea (nascosta) per copia/download
             csvOutput.value = csvText;
-            
-            // Abilita pulsanti di download/copia
+              // Abilita pulsanti di download/copia
             copyBtn.disabled = false;
             sendToQbBtn.disabled = false;
+            saveToDbBtn.disabled = false;
             
             // Crea un URL per il download
             updateDownloadLink(csvText);
@@ -570,6 +657,101 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             // Riattiva il pulsante
             convertBtn.disabled = false;
+        }
+    }
+    
+    // Converti i file XML in CSV includendo la quantità come colonna separata
+    async function convertXmlToCsvWithQuantity() {
+        console.log('DEBUG: convertXmlToCsvWithQuantity() è stata chiamata - processXmlWithQuantity disponibile:', typeof window.processXmlWithQuantity === 'function');
+        if (typeof window.processXmlWithQuantity !== 'function') {
+            alert('ERRORE: processXmlWithQuantity non è disponibile globalmente!');
+            return;
+        }
+        // Ottieni i file XML selezionati
+        const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
+        if (files.length === 0) return;
+        
+        // Mostra messaggio di elaborazione
+        showStatus('Elaborazione in corso (con quantità)...', 'info');
+        // Disabilita i pulsanti durante l'elaborazione
+        convertBtn.disabled = true;
+        convertQtyBtn.disabled = true;
+        sendToQbBtn.disabled = true;
+        saveToDbBtn.disabled = true;
+        
+        try {
+            // Intestazione CSV con quantità
+            const headers = [
+                "BillNo",
+                "Supplier",
+                "BillDate",
+                "DueDate",
+                "Terms",
+                "Location",
+                "Memo",
+                "Account",
+                "LineDescription",
+                "Quantity",  // Nuova colonna quantità
+                "UnitPrice", // Prezzo unitario
+                "LineAmount",
+                "LineTaxCode",
+                "LineTaxAmount",
+                "Filename"  // campo filename
+            ];
+            
+            // Righe del CSV
+            let csvRows = [headers.join(',')];
+            
+            // Registra i numeri di fattura per gestire i duplicati
+            const invoiceNumbers = {};
+            
+            // Elabora ogni file
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const file of files) {
+                try {
+                    const xmlText = await readFile(file);
+                    console.log(`DEBUG: Elaborazione file ${file.name} con quantità`);
+                    
+                    // Usa window.processXmlWithQuantity per includere la quantità
+                    let fileRows = window.processXmlWithQuantity(xmlText, invoiceNumbers);
+                    // Aggiungi nome file a ogni riga CSV
+                    fileRows = fileRows.map(r => `${r},"${file.name}"`);
+                    if (fileRows.length > 0) {
+                        csvRows = csvRows.concat(fileRows);
+                        successCount++;
+                    }
+                } catch (error) {
+                    console.error(`Errore nell'elaborazione di ${file.name}:`, error);
+                    errorCount++;
+                }
+            }
+            
+            // Crea il CSV completo
+            const csvText = csvRows.join('\n');
+            
+            // Mostra il CSV in grid (tabella)
+            renderCsvGrid(csvText);
+            // Mostra anche nella textarea (nascosta) per copia/download
+            csvOutput.value = csvText;
+            // Abilita pulsanti di download/copia
+            copyBtn.disabled = false;
+            sendToQbBtn.disabled = false;
+            saveToDbBtn.disabled = false;
+            
+            // Crea un URL per il download
+            updateDownloadLink(csvText, "fatture_quickbooks_con_quantita.csv");
+            
+            // Mostra messaggio di successo
+            showStatus(`Conversione con quantità completata: ${successCount} file elaborati con successo${errorCount > 0 ? `, ${errorCount} falliti` : ''}.`, 'success');
+        } catch (error) {
+            // Mostra errore
+            showStatus(`Errore durante la conversione con quantità: ${error.message}`, 'error');
+        } finally {
+            // Riattiva i pulsanti
+            convertBtn.disabled = false;
+            convertQtyBtn.disabled = false;
         }
     }        // Invio CSV a QuickBooks
     async function sendCsvToQuickBooks() {
@@ -641,7 +823,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Aggiorna il link di download
-    function updateDownloadLink(csvContent) {
+    function updateDownloadLink(csvContent, filename = "fatture_quickbooks.csv") {
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         
         // Crea URL per il download
@@ -649,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Aggiorna il link di download
         downloadLink.href = url;
-        downloadLink.download = "fatture_quickbooks.csv";
+        downloadLink.download = filename;
         downloadLink.style.display = "inline-block";
     }
     
@@ -737,10 +919,55 @@ document.addEventListener('DOMContentLoaded', function() {
         table.appendChild(tbody);
         
         // Aggiungi la tabella al contenitore
-        csvGridContainer.appendChild(table);
+        csvGridContainer.appendChild(table);    }
+    
+    // Funzione per salvare i dati nel database MySQL
+    async function saveCsvToDatabase() {
+        try {
+            const csvData = csvOutput.value;
+            if (!csvData || csvData.trim() === '') {
+                alert('Nessun dato CSV da salvare. Prima converti i file XML.');
+                return;
+            }
+            
+            // Disabilita il pulsante durante il salvataggio
+            saveToDbBtn.disabled = true;
+            saveToDbBtn.textContent = 'Salvando...';
+            
+            const response = await fetch('/save-to-database', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    csvData: csvData
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`✅ ${result.message}`);
+                statusMsg.innerHTML = `<div style="color: green;">✅ ${result.message}</div>`;
+            } else {
+                alert(`❌ Errore: ${result.message}`);
+                statusMsg.innerHTML = `<div style="color: red;">❌ Errore: ${result.message}</div>`;
+            }
+            
+        } catch (error) {
+            console.error('Errore durante il salvataggio:', error);
+            alert('❌ Errore durante il salvataggio nel database');
+            statusMsg.innerHTML = '<div style="color: red;">❌ Errore durante il salvataggio nel database</div>';
+        } finally {
+            // Riabilita il pulsante
+            saveToDbBtn.disabled = false;
+            saveToDbBtn.textContent = 'Salva in Database';
+        }
     }
+    
     // --- FINE DI TUTTE LE FUNZIONI E LISTENER ---
     console.log('Script inizializzato correttamente - processXml disponibile:', typeof window.processXml === 'function');
+    console.log('Script inizializzato correttamente - processXmlWithQuantity disponibile:', typeof window.processXmlWithQuantity === 'function');
 });
     </script>
 </body>

@@ -131,8 +131,9 @@ def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, ac
     try:
         if activity_date:
             activity_date = datetime.strptime(str(activity_date)[:10], "%Y-%m-%d").strftime("%Y-%m-%d")
+            logging.debug(f"Data attivita normalizzata: {activity_date}")
     except Exception as e:
-        logging.warning(f"Data attività non valida: {activity_date}, errore: {e}. Uso la data odierna.")
+        logging.warning(f"ATTENZIONE: Data attivita non valida: {activity_date}, errore: {e}. Uso la data odierna.")
         activity_date = datetime.now().strftime("%Y-%m-%d")
 
     logging.info(f"Verifico la presenza dell'employee '{employee_name}' in QuickBooks...")
@@ -141,7 +142,11 @@ def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, ac
         logging.info(f"Employee '{employee_name}' non trovato. Creo un nuovo dipendente...")
         employee_id = create_employee(employee_name, access_token)
         if not employee_id:
+            logging.error(f"ERRORE: Impossibile creare dipendente '{employee_name}'")
             raise ValueError("Impossibile creare dipendente.")
+        logging.info(f"SUCCESS: Nuovo dipendente creato con ID: {employee_id}")
+    else:
+        logging.debug(f"SUCCESS: Employee trovato con ID: {employee_id}")
 
     logging.info(f"Employee '{employee_name}' pronto con ID {employee_id}. Procedo con inserimento ore...")
 
@@ -160,6 +165,8 @@ def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, ac
         "Minutes": minutes,
         "Description": description
     }
+    
+    logging.debug(f"Payload QB: {hours}h {minutes}m, Tariffa: EUR{hourly_rate}/h")
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -168,21 +175,23 @@ def inserisci_ore(employee_name, subcustomer_id, hours, minutes, hourly_rate, ac
     }
 
     if existing:
-        logging.info("Ore già inserite per questa data. Aggiorno la TimeActivity...")
+        logging.info(f"Ore gia inserite per questa data. Aggiorno la TimeActivity ID: {existing.get('Id')}...")
         payload["Id"] = existing["Id"]
         payload["SyncToken"] = existing["SyncToken"]
         payload["sparse"] = True
-        url = f"{config.API_BASE_URL}{config.REALM_ID}/timeactivity?operation=update"
+        url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/timeactivity?operation=update"
         response = requests.post(url, headers=headers, json=payload)
     else:
         logging.info("Nessuna TimeActivity trovata. Creo una nuova registrazione...")
-        url = f"{config.API_BASE_URL}{config.REALM_ID}/timeactivity"
+        url = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/timeactivity"
         response = requests.post(url, headers=headers, json=payload)
 
     if response.status_code in [200, 201]:
+        logging.info(f"SUCCESS: TimeActivity QB completata con successo (Status: {response.status_code})")
         return response.json()
     else:
-        logging.error(f"Errore durante inserimento ore: {response.status_code}, {response.text}")
+        logging.error(f"ERRORE durante inserimento ore QB: {response.status_code}")
+        logging.error(f"   Dettaglio errore: {response.text}")
         return None
 
 
@@ -191,30 +200,66 @@ def import_ore_da_excel(filepath, data_attivita, hourly_rate=50, descrizione_def
     Importa ore lavorate da un file Excel con colonne:
     A: Project ID, B: Nominativo dipendente, C: Ore lavorate (HH:MM)
     """
+    import logging
+    
+    logging.info(f"INIZIO ELABORAZIONE EXCEL: {filepath}")
+    logging.info(f"Data attivita: {data_attivita}")
+    
     if not os.path.exists(filepath):
+        logging.error(f"ERRORE: File non trovato: {filepath}")
         raise FileNotFoundError(f"File non trovato: {filepath}")
-    wb = openpyxl.load_workbook(filepath)
-    ws = wb.active
+    
+    try:
+        logging.info("Apertura file Excel...")
+        wb = openpyxl.load_workbook(filepath)
+        ws = wb.active
+        logging.info(f"Fogli di lavoro trovati: {len(wb.worksheets)}")
+        logging.info(f"Foglio attivo: {ws.title}")
+        
+        # Conta righe totali (escluso header)
+        total_rows = sum(1 for row in ws.iter_rows(min_row=2) if any(cell.value for cell in row))
+        logging.info(f"Righe da elaborare: {total_rows}")
+        
+    except Exception as e:
+        logging.error(f"ERRORE apertura Excel: {e}")
+        raise
+    
     risultati = []
+    processed_count = 0
+    
     for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # Salta header
         project_id = row[0].value
         employee_name = row[1].value
         ore_str = row[2].value
+        
+        processed_count += 1
+        if processed_count % 10 == 0:  # Log ogni 10 righe
+            logging.info(f"Elaborate {processed_count}/{total_rows} righe...")
+        
+        # Log dettagli riga solo se in debug
+        logging.debug(f"   Riga {i}: Project={project_id}, Employee={employee_name}, Ore={ore_str}")
+        
         if not (project_id and employee_name and ore_str):
+            logging.warning(f"ATTENZIONE Riga {i}: Dati mancanti - Project={project_id}, Employee={employee_name}, Ore={ore_str}")
             risultati.append({"row": i, "project_id": project_id, "employee_name": employee_name, "ore": ore_str, "esito": "Dati mancanti"})
             continue
+        
         # Conversione ore HH:MM → ore e minuti separati
         try:
             if isinstance(ore_str, (int, float)):
                 hours = int(ore_str)
                 minutes = int(round((float(ore_str) - hours) * 60))
+                logging.debug(f"   Riga {i}: Conversione numerica {ore_str} -> {hours}h {minutes}m")
             else:
                 ore_parts = str(ore_str).strip().split(":")
                 hours = int(ore_parts[0])
                 minutes = int(ore_parts[1]) if len(ore_parts) > 1 else 0
+                logging.debug(f"   Riga {i}: Conversione stringa '{ore_str}' -> {hours}h {minutes}m")
         except Exception as e:
+            logging.error(f"ERRORE Riga {i}: Errore conversione ore '{ore_str}': {e}")
             risultati.append({"row": i, "project_id": project_id, "employee_name": employee_name, "ore": ore_str, "esito": f"Errore conversione ore: {e}"})
             continue
+        
         # NON chiamare inserisci_ore qui! Solo verifica dati, nessuna chiamata a QB
         risultati.append({
             "row": i,
@@ -224,4 +269,13 @@ def import_ore_da_excel(filepath, data_attivita, hourly_rate=50, descrizione_def
             "minutes": minutes,
             "esito": "OK"
         })
+    
+    success_count = sum(1 for r in risultati if r.get('esito') == 'OK')
+    error_count = len(risultati) - success_count
+    
+    logging.info(f"ELABORAZIONE EXCEL COMPLETATA:")
+    logging.info(f"   Righe totali elaborate: {len(risultati)}")
+    logging.info(f"   Righe valide: {success_count}")
+    logging.info(f"   Righe con errori: {error_count}")
+    
     return risultati

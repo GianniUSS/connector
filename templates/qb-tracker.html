@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker QuickBooks - Rentman Project Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stats-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .stats-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .stats-card.invoices {
+            border-left-color: #27ae60;
+        }
+        
+        .stats-card.time-activities {
+            border-left-color: #e74c3c;
+        }
+        
+        .stats-card.general {
+            border-left-color: #f39c12;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .success { color: #27ae60; }
+        .error { color: #e74c3c; }
+        .timeout { color: #f39c12; }
+        .other { color: #95a5a6; }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219a52;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #d68910;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-back {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-back:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .project-search {
+            margin-bottom: 20px;
+        }
+        
+        .project-search input {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .time-activities-list {
+            margin-top: 15px;
+        }
+        
+        .time-activity-item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .time-activity-item.success {
+            border-left-color: #27ae60;
+        }
+        
+        .time-activity-item.error {
+            border-left-color: #e74c3c;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Tracker QuickBooks</h1>
+        
+        <div class="message" id="message"></div>
+        
+        <div class="controls">
+            <button class="btn-primary" onclick="loadStats()">
+                🔄 Aggiorna Statistiche
+            </button>
+            <button class="btn-success" onclick="exportData('time_activities')">
+                📤 Esporta Ore
+            </button>
+            <button class="btn-success" onclick="exportData('invoices')">
+                📤 Esporta Fatture
+            </button>
+            <button class="btn-warning" onclick="cleanupOld('time_activities')">
+                🧹 Pulisci Ore Vecchie
+            </button>
+            <button class="btn-back" onclick="goBack()">
+                ← Torna alla Home
+            </button>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="loading">Caricamento statistiche...</div>
+        </div>
+        
+        <div class="project-search">
+            <h3>🔍 Cerca Progetto</h3>
+            <input type="number" id="projectIdInput" placeholder="ID Progetto (es: 3485)">
+            <button class="btn-primary" onclick="searchProject()">Cerca</button>
+        </div>
+        
+        <div class="project-details" id="projectDetails">
+            <h3>Dettagli Progetto</h3>
+            <div id="projectContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        function showMessage(text, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function loadStats() {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = '<div class="loading">Caricamento statistiche...</div>';
+            
+            fetch('/qb-tracker-stats')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayStats(data.stats, data.additional_stats);
+                    } else {
+                        showMessage('Errore nel caricamento delle statistiche: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    showMessage('Errore di connessione: ' + error, 'error');
+                });
+        }
+        
+        function displayStats(stats, additionalStats) {
+            const statsGrid = document.getElementById('statsGrid');
+            let html = '';
+            
+            // Statistiche Fatture
+            if (stats.invoices) {
+                html += createStatsCard('Fatture', stats.invoices, 'invoices');
+            }
+            
+            // Statistiche Ore
+            if (stats.time_activities) {
+                const extraStats = additionalStats.time_activities_extra || {};
+                html += createStatsCard('Ore Lavorate', stats.time_activities, 'time-activities', extraStats);
+            }
+            
+            // Statistiche Generali
+            if (stats.general) {
+                html += createStatsCard('Generale', stats.general, 'general');
+            }
+            
+            statsGrid.innerHTML = html;
+        }
+        
+        function createStatsCard(title, stats, cssClass, extraStats = {}) {
+            let extraHtml = '';
+            if (extraStats.unique_projects) {
+                extraHtml = `
+                    <div class="stat-item">
+                        <span>Progetti Unici:</span>
+                        <span class="stat-value">${extraStats.unique_projects}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Dipendenti Unici:</span>
+                        <span class="stat-value">${extraStats.unique_employees}</span>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="stats-card ${cssClass}">
+                    <h3>${title}</h3>
+                    <div class="stat-item">
+                        <span>Totale:</span>
+                        <span class="stat-value">${stats.total}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Successi:</span>
+                        <span class="stat-value success">${stats.success}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Errori:</span>
+                        <span class="stat-value error">${stats.error}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Timeout:</span>
+                        <span class="stat-value timeout">${stats.timeout}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Altri:</span>
+                        <span class="stat-value other">${stats.other}</span>
+                    </div>
+                    ${extraHtml}
+                </div>
+            `;
+        }
+        
+        function searchProject() {
+            const projectId = document.getElementById('projectIdInput').value;
+            if (!projectId) {
+                showMessage('Inserisci un ID progetto', 'error');
+                return;
+            }
+            
+            const projectDetails = document.getElementById('projectDetails');
+            const projectContent = document.getElementById('projectContent');
+            
+            projectContent.innerHTML = '<div class="loading">Caricamento dettagli progetto...</div>';
+            projectDetails.style.display = 'block';
+            
+            fetch(`/qb-tracker-project/${projectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayProjectDetails(data.project_summary);
+                    } else {
+                        projectContent.innerHTML = `<p class="error">Errore: ${data.error}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    projectContent.innerHTML = `<p class="error">Errore di connessione: ${error}</p>`;
+                });
+        }
+        
+        function displayProjectDetails(summary) {
+            const projectContent = document.getElementById('projectContent');
+            
+            let html = `<h4>Progetto ${summary.project_id}</h4>`;
+            
+            // Stato fattura
+            if (summary.invoice) {
+                html += `
+                    <div class="stat-item">
+                        <span><strong>Fattura:</strong></span>
+                        <span class="stat-value ${summary.invoice.status}">${summary.invoice.status}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Data:</span>
+                        <span class="stat-value">${summary.invoice.timestamp}</span>
+                    </div>
+                `;
+                if (summary.invoice.message) {
+                    html += `
+                        <div class="stat-item">
+                            <span>Messaggio:</span>
+                            <span class="stat-value">${summary.invoice.message}</span>
+                        </div>
+                    `;
+                }
+            } else {
+                html += '<p>Nessuna fattura importata</p>';
+            }
+            
+            // Ore lavorate
+            if (summary.time_activities && summary.time_activities.length > 0) {
+                html += `<h4>Ore Lavorate (${summary.time_activities.length})</h4>`;
+                html += '<div class="time-activities-list">';
+                
+                summary.time_activities.forEach(activity => {
+                    const details = activity.details || {};
+                    html += `
+                        <div class="time-activity-item ${activity.status}">
+                            <strong>${activity.employee_name}</strong> - 
+                            ${details.hours || 0}h ${details.minutes || 0}m
+                            <br>
+                            <small>
+                                Status: ${activity.status} | 
+                                Data: ${activity.timestamp} | 
+                                Metodo: ${details.import_method || 'N/A'}
+                            </small>
+                            ${activity.message ? `<br><small>Messaggio: ${activity.message}</small>` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            } else {
+                html += '<p>Nessuna ora lavorata importata</p>';
+            }
+            
+            projectContent.innerHTML = html;
+        }
+        
+        function exportData(operationType) {
+            fetch('/qb-tracker-export', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    operation_type: operationType
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(`Dati esportati in: ${data.output_file}`, 'success');
+                } else {
+                    showMessage('Errore durante esportazione: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Errore di connessione: ' + error, 'error');
+            });
+        }
+        
+        function cleanupOld(operationType, days = 30) {
+            if (!confirm(`Rimuovere entry più vecchie di ${days} giorni da ${operationType}?`)) {
+                return;
+            }
+            
+            fetch('/qb-tracker-cleanup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    operation_type: operationType,
+                    days_old: days
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(`Rimossi ${data.removed_count} entry vecchi`, 'success');
+                    loadStats(); // Ricarica le statistiche
+                } else {
+                    showMessage('Errore durante pulizia: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Errore di connessione: ' + error, 'error');
+            });
+        }
+        
+        function goBack() {
+            window.location.href = '/';
+        }
+        
+        // Carica le statistiche all'avvio
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+        });
+    </script>
+</body>
+</html>

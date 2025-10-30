@@ -815,19 +815,22 @@ def find_subcustomer_with_robust_matching(customers_list, display_name, parent_i
     """
     import logging
     
+    # TRIM preventivo del nome di ricerca
+    display_name_clean = display_name.strip() if display_name else display_name
+    
     for c in customers_list:
         customer_display_name = c.get('DisplayName', '')
         customer_parent_ref = c.get('ParentRef', {}).get('value', '')
         
         # Strategia 1: Match esatto
-        if customer_display_name == display_name and customer_parent_ref == parent_id:
-            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato (match esatto), ID {c.get('Id')}")
+        if customer_display_name == display_name_clean and customer_parent_ref == parent_id:
+            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_clean}' trovato (match esatto), ID {c.get('Id')}")
             return c
         
         # Strategia 2: Match con trim (rimuove spazi iniziali/finali) - RISOLVE CASO CSEXO25
-        if customer_display_name.strip() == display_name.strip() and customer_parent_ref == parent_id:
-            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato (match trimmed), ID {c.get('Id')}")
-            logging.info(f"[QBO][SUB-CUSTOMER] Input: '{display_name}' ({len(display_name)} chars) -> QB: '{customer_display_name}' ({len(customer_display_name)} chars)")
+        if customer_display_name.strip() == display_name_clean.strip() and customer_parent_ref == parent_id:
+            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_clean}' trovato (match trimmed), ID {c.get('Id')}")
+            logging.info(f"[QBO][SUB-CUSTOMER] Input: '{display_name_clean}' ({len(display_name_clean)} chars) -> QB: '{customer_display_name}' ({len(customer_display_name)} chars)")
             return c
         
         # Strategia 3: Match normalizzato (rimuove caratteri invisibili)
@@ -836,9 +839,24 @@ def find_subcustomer_with_robust_matching(customers_list, display_name, parent_i
             # Rimuove caratteri invisibili e normalizza spazi
             return re.sub(r'\s+', ' ', s.strip())
         
-        if normalize_string(customer_display_name) == normalize_string(display_name) and customer_parent_ref == parent_id:
-            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato (match normalizzato), ID {c.get('Id')}")
+        if normalize_string(customer_display_name) == normalize_string(display_name_clean) and customer_parent_ref == parent_id:
+            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_clean}' trovato (match normalizzato), ID {c.get('Id')}")
             return c
+        
+        # Strategia 4: Match parziale per nomi troncati (gestisce casi come 'Casa Freda_Foggi' vs 'Casa Freda_Foggia (Fg)')
+        normalized_customer = normalize_string(customer_display_name)
+        normalized_search = normalize_string(display_name_clean)
+        
+        # Se uno è più corto dell'altro, prova match parziale
+        if len(normalized_customer) != len(normalized_search) and customer_parent_ref == parent_id:
+            shorter = min(normalized_customer, normalized_search, key=len)
+            longer = max(normalized_customer, normalized_search, key=len)
+            
+            # Match se il nome più corto è contenuto all'inizio del più lungo (almeno 15 caratteri per evitare false match)
+            if len(shorter) >= 15 and longer.startswith(shorter):
+                logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_clean}' trovato (match parziale), ID {c.get('Id')}")
+                logging.info(f"[QBO][SUB-CUSTOMER] Match parziale: QB='{normalized_customer}' vs Input='{normalized_search}'")
+                return c
     
     return None
 
@@ -868,12 +886,18 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
             "Accept": "application/json"
         }
         
+        # TRIM del nome per rimuovere spazi extra
+        display_name_trimmed = display_name.strip() if display_name else display_name
+        
         # Strategia 1: Query con escape apostrofi
-        safe_display_name = display_name.replace("'", "''") if display_name else display_name
+        safe_display_name = display_name_trimmed.replace("'", "''") if display_name_trimmed else display_name_trimmed
+        # Gestisci anche altri caratteri problematici per le query SQL
+        safe_display_name = safe_display_name.replace("\\", "\\\\") if safe_display_name else safe_display_name
         query = f"SELECT * FROM Customer WHERE DisplayName = '{safe_display_name}'"
         params = {"query": query}
         
-        logging.info(f"[QBO][SUB-CUSTOMER] Cerco sub-customer con DisplayName: '{display_name}' (escaped: '{safe_display_name}')")
+        logging.info(f"[QBO][SUB-CUSTOMER] Cerco sub-customer con DisplayName: '{display_name_trimmed}' (escaped: '{safe_display_name}')")
+        logging.info(f"[QBO][SUB-CUSTOMER] Debug - Nome originale: '{repr(display_name)}' -> Trimmed: '{repr(display_name_trimmed)}' (lunghezza: {len(display_name_trimmed)})")
         resp = requests.get(url_query, headers=headers, params=params)
         
         # Se la query diretta fallisce per parsing, provo strategie alternative
@@ -881,7 +905,7 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
             logging.warning(f"[QBO][SUB-CUSTOMER] Query con escape fallita per parsing. Provo query senza escape...")
             
             # Strategia 2: Query senza escape degli apostrofi
-            query_no_escape = f"SELECT * FROM Customer WHERE DisplayName = '{display_name}'"
+            query_no_escape = f"SELECT * FROM Customer WHERE DisplayName = '{display_name_trimmed}'"
             params_no_escape = {"query": query_no_escape}
             resp_alt = requests.get(url_query, headers=headers, params=params_no_escape)
             
@@ -892,10 +916,10 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                     # Filtro per parent_id se necessario
                     matching_customers = [c for c in customers_alt if c.get('ParentRef', {}).get('value') == parent_id]
                     if matching_customers:
-                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato con query senza escape, ID {matching_customers[0].get('Id')}")
+                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato con query senza escape, ID {matching_customers[0].get('Id')}")
                         return matching_customers[0]
                     elif len(customers_alt) == 1:
-                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato con query senza escape (unico), ID {customers_alt[0].get('Id')}")
+                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato con query senza escape (unico), ID {customers_alt[0].get('Id')}")
                         return customers_alt[0]
               # Strategia 3: Workaround completo - recupera tutti i sub-customer e filtra in Python
             logging.warning(f"[QBO][SUB-CUSTOMER] Anche query senza escape fallita. Provo workaround: recupero tutti i sub-customer (Job=true) e filtro in Python...")
@@ -906,14 +930,14 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
             if resp_all.status_code == 200:
                 data_all = resp_all.json()
                 customers_all = data_all.get('QueryResponse', {}).get('Customer', [])
-                logging.info(f"[QBO][SUB-CUSTOMER] Recuperati {len(customers_all)} sub-customer totali, filtro per DisplayName='{display_name}' e ParentRef.value='{parent_id}'")
+                logging.info(f"[QBO][SUB-CUSTOMER] Recuperati {len(customers_all)} sub-customer totali, filtro per DisplayName='{display_name_trimmed}' e ParentRef.value='{parent_id}'")
                 
                 # Usa la funzione di matching robusta
-                found_customer = find_subcustomer_with_robust_matching(customers_all, display_name, parent_id)
+                found_customer = find_subcustomer_with_robust_matching(customers_all, display_name_trimmed, parent_id)
                 if found_customer:
                     return found_customer
                 
-                logging.warning(f"[QBO][SUB-CUSTOMER] Nessun sub-customer trovato tramite workaround per DisplayName='{display_name}' e ParentRef='{parent_id}'")
+                logging.warning(f"[QBO][SUB-CUSTOMER] Nessun sub-customer trovato tramite workaround per DisplayName='{display_name_trimmed}' e ParentRef='{parent_id}'")
             else:
                 logging.error(f"[QBO][SUB-CUSTOMER] Workaround fallito: errore query all sub-customer: status {resp_all.status_code} - {resp_all.text}")
                 
@@ -928,22 +952,25 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                     if len(matching_customers) > 1:
                         logging.warning(f"[QBO][SUB-CUSTOMER] Trovati {len(matching_customers)} sub-customer con lo stesso DisplayName e ParentRef: '{display_name}'. Restituisco il primo con ID {matching_customers[0].get('Id')}")
                     else:
-                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato in QBO con ID {matching_customers[0].get('Id')}")
+                        logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato in QBO con ID {matching_customers[0].get('Id')}")
                     return matching_customers[0]
                 elif len(customers) == 1:
                     # Se c'è un solo risultato, probabilmente è quello giusto
-                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato (unico risultato), ID {customers[0].get('Id')}")
+                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato (unico risultato), ID {customers[0].get('Id')}")
                     return customers[0]
                 else:
-                    logging.warning(f"[QBO][SUB-CUSTOMER] Trovati {len(customers)} customer con DisplayName '{display_name}' ma nessuno con ParentRef='{parent_id}' (procedo con creazione)")
+                    logging.warning(f"[QBO][SUB-CUSTOMER] Trovati {len(customers)} customer con DisplayName '{display_name_trimmed}' ma nessuno con ParentRef='{parent_id}' (procedo con creazione)")
             else:
-                logging.info(f"[QBO][SUB-CUSTOMER] Nessun sub-customer trovato per '{display_name}' (procedo con creazione)")
+                logging.info(f"[QBO][SUB-CUSTOMER] Nessun sub-customer trovato per '{display_name_trimmed}' (procedo con creazione)")
         else:
             logging.error(f"[QBO][SUB-CUSTOMER] Errore query sub-customer: status {resp.status_code} - {resp.text}")
         
-        # Creazione sub-cliente
+        # Creazione sub-cliente (usa il nome trimmed)
         url_create = f"{config.API_BASE_URL}/v3/company/{config.REALM_ID}/customer"
         headers["Content-Type"] = "application/json"
+        
+        # Aggiorna il DisplayName nel payload con la versione trimmed
+        subcustomer_data["DisplayName"] = display_name_trimmed
         subcustomer_data["ParentRef"] = {"value": parent_id}
         subcustomer_data["Job"] = True
         if "CustomField" in subcustomer_data:
@@ -956,7 +983,7 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
         
         if resp.status_code in (200, 201):
             customer = resp.json().get('Customer', {})
-            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' creato in QBO con ID {customer.get('Id')}")
+            logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' creato in QBO con ID {customer.get('Id')}")
             return customer
         else:
             # Gestione errore 6000 (already using this name)
@@ -967,10 +994,10 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                 
                 for err in errors:
                     if (err.get("code") == "6000" and "already using this name" in err.get("Detail", "")):
-                        logging.warning(f"[QBO][SUB-CUSTOMER] Sub-customer già esistente con nome '{display_name}'. Provo a recuperare l'ID tramite strategie di fallback...")
+                        logging.warning(f"[QBO][SUB-CUSTOMER] Sub-customer già esistente con nome '{display_name_trimmed}'. Provo a recuperare l'ID tramite strategie di fallback...")
                         
                         # Strategia fallback 1: Query diretta con escape
-                        safe_display_name_fallback = display_name.replace("'", "''") if display_name else display_name
+                        safe_display_name_fallback = display_name_trimmed.replace("'", "''") if display_name_trimmed else display_name_trimmed
                         query_fallback = f"SELECT * FROM Customer WHERE DisplayName = '{safe_display_name_fallback}'"
                         params_fallback = {"query": query_fallback}
                         logging.info(f"[QBO][SUB-CUSTOMER] Query fallback per recupero ID: {query_fallback}")
@@ -984,12 +1011,12 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                                 matching_customers = [c for c in customers3 if c.get('ParentRef', {}).get('value') == parent_id]
                                 if matching_customers:
                                     customer_found = matching_customers[0]
-                                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato con fallback query diretta, ID {customer_found.get('Id')}")
+                                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato con fallback query diretta, ID {customer_found.get('Id')}")
                                     return customer_found
                                 elif len(customers3) == 1:
                                     # Se c'è un solo risultato, probabilmente è quello giusto
                                     customer_found = customers3[0]
-                                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name}' trovato con fallback (unico risultato), ID {customer_found.get('Id')}")
+                                    logging.info(f"[QBO][SUB-CUSTOMER] Sub-customer '{display_name_trimmed}' trovato con fallback (unico risultato), ID {customer_found.get('Id')}")
                                     return customer_found
                         
                         # Strategia fallback 2: Se query diretta fallisce, provo workaround completo
@@ -1002,10 +1029,10 @@ def trova_o_crea_subcustomer(display_name, parent_id, subcustomer_data):
                             if resp_all_fallback.status_code == 200:
                                 data_all_fallback = resp_all_fallback.json()
                                 customers_all_fallback = data_all_fallback.get('QueryResponse', {}).get('Customer', [])
-                                logging.info(f"[QBO][SUB-CUSTOMER] Fallback completo: recuperati {len(customers_all_fallback)} sub-customer, filtro per DisplayName='{display_name}' e ParentRef='{parent_id}'")
+                                logging.info(f"[QBO][SUB-CUSTOMER] Fallback completo: recuperati {len(customers_all_fallback)} sub-customer, filtro per DisplayName='{display_name_trimmed}' e ParentRef='{parent_id}'")
                                 
                                 # Usa la funzione di matching robusta anche qui
-                                found_customer = find_subcustomer_with_robust_matching(customers_all_fallback, display_name, parent_id)
+                                found_customer = find_subcustomer_with_robust_matching(customers_all_fallback, display_name_trimmed, parent_id)
                                 if found_customer:
                                     return found_customer
                                 

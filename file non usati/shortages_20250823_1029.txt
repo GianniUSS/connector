@@ -1,0 +1,16 @@
+Rentman • Carenze progetto 31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr) (ID 3288) — data 2025-08-31
+
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Silvania 15x20_montaggio incluso (sidewall inclusi) → pianificato 1, coperto 0, ❗ mancano 1
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Dancefloor 6x6 bianco → pianificato 1, coperto 0, ❗ mancano 1
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Tetto di luci - Passo 50cm._700ml. → pianificato 1, coperto 0, ❗ mancano 1
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Colonna Haier → pianificato 4, coperto 0, ❗ mancano 4
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Personale  Allestimenti_29 Agosto_1 Settembre → pianificato 10, coperto 0, ❗ mancano 10
+- [31Aug25 EXO_Ottone Wedding_Castello di Vicarello_Poggi del Sasso (Gr)] Ombreggiante → pianificato 1, coperto 0, ❗ mancano 1
+
+--- DEBUG GRUPPI ---
+Silvania 15x20_montaggio incluso (sidewall inclusi) | planned_parts=[1.0, 1.0] reserved_parts=[0.0, 0.0] subrent_parts=[0.0, 0.0] → planned_eff=1.0, reserved_sum=0.0, subrent_sum=0.0, missing=1.0 | reasons=['', ''] ui_match=False | event_dates=[datetime.date(2025, 8, 29), datetime.date(2025, 8, 29)]
+Dancefloor 6x6 bianco | planned_parts=[1.0, 1.0] reserved_parts=[0.0, 0.0] subrent_parts=[0.0, 0.0] → planned_eff=1.0, reserved_sum=0.0, subrent_sum=0.0, missing=1.0 | reasons=['', ''] ui_match=False | event_dates=[datetime.date(2025, 8, 29), datetime.date(2025, 8, 29)]
+Tetto di luci - Passo 50cm._700ml. | planned_parts=[1.0, 1.0] reserved_parts=[0.0, 0.0] subrent_parts=[0.0, 0.0] → planned_eff=1.0, reserved_sum=0.0, subrent_sum=0.0, missing=1.0 | reasons=['', ''] ui_match=False | event_dates=[datetime.date(2025, 8, 29), datetime.date(2025, 8, 29)]
+Colonna Haier | planned_parts=[4.0] reserved_parts=[0.0] subrent_parts=[0.0] → planned_eff=4.0, reserved_sum=0.0, subrent_sum=0.0, missing=4.0 | reasons=[''] ui_match=False | event_dates=[datetime.date(2025, 8, 29)]
+Personale  Allestimenti_29 Agosto_1 Settembre | planned_parts=[10.0] reserved_parts=[0.0] subrent_parts=[0.0] → planned_eff=10.0, reserved_sum=0.0, subrent_sum=0.0, missing=10.0 | reasons=[''] ui_match=False | event_dates=[datetime.date(2025, 8, 29)]
+Ombreggiante | planned_parts=[1.0] reserved_parts=[0.0] subrent_parts=[0.0] → planned_eff=1.0, reserved_sum=0.0, subrent_sum=0.0, missing=1.0 | reasons=[''] ui_match=False | event_dates=[datetime.date(2025, 8, 29)]

@@ -1,0 +1,1880 @@
+{
+  "test_001": {
+    "status": "success",
+    "message": "Test",
+    "timestamp": "2025-06-26T12:49:23",
+    "details": {
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_error_20250626_130043": {
+    "status": "error",
+    "message": "Errore durante importazione Excel: cannot access local variable 'datetime' where it is not associated with a value",
+    "timestamp": "2025-06-26T13:00:43",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-03-13",
+      "error_type": "general_exception",
+      "full_error": "cannot access local variable 'datetime' where it is not associated with a value",
+      "exception_type": "UnboundLocalError",
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_error_20250627_073103": {
+    "status": "error",
+    "message": "Errore durante importazione Excel: cannot access local variable 'datetime' where it is not associated with a value",
+    "timestamp": "2025-06-27T07:31:03",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "error_type": "general_exception",
+      "full_error": "cannot access local variable 'datetime' where it is not associated with a value",
+      "exception_type": "UnboundLocalError",
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_error_20250627_073607": {
+    "status": "error",
+    "message": "Errore durante importazione Excel: cannot access local variable 'datetime' where it is not associated with a value",
+    "timestamp": "2025-06-27T07:36:07",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "error_type": "general_exception",
+      "full_error": "cannot access local variable 'datetime' where it is not associated with a value",
+      "exception_type": "UnboundLocalError",
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_error_20250627_073707": {
+    "status": "error",
+    "message": "Errore durante importazione Excel: cannot access local variable 'datetime' where it is not associated with a value",
+    "timestamp": "2025-06-27T07:37:08",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "error_type": "general_exception",
+      "full_error": "cannot access local variable 'datetime' where it is not associated with a value",
+      "exception_type": "UnboundLocalError",
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_error_20250627_074044": {
+    "status": "error",
+    "message": "Errore durante importazione Excel: File is not a zip file",
+    "timestamp": "2025-06-27T07:40:44",
+    "details": {
+      "file_name": "test_excel.csv",
+      "activity_date": "2025-05-22",
+      "error_type": "general_exception",
+      "full_error": "File is not a zip file",
+      "exception_type": "BadZipFile",
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_074524": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T07:46:06",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 5,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 2366,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_074919": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T07:49:56",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 5,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 2366,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 2366,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_075241": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T07:53:22",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-01-01",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 5,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3156,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3156,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3156,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3156,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3156,
+          "employee": "Anna Pinto",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_075708": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T07:57:33",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-01-26",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 3,
+        "error_rows": 8
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3226,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Ciro Russo",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_080737": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T08:08:01",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-22",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 3,
+        "error_rows": 8
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3226,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Ciro Russo",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_081059": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T08:11:22",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-01-22",
+      "validation_results": {
+        "total_rows": 11,
+        "valid_rows": 3,
+        "error_rows": 8
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3226,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Ciro Russo",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_081233": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T08:12:55",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-01-22",
+      "validation_results": {
+        "total_rows": 3,
+        "valid_rows": 3,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3226,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3226,
+          "employee": "Ciro Russo",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_081544": {
+    "status": "success",
+    "message": "Importazione completata: 4/4 righe inserite",
+    "timestamp": "2025-06-27T08:16:14",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-06-01",
+      "validation_results": {
+        "total_rows": 4,
+        "valid_rows": 4,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 4,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3274,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3274,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3274,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3274,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_081945": {
+    "status": "success",
+    "message": "Importazione completata: 2/2 righe inserite",
+    "timestamp": "2025-06-27T08:20:10",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-26",
+      "validation_results": {
+        "total_rows": 4,
+        "valid_rows": 2,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 2,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3293,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3293,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_082256": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T08:23:36",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-26",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 5,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3303,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3303,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3303,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3303,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3303,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_084522": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T08:45:59",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-30",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 3,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3322,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3322,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3322,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_090013": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T09:00:48",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-30",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 3,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3322,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3322,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3322,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_090340": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-27T09:04:20",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-30",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 3,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3332,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3332,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3332,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_090652": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T09:07:36",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-26",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 5,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3354,
+          "employee": "Mino Pellegrino",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_090918": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-27T09:09:57",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-26",
+      "validation_results": {
+        "total_rows": 5,
+        "valid_rows": 5,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3354,
+          "employee": "Mino Pellegrino",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3354,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_091628": {
+    "status": "success",
+    "message": "Importazione completata: 8/8 righe inserite",
+    "timestamp": "2025-06-27T09:17:32",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-17",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 8,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 8,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3410,
+          "employee": "Anna Pinto",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Mino Pellegrino",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Angelo Ruggieri",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3410,
+          "employee": "Tatiana Veronesi",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_105245": {
+    "status": "success",
+    "message": "Importazione completata: 1/1 righe inserite",
+    "timestamp": "2025-06-27T10:53:08",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 1,
+        "error_rows": 7
+      },
+      "qb_results": {
+        "success_count": 1,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3422,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250627_105451": {
+    "status": "success",
+    "message": "Importazione completata: 1/1 righe inserite",
+    "timestamp": "2025-06-27T10:55:30",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 1,
+        "error_rows": 7
+      },
+      "qb_results": {
+        "success_count": 1,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3424,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_071321": {
+    "status": "success",
+    "message": "Importazione completata: 1/1 righe inserite",
+    "timestamp": "2025-06-30T07:13:36",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 1,
+        "error_rows": 7
+      },
+      "qb_results": {
+        "success_count": 1,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3424,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_072558": {
+    "status": "error",
+    "message": "Importazione completata: 0/7 righe inserite",
+    "timestamp": "2025-06-30T07:26:46",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-11",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 7,
+        "error_rows": 1
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 7,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3475,
+          "employee": "Gentian  Deda",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Angelo Semeraro",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Donato Laviola",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Anxhelo Cjapi",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Tonio Calianno",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Flavio Vito Ricci",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        },
+        {
+          "project_id": 3475,
+          "employee": "Pasquale Donnaloia",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_073016": {
+    "status": "error",
+    "message": "Importazione completata: 0/1 righe inserite",
+    "timestamp": "2025-06-30T07:30:25",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-11",
+      "validation_results": {
+        "total_rows": 1,
+        "valid_rows": 1,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 1,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3475,
+          "employee": "Gentian  Deda",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_073418": {
+    "status": "error",
+    "message": "Importazione completata: 0/1 righe inserite",
+    "timestamp": "2025-06-30T07:34:25",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-11",
+      "validation_results": {
+        "total_rows": 1,
+        "valid_rows": 1,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 1,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3475,
+          "employee": "Gentian  Deda",
+          "esito": "ERRORE: Subcustomer non trovato/creato per 11May25 EXO_Casa Freda_Foggia (Fg) "
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_074758": {
+    "status": "success",
+    "message": "Importazione completata: 1/1 righe inserite",
+    "timestamp": "2025-06-30T07:48:09",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-11",
+      "validation_results": {
+        "total_rows": 1,
+        "valid_rows": 1,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 1,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3475,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_075547": {
+    "status": "success",
+    "message": "Importazione completata: 7/7 righe inserite",
+    "timestamp": "2025-06-30T07:57:07",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-11",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 7,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 7,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3475,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3475,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_075940": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-30T08:00:22",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-03-30",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 5,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3485,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3485,
+          "employee": "Ciro Russo",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3485,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3485,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3485,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_080431": {
+    "status": "success",
+    "message": "Importazione completata: 2/2 righe inserite",
+    "timestamp": "2025-06-30T08:04:48",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-26",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 2,
+        "error_rows": 5
+      },
+      "qb_results": {
+        "success_count": 2,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3540,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3540,
+          "employee": "Mino Pellegrino",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_080624": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-30T08:07:05",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-31",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 5,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3569,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3569,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3569,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3569,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3569,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_080907": {
+    "status": "success",
+    "message": "Importazione completata: 7/7 righe inserite",
+    "timestamp": "2025-06-30T08:10:50",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-04-28",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 7,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 7,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3588,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Angelo Ruggieri",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3588,
+          "employee": "Anna Pinto",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_085651": {
+    "status": "error",
+    "message": "Importazione completata: 0/3 righe inserite",
+    "timestamp": "2025-06-30T08:56:58",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-10",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 3,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 3,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3592,
+          "employee": "Angelo Semeraro",
+          "esito": "ERRORE: Customer non trovato/creato per Getur Levante srl"
+        },
+        {
+          "project_id": 3592,
+          "employee": "Donato Laviola",
+          "esito": "ERRORE: Customer non trovato/creato per Getur Levante srl"
+        },
+        {
+          "project_id": 3592,
+          "employee": "Flavio Vito Ricci",
+          "esito": "ERRORE: Customer non trovato/creato per Getur Levante srl"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_085801": {
+    "status": "success",
+    "message": "Importazione completata: 3/3 righe inserite",
+    "timestamp": "2025-06-30T08:58:24",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-10",
+      "validation_results": {
+        "total_rows": 7,
+        "valid_rows": 3,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 3,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3592,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3592,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3592,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_110159": {
+    "status": "error",
+    "message": "Importazione completata: 0/8 righe inserite",
+    "timestamp": "2025-06-30T11:02:18",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 8,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 8,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3614,
+          "employee": "Pasquale Donnaloia",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Angelo Semeraro",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Mino Pellegrino",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Tonio Calianno",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Gentian  Deda",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Anxhelo Cjapi",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Donato Laviola",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Angelo Ruggieri",
+          "esito": "ERRORE: Customer non trovato/creato per Ingenius Production"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_110246": {
+    "status": "success",
+    "message": "Importazione completata: 8/8 righe inserite",
+    "timestamp": "2025-06-30T11:03:46",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 8,
+        "error_rows": 0
+      },
+      "qb_results": {
+        "success_count": 8,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3614,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Angelo Semeraro",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Mino Pellegrino",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3614,
+          "employee": "Angelo Ruggieri",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_110535": {
+    "status": "success",
+    "message": "Importazione completata: 4/4 righe inserite",
+    "timestamp": "2025-06-30T11:06:06",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-25",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 4,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 4,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3618,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Fabio De Carolis",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_110917": {
+    "status": "success",
+    "message": "Importazione completata: 4/4 righe inserite",
+    "timestamp": "2025-06-30T11:09:45",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-25",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 4,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 4,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3618,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3618,
+          "employee": "Fabio De Carolis",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_111356": {
+    "status": "success",
+    "message": "Importazione completata: 5/5 righe inserite",
+    "timestamp": "2025-06-30T11:14:36",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-18",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 5,
+        "error_rows": 3
+      },
+      "qb_results": {
+        "success_count": 5,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3649,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3649,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3649,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3649,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3649,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_120312": {
+    "status": "error",
+    "message": "Importazione completata: 0/2 righe inserite",
+    "timestamp": "2025-06-30T12:03:17",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-16",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 2,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 2,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3660,
+          "employee": "Donato Laviola",
+          "esito": "ERRORE: Customer non trovato/creato per Rachel Birthistle Events srl"
+        },
+        {
+          "project_id": 3660,
+          "employee": "Angelo Ruggieri",
+          "esito": "ERRORE: Customer non trovato/creato per Rachel Birthistle Events srl"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_120426": {
+    "status": "success",
+    "message": "Importazione completata: 2/2 righe inserite",
+    "timestamp": "2025-06-30T12:04:42",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-16",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 2,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 2,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3660,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3660,
+          "employee": "Angelo Ruggieri",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_122304": {
+    "status": "success",
+    "message": "Importazione completata: 6/6 righe inserite",
+    "timestamp": "2025-06-30T12:23:46",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-21",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 6,
+        "error_rows": 2
+      },
+      "qb_results": {
+        "success_count": 6,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3669,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3669,
+          "employee": "Angelo Ruggieri",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3669,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3669,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3669,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3669,
+          "employee": "Flavio Vito Ricci",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_122616": {
+    "status": "success",
+    "message": "Importazione completata: 2/2 righe inserite",
+    "timestamp": "2025-06-30T12:26:31",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-10",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 2,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 2,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3681,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3681,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_123854": {
+    "status": "success",
+    "message": "Importazione completata: 2/2 righe inserite",
+    "timestamp": "2025-06-30T12:39:18",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-28",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 2,
+        "error_rows": 6
+      },
+      "qb_results": {
+        "success_count": 2,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3683,
+          "employee": "Donato Laviola",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3683,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_130534": {
+    "status": "error",
+    "message": "Importazione completata: 0/4 righe inserite",
+    "timestamp": "2025-06-30T13:05:43",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-17",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 4,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 0,
+        "error_count": 4,
+        "success_rate": "0.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3687,
+          "employee": "Gentian  Deda",
+          "esito": "ERRORE: Customer non trovato/creato per Rocco  Forte & Figli (Puglia) srl"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Anxhelo Cjapi",
+          "esito": "ERRORE: Customer non trovato/creato per Rocco  Forte & Figli (Puglia) srl"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Tonio Calianno",
+          "esito": "ERRORE: Customer non trovato/creato per Rocco  Forte & Figli (Puglia) srl"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Pasquale Donnaloia",
+          "esito": "ERRORE: Customer non trovato/creato per Rocco  Forte & Figli (Puglia) srl"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_130633": {
+    "status": "success",
+    "message": "Importazione completata: 4/4 righe inserite",
+    "timestamp": "2025-06-30T13:07:06",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-17",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 4,
+        "error_rows": 4
+      },
+      "qb_results": {
+        "success_count": 4,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3687,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Anxhelo Cjapi",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Tonio Calianno",
+          "esito": "SUCCESS"
+        },
+        {
+          "project_id": 3687,
+          "employee": "Pasquale Donnaloia",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  },
+  "excel_import_20250630_130940": {
+    "status": "success",
+    "message": "Importazione completata: 1/1 righe inserite",
+    "timestamp": "2025-06-30T13:09:47",
+    "details": {
+      "file_name": "Cartel2.xlsx",
+      "activity_date": "2025-05-25",
+      "validation_results": {
+        "total_rows": 8,
+        "valid_rows": 1,
+        "error_rows": 7
+      },
+      "qb_results": {
+        "success_count": 1,
+        "error_count": 0,
+        "success_rate": "100.0%"
+      },
+      "detailed_results": [
+        {
+          "project_id": 3703,
+          "employee": "Gentian  Deda",
+          "esito": "SUCCESS"
+        }
+      ],
+      "operation_type": "excel_hours",
+      "import_source": "excel"
+    }
+  }
+}

@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
+import config
 
 class QuickBooksBillImporter:
     """
@@ -15,7 +16,20 @@ class QuickBooksBillImporter:
         self.headers = {
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json",
-            "Content-Type": "application/json"        }
+            "Content-Type": "application/json"
+        }
+        self.item_cache: Dict[str, Optional[str]] = {}
+        self.default_item_id = getattr(config, 'DEFAULT_QB_ITEM_ID', None)
+        if self.default_item_id == '':
+            self.default_item_id = None
+        self.default_item_name = getattr(config, 'DEFAULT_QB_ITEM_NAME', None)
+        if self.default_item_name:
+            self.default_item_name = self.default_item_name.strip() or None
+        self.default_item_expense_account_id = getattr(config, 'DEFAULT_QB_ITEM_EXPENSE_ACCOUNT_ID', '1') or '1'
+        self.default_item_income_account_id = getattr(config, 'DEFAULT_QB_ITEM_INCOME_ACCOUNT_ID', None)
+        if self.default_item_income_account_id == '':
+            self.default_item_income_account_id = None
+        self._default_item_checked = False
     
     def create_bill(self, bill_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         url = f"{self.base_url}/v3/company/{self.realm_id}/bill"
@@ -208,16 +222,18 @@ class QuickBooksBillImporter:
             "Amount": float(line_item['amount']),
             "DetailType": "AccountBasedExpenseLineDetail"
         }
-        if line_item.get('item_id'):
+        item_id = line_item.get('item_id') or self._resolve_line_item_item_id(line_item)
+        if item_id:
+            line_item['item_id'] = item_id
             line["DetailType"] = "ItemBasedExpenseLineDetail"
             line["ItemBasedExpenseLineDetail"] = {
                 "ItemRef": {
-                    "value": str(line_item['item_id'])
+                    "value": str(item_id)
                 }
             }
-            if line_item.get('quantity'):
+            if line_item.get('quantity') is not None:
                 line["ItemBasedExpenseLineDetail"]["Qty"] = float(line_item['quantity'])
-            if line_item.get('unit_price'):
+            if line_item.get('unit_price') is not None:
                 line["ItemBasedExpenseLineDetail"]["UnitPrice"] = float(line_item['unit_price'])
         else:
             line["AccountBasedExpenseLineDetail"] = {
@@ -244,6 +260,135 @@ class QuickBooksBillImporter:
         # print(f"[build_line_item] Riga {line_num} costruita (sintetico)")
         return line
 
+    def _resolve_line_item_item_id(self, line_item: Dict[str, Any]) -> Optional[str]:
+        """Restituisce l'item_id da usare per una linea, sfruttando cache e configurazione."""
+        item_id = line_item.get('item_id')
+        if item_id:
+            return str(item_id)
+        item_name = line_item.get('item_name')
+        resolved_id = None
+        if item_name:
+            resolved_id = self._get_item_id_by_name(item_name)
+        if resolved_id:
+            return resolved_id
+        if self.default_item_id:
+            return str(self.default_item_id)
+        if self.default_item_name:
+            resolved_id = self._ensure_default_item_exists(unit_price=line_item.get('unit_price'))
+            if resolved_id:
+                return resolved_id
+        return None
+
+    def _get_item_id_by_name(self, name: str) -> Optional[str]:
+        if not name:
+            return None
+        key = name.strip().lower()
+        if not key:
+            return None
+        if key in self.item_cache:
+            cached = self.item_cache[key]
+            return str(cached) if cached else None
+        item = self.get_item_by_name(name)
+        if item:
+            item_id = item.get('Id')
+            self.item_cache[key] = item_id
+            return str(item_id)
+        self.item_cache[key] = None
+        return None
+
+    def _ensure_default_item_exists(self, unit_price: Optional[Any] = None) -> Optional[str]:
+        if not self.default_item_name:
+            return None
+        if self.default_item_id:
+            return str(self.default_item_id)
+        if not self._default_item_checked:
+            self._default_item_checked = True
+            item = self.get_item_by_name(self.default_item_name)
+            if item:
+                item_id = item.get('Id')
+                self.default_item_id = item_id
+                key = self.default_item_name.strip().lower()
+                self.item_cache[key] = item_id
+                return str(item_id)
+            if not self.default_item_income_account_id:
+                logging.warning("DEFAULT_QB_ITEM_NAME configurato ma DEFAULT_QB_ITEM_INCOME_ACCOUNT_ID non impostato: impossibile creare automaticamente l'articolo.")
+                return None
+            purchase_cost = None
+            if unit_price is not None:
+                try:
+                    purchase_cost = float(unit_price)
+                except (TypeError, ValueError):
+                    purchase_cost = None
+            created_id = self._create_item(
+                self.default_item_name,
+                expense_account_id=self.default_item_expense_account_id,
+                income_account_id=self.default_item_income_account_id,
+                purchase_cost=purchase_cost
+            )
+            if created_id:
+                self.default_item_id = created_id
+                key = self.default_item_name.strip().lower()
+                self.item_cache[key] = created_id
+                return str(created_id)
+        return str(self.default_item_id) if self.default_item_id else None
+
+    def _create_item(self, name: str, expense_account_id: Optional[str] = None,
+                     income_account_id: Optional[str] = None, purchase_cost: Optional[Any] = None) -> Optional[str]:
+        if not name or not income_account_id:
+            return None
+        payload: Dict[str, Any] = {
+            "Name": name[:100],
+            "Type": "Service",
+            "TrackQtyOnHand": False,
+            "PurchaseDesc": name[:100],
+            "ExpenseAccountRef": {"value": str(expense_account_id or '1')},
+            "Active": True
+        }
+        if purchase_cost is not None:
+            try:
+                payload["PurchaseCost"] = float(purchase_cost)
+            except (TypeError, ValueError):
+                pass
+        payload["IncomeAccountRef"] = {"value": str(income_account_id)}
+        url = f"{self.base_url}/v3/company/{self.realm_id}/item"
+        try:
+            response = requests.post(url, headers=self.headers, json=payload)
+            if response.status_code in (200, 201):
+                data = response.json()
+                item = data.get("Item")
+                if item:
+                    item_id = item.get("Id")
+                    logging.info(f"[create_item] Articolo '{name}' creato con ID {item_id}")
+                    return item_id
+                logging.error(f"[create_item] Risposta senza Item: {data}")
+            else:
+                try:
+                    error_data = response.json()
+                except Exception:
+                    error_data = response.text
+                logging.error(f"[create_item] Errore {response.status_code}: {error_data}")
+        except Exception as e:
+            logging.error(f"[create_item] Errore nella creazione dell'articolo '{name}': {e}")
+        return None
+
+    def get_item_by_name(self, name: str) -> Optional[Dict[str, Any]]:
+        url = f"{self.base_url}/v3/company/{self.realm_id}/query"
+        safe_name = name.replace("'", "\\'")
+        query = f"SELECT * FROM Item WHERE Name = '{safe_name}'"
+        params = {"query": query}
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                items = data.get("QueryResponse", {}).get("Item", [])
+                if items:
+                    return items[0]
+            else:
+                logging.error(f"[get_item_by_name] Errore {response.status_code}: {response.text}")
+        except Exception as e:
+            logging.error(f"[get_item_by_name] Errore: {e}")
+        return None
+
     def _handle_error(self, response: requests.Response, operation: str):
         try:
             error_data = response.json()
@@ -258,7 +403,7 @@ class QuickBooksBillImporter:
         except:
             logging.error(f"[{operation}] Errore {response.status_code} - {response.text}")
 
-    def find_or_create_vendor(self, vendor_name: str, vendor_data: Dict[str, Any] = None) -> Optional[str]:
+    def find_or_create_vendor(self, vendor_name: str, vendor_data: Optional[Dict[str, Any]] = None) -> Optional[str]:
         """
         Cerca un fornitore per nome (query mirata), se non esiste lo crea
         """

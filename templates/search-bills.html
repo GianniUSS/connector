@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ricerca Fatture - Database Bills</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .search-section {
+            padding: 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .search-btn:hover {
+            background: #5a67d8;
+        }
+        .filters {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .filter-group label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 120px;
+        }
+        .results-section {
+            padding: 0;
+        }
+        .results-header {
+            background: #f8fafc;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .results-count {
+            font-weight: 600;
+            color: #374151;
+        }
+        .export-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        .export-btn:hover {
+            background: #059669;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .results-table th {
+            background: #f1f5f9;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .results-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #374151;
+        }
+        .results-table tr:hover {
+            background: #f8fafc;
+        }
+        .amount-cell {
+            text-align: right;
+            font-weight: 600;
+            color: #059669;
+        }
+        .date-cell {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .supplier-cell {
+            font-weight: 500;
+            color: #1e40af;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        .pagination {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        .pagination-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: #5a67d8;
+        }
+        .pagination-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .pagination-info {
+            color: #64748b;
+            font-size: 14px;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s ease;
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            background: #1f2937;
+        }
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">← Torna a Progetti</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Ricerca Fatture Database</h1>
+        </div>
+        
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cerca per fornitore, numero fattura, descrizione...">
+                <button class="search-btn" id="searchBtn">🔍 Cerca</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Data Da:</label>
+                    <input type="date" class="filter-input" id="dateFrom">
+                </div>
+                <div class="filter-group">
+                    <label>Data A:</label>
+                    <input type="date" class="filter-input" id="dateTo">
+                </div>
+                <div class="filter-group">
+                    <label>Fornitore:</label>
+                    <input type="text" class="filter-input" id="supplierFilter" placeholder="Nome fornitore">
+                </div>
+                <div class="filter-group">
+                    <label>Importo Min:</label>
+                    <input type="number" class="filter-input" id="amountMin" placeholder="0.00" step="0.01">
+                </div>
+                <div class="filter-group">
+                    <label>Importo Max:</label>
+                    <input type="number" class="filter-input" id="amountMax" placeholder="999999.99" step="0.01">
+                </div>
+                <div class="filter-group">
+                    <label>&nbsp;</label>
+                    <button class="filter-input" id="clearFilters" style="background: #ef4444; color: white; border: none; cursor: pointer;">Cancella Filtri</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">Pronto per la ricerca</div>
+                <button class="export-btn" id="exportBtn" style="display: none;">📋 Esporta CSV</button>
+            </div>
+            
+            <div class="table-container">
+                <table class="results-table" id="resultsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Data Fattura</th>
+                            <th>Scadenza</th>
+                            <th>Fornitore</th>
+                            <th>N° Fattura</th>
+                            <th>Descrizione</th>
+                            <th>Importo</th>
+                            <th>File</th>
+                            <th>Data Inserimento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                    </tbody>
+                </table>
+                <div class="loading" id="loadingMsg" style="display: none;">
+                    🔄 Ricerca in corso...
+                </div>
+                <div class="no-results" id="noResultsMsg" style="display: none;">
+                    📭 Nessun risultato trovato per la ricerca.
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination" id="paginationSection" style="display: none;">
+            <button class="pagination-btn" id="prevBtn">← Precedente</button>
+            <div class="pagination-info" id="paginationInfo"></div>
+            <button class="pagination-btn" id="nextBtn">Successivo →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentResults = [];
+        
+        // Elementi DOM
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsTable = document.getElementById('resultsTable');
+        const resultsBody = document.getElementById('resultsBody');
+        const resultsCount = document.getElementById('resultsCount');
+        const loadingMsg = document.getElementById('loadingMsg');
+        const noResultsMsg = document.getElementById('noResultsMsg');
+        const exportBtn = document.getElementById('exportBtn');
+        const paginationSection = document.getElementById('paginationSection');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        
+        // Event listeners
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Auto-search quando cambiano i filtri
+        document.querySelectorAll('.filter-input').forEach(input => {
+            if (input.id !== 'clearFilters') {
+                input.addEventListener('change', performSearch);
+            }
+        });
+        
+        clearFiltersBtn.addEventListener('click', clearFilters);
+        exportBtn.addEventListener('click', exportResults);
+        prevBtn.addEventListener('click', () => changePage(currentPage - 1));
+        nextBtn.addEventListener('click', () => changePage(currentPage + 1));
+        
+        // Funzione di ricerca principale
+        async function performSearch(page = 1) {
+            const searchTerm = searchInput.value.trim();
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const supplier = document.getElementById('supplierFilter').value.trim();
+            const amountMin = document.getElementById('amountMin').value;
+            const amountMax = document.getElementById('amountMax').value;
+            
+            showLoading(true);
+            hideResults();
+            
+            try {
+                const response = await fetch('/search-bills', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        search_term: searchTerm,
+                        date_from: dateFrom,
+                        date_to: dateTo,
+                        supplier: supplier,
+                        amount_min: amountMin,
+                        amount_max: amountMax,
+                        page: page,
+                        per_page: 50
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result.data, result.total, page, result.total_pages);
+                    currentResults = result.all_data || result.data; // Per export
+                } else {
+                    showError(result.message);
+                }
+                
+            } catch (error) {
+                console.error('Errore ricerca:', error);
+                showError('Errore durante la ricerca');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Mostra i risultati
+        function displayResults(data, total, page, totalPages) {
+            currentPage = page;
+            this.totalPages = totalPages;
+            
+            if (data.length === 0) {
+                showNoResults();
+                return;
+            }
+            
+            resultsBody.innerHTML = '';
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="date-cell">${formatDate(row.bill_date)}</td>
+                    <td class="date-cell">${formatDate(row.due_date)}</td>
+                    <td class="supplier-cell">${highlightText(row.supplier || '-')}</td>
+                    <td>${highlightText(row.bill_no || '-')}</td>
+                    <td>${highlightText(row.line_description || '-')}</td>
+                    <td class="amount-cell">€ ${formatAmount(row.line_amount)}</td>
+                    <td style="font-size: 12px; color: #64748b;">${row.filename || '-'}</td>
+                    <td class="date-cell">${formatDateTime(row.created_at)}</td>
+                `;
+                resultsBody.appendChild(tr);
+            });
+            
+            resultsCount.textContent = `${total} risultati trovati`;
+            resultsTable.style.display = 'table';
+            exportBtn.style.display = 'inline-block';
+            
+            // Aggiorna paginazione
+            updatePagination(page, totalPages, total);
+        }
+        
+        // Aggiorna la paginazione
+        function updatePagination(page, totalPages, total) {
+            if (totalPages <= 1) {
+                paginationSection.style.display = 'none';
+                return;
+            }
+            
+            paginationSection.style.display = 'flex';
+            prevBtn.disabled = page <= 1;
+            nextBtn.disabled = page >= totalPages;
+            
+            const start = (page - 1) * 50 + 1;
+            const end = Math.min(page * 50, total);
+            paginationInfo.textContent = `${start}-${end} di ${total} risultati (Pagina ${page} di ${totalPages})`;
+        }
+        
+        // Cambia pagina
+        function changePage(page) {
+            if (page >= 1 && page <= totalPages) {
+                performSearch(page);
+            }
+        }
+        
+        // Evidenzia il testo cercato
+        function highlightText(text) {
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm || !text) return text;
+            
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+        
+        // Formatta le date
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('it-IT');
+            } catch {
+                return dateStr;
+            }
+        }
+        
+        // Formatta data e ora
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleString('it-IT');
+            } catch {
+                return dateStr;
+            }
+        }
+        
+        // Formatta gli importi
+        function formatAmount(amount) {
+            if (!amount) return '0,00';
+            return parseFloat(amount).toLocaleString('it-IT', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        // Mostra/nascondi loading
+        function showLoading(show) {
+            loadingMsg.style.display = show ? 'block' : 'none';
+        }
+        
+        // Nascondi risultati
+        function hideResults() {
+            resultsTable.style.display = 'none';
+            noResultsMsg.style.display = 'none';
+            exportBtn.style.display = 'none';
+            paginationSection.style.display = 'none';
+        }
+        
+        // Mostra nessun risultato
+        function showNoResults() {
+            noResultsMsg.style.display = 'block';
+            resultsCount.textContent = 'Nessun risultato trovato';
+        }
+        
+        // Mostra errore
+        function showError(message) {
+            resultsCount.textContent = `Errore: ${message}`;
+            resultsCount.style.color = '#ef4444';
+            setTimeout(() => {
+                resultsCount.style.color = '#374151';
+            }, 5000);
+        }
+        
+        // Cancella filtri
+        function clearFilters() {
+            searchInput.value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('supplierFilter').value = '';
+            document.getElementById('amountMin').value = '';
+            document.getElementById('amountMax').value = '';
+            
+            hideResults();
+            resultsCount.textContent = 'Filtri cancellati - Pronto per nuova ricerca';
+        }
+        
+        // Esporta risultati in CSV
+        function exportResults() {
+            if (!currentResults || currentResults.length === 0) {
+                alert('Nessun risultato da esportare');
+                return;
+            }
+            
+            // Crea CSV
+            const headers = ['Data Fattura', 'Scadenza', 'Fornitore', 'N° Fattura', 'Descrizione', 'Importo', 'File', 'Data Inserimento'];
+            const csvContent = [
+                headers.join(','),
+                ...currentResults.map(row => [
+                    formatDate(row.bill_date),
+                    formatDate(row.due_date),
+                    `"${(row.supplier || '').replace(/"/g, '""')}"`,
+                    `"${(row.bill_no || '').replace(/"/g, '""')}"`,
+                    `"${(row.line_description || '').replace(/"/g, '""')}"`,
+                    row.line_amount || '0',
+                    `"${(row.filename || '').replace(/"/g, '""')}"`,
+                    formatDateTime(row.created_at)
+                ].join(','))
+            ].join('\n');
+            
+            // Download CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `ricerca_fatture_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Pagina di ricerca fatture inizializzata');
+        });
+    </script>
+</body>
+</html>

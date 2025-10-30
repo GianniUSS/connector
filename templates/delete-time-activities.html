@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elimina Ore QuickBooks - Rentman Project Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-preview {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-preview:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-back {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-back:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .results-preview {
+            background-color: #e8f4fd;
+            border: 1px solid #3498db;
+        }
+        
+        .results-success {
+            background-color: #d4edda;
+            border: 1px solid #27ae60;
+        }
+        
+        .results-error {
+            background-color: #f8d7da;
+            border: 1px solid #e74c3c;
+        }
+        
+        .activities-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .activities-table th, .activities-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .activities-table th {
+            background-color: #f1f2f6;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Elimina Ore QuickBooks</h1>
+        
+        <div class="warning-box">
+            <strong>⚠️ ATTENZIONE:</strong> Questa operazione eliminerà definitivamente le TimeActivity da QuickBooks. 
+            L'operazione non può essere annullata. Usa sempre l'anteprima prima di procedere con l'eliminazione.
+            <br><br>
+            <strong>💡 Suggerimento:</strong> Puoi filtrare per nome progetto invece del Customer ID - il sistema cercherà automaticamente il customer corrispondente.
+        </div>
+        
+        <div class="form-section">
+            <h3>Filtri di Ricerca</h3>
+            
+            <div class="form-group">
+                <label for="customerIdInput">Customer ID (Sub-customer):</label>
+                <input type="text" id="customerIdInput" placeholder="Es: 123 (ID del sub-customer in QuickBooks)">
+            </div>
+            
+            <div class="form-group">
+                <label for="projectNameInput">Nome Progetto:</label>
+                <input type="text" id="projectNameInput" placeholder="Es: Evento Milano 2024 (cerca nel nome del customer)">
+                <small style="color: #666; font-size: 12px;">Alternativa al Customer ID - cerca automaticamente il customer corrispondente</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="employeeNameInput">Nome Employee:</label>
+                <input type="text" id="employeeNameInput" placeholder="Es: Mario Rossi">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dateFromInput">Data Da:</label>
+                    <input type="date" id="dateFromInput">
+                </div>
+                <div class="form-group">
+                    <label for="dateToInput">Data A:</label>
+                    <input type="date" id="dateToInput">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="dateExactInput">Data Esatta (alternativa al range):</label>
+                <input type="date" id="dateExactInput">
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="confirmDeletion">
+                <label for="confirmDeletion">Confermo di voler eliminare le ore trovate (richiesto per eliminazione definitiva)</label>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-preview" onclick="previewDeletion()">
+                    🔍 Anteprima
+                </button>
+                <button class="btn-delete" onclick="executeDeletion()">
+                    🗑️ Elimina Ore
+                </button>
+                <button class="btn-back" onclick="goBack()">
+                    ← Torna alla Home
+                </button>
+            </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h3 id="resultsTitle">Risultati</h3>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        function validateForm() {
+            const customerId = document.getElementById('customerIdInput').value.trim();
+            const projectName = document.getElementById('projectNameInput').value.trim();
+            const employeeName = document.getElementById('employeeNameInput').value.trim();
+            const dateFrom = document.getElementById('dateFromInput').value;
+            const dateTo = document.getElementById('dateToInput').value;
+            const dateExact = document.getElementById('dateExactInput').value;
+            
+            // Validazione: non permettere sia Customer ID che Nome Progetto
+            if (customerId && projectName) {
+                alert('⚠️ Specificare solo Customer ID OPPURE Nome Progetto, non entrambi');
+                return false;
+            }
+            
+            if (!customerId && !projectName && !employeeName && !dateFrom && !dateTo && !dateExact) {
+                alert('Specifica almeno un filtro di ricerca');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function getFormData() {
+            return {
+                customer_id: document.getElementById('customerIdInput').value.trim() || null,
+                project_name: document.getElementById('projectNameInput').value.trim() || null,
+                employee_name: document.getElementById('employeeNameInput').value.trim() || null,
+                date_from: document.getElementById('dateFromInput').value || null,
+                date_to: document.getElementById('dateToInput').value || null,
+                date_exact: document.getElementById('dateExactInput').value || null
+            };
+        }
+        
+        function showResults(data, isPreview = false) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsTitle = document.getElementById('resultsTitle');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            resultsSection.style.display = 'block';
+            
+            if (isPreview) {
+                resultsSection.className = 'results-section results-preview';
+                resultsTitle.textContent = '🔍 Anteprima Eliminazione';
+            } else if (data.success) {
+                resultsSection.className = 'results-section results-success';
+                resultsTitle.textContent = '✅ Eliminazione Completata';
+            } else {
+                resultsSection.className = 'results-section results-error';
+                resultsTitle.textContent = '❌ Errore';
+            }
+            
+            let html = `<p><strong>${data.message}</strong></p>`;
+            
+            if (data.activities_found && data.activities_found.length > 0) {
+                html += `
+                    <p>Trovate <strong>${data.activities_found.length}</strong> TimeActivity:</p>
+                    <table class="activities-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Employee</th>
+                                <th>Ore</th>
+                                <th>Descrizione</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                data.activities_found.forEach(activity => {
+                    html += `
+                        <tr>
+                            <td>${activity.id}</td>
+                            <td>${activity.date}</td>
+                            <td>${activity.employee}</td>
+                            <td>${activity.hours}h ${activity.minutes}m</td>
+                            <td>${activity.description}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                        </tbody>
+                    </table>
+                `;
+            }
+            
+            if (!isPreview && data.success) {
+                html += `
+                    <p><strong>Statistiche eliminazione:</strong></p>
+                    <ul>
+                        <li>Eliminate con successo: ${data.deleted_count}</li>
+                        <li>Errori: ${data.error_count || 0}</li>
+                    </ul>
+                `;
+            }
+            
+            if (data.error) {
+                html += `<p style="color: #e74c3c;"><strong>Errore:</strong> ${data.error}</p>`;
+            }
+            
+            resultsContent.innerHTML = html;
+        }
+        
+        function showLoading() {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsTitle = document.getElementById('resultsTitle');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            resultsSection.style.display = 'block';
+            resultsSection.className = 'results-section';
+            resultsTitle.textContent = 'Elaborazione in corso...';
+            resultsContent.innerHTML = '<div class="loading">⏳ Ricerca TimeActivity in corso...</div>';
+        }
+        
+        function previewDeletion() {
+            if (!validateForm()) return;
+            
+            showLoading();
+            
+            const formData = getFormData();
+            formData.preview_only = true;
+            
+            fetch('/elimina-ore-qb', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                showResults(data, true);
+            })
+            .catch(error => {
+                showResults({
+                    success: false,
+                    message: 'Errore durante anteprima',
+                    error: error.toString()
+                });
+            });
+        }
+        
+        function executeDeletion() {
+            if (!validateForm()) return;
+            
+            const confirmCheckbox = document.getElementById('confirmDeletion');
+            if (!confirmCheckbox.checked) {
+                alert('Devi confermare l\'eliminazione spuntando la casella');
+                return;
+            }
+            
+            if (!confirm('Sei sicuro di voler eliminare definitivamente le TimeActivity trovate? Questa operazione non può essere annullata.')) {
+                return;
+            }
+            
+            showLoading();
+            document.getElementById('resultsContent').innerHTML = '<div class="loading">🗑️ Eliminazione TimeActivity in corso...</div>';
+            
+            const formData = getFormData();
+            formData.preview_only = false;
+            
+            fetch('/elimina-ore-qb', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                showResults(data, false);
+                
+                // Reset form dopo eliminazione riuscita
+                if (data.success) {
+                    document.getElementById('confirmDeletion').checked = false;
+                }
+            })
+            .catch(error => {
+                showResults({
+                    success: false,
+                    message: 'Errore durante eliminazione',
+                    error: error.toString()
+                });
+            });
+        }
+        
+        function goBack() {
+            window.location.href = '/';
+        }
+        
+        // Imposta data odierna come default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateFromInput').value = today;
+            document.getElementById('dateToInput').value = today;
+        });
+    </script>
+</body>
+</html>

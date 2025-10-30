@@ -1,0 +1,3056 @@
+{
+  "3206": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-06-26T14:28:22",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3206",
+      "operation_type": "invoice"
+    }
+  },
+  "3162": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-07-01T17:20:57",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3162",
+      "operation_type": "invoice"
+    }
+  },
+  "2946": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:29:59",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "2946",
+      "operation_type": "invoice"
+    }
+  },
+  "3823": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:21",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3823",
+      "operation_type": "invoice"
+    }
+  },
+  "3847": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:21",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3847",
+      "operation_type": "invoice"
+    }
+  },
+  "2862": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-07-02T15:40:45",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "2862",
+      "operation_type": "invoice"
+    }
+  },
+  "3506": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3506",
+      "operation_type": "invoice"
+    }
+  },
+  "3561": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3561",
+      "operation_type": "invoice"
+    }
+  },
+  "3726": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:14",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3726",
+      "operation_type": "invoice"
+    }
+  },
+  "3595": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:07",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3595",
+      "operation_type": "invoice"
+    }
+  },
+  "3788": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3788",
+      "operation_type": "invoice"
+    }
+  },
+  "3620": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:08",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3620",
+      "operation_type": "invoice"
+    }
+  },
+  "3451": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3451",
+      "operation_type": "invoice"
+    }
+  },
+  "3727": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:14",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3727",
+      "operation_type": "invoice"
+    }
+  },
+  "3793": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:16",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3793",
+      "operation_type": "invoice"
+    }
+  },
+  "3686": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3686",
+      "operation_type": "invoice"
+    }
+  },
+  "3848": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:20",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3848",
+      "operation_type": "invoice"
+    }
+  },
+  "3852": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:22",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3852",
+      "operation_type": "invoice"
+    }
+  },
+  "3889": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:28",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3889",
+      "operation_type": "invoice"
+    }
+  },
+  "3862": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:03",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3862",
+      "operation_type": "invoice"
+    }
+  },
+  "3825": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:20",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3825",
+      "operation_type": "invoice"
+    }
+  },
+  "3894": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T12:30:35",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3894",
+      "operation_type": "invoice"
+    }
+  },
+  "3874": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3874",
+      "operation_type": "invoice"
+    }
+  },
+  "3875": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-07-15T13:03:12",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3875",
+      "operation_type": "invoice"
+    }
+  },
+  "3900": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T14:05:28",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3900",
+      "operation_type": "invoice"
+    }
+  },
+  "3890": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:29",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3890",
+      "operation_type": "invoice"
+    }
+  },
+  "3902": {
+    "status": "error",
+    "message": "Sub-customer non trovato/creato",
+    "timestamp": "2025-10-24T12:30:43",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3902",
+      "operation_type": "invoice"
+    }
+  },
+  "3904": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3904",
+      "operation_type": "invoice"
+    }
+  },
+  "3940": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:37",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3940",
+      "operation_type": "invoice"
+    }
+  },
+  "3608": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:08",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3608",
+      "operation_type": "invoice"
+    }
+  },
+  "3760": {
+    "status": "error",
+    "message": "Progetto 3760 non ha un cliente associato",
+    "timestamp": "2025-07-22T16:55:12",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3760",
+      "operation_type": "invoice"
+    }
+  },
+  "3644": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3644",
+      "operation_type": "invoice"
+    }
+  },
+  "3393": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:02",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3393",
+      "operation_type": "invoice"
+    }
+  },
+  "3261": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:29:59",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3261",
+      "operation_type": "invoice"
+    }
+  },
+  "3591": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:07",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3591",
+      "operation_type": "invoice"
+    }
+  },
+  "3865": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:26",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3865",
+      "operation_type": "invoice"
+    }
+  },
+  "3633": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:09",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3633",
+      "operation_type": "invoice"
+    }
+  },
+  "3717": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3717",
+      "operation_type": "invoice"
+    }
+  },
+  "3869": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:23",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3869",
+      "operation_type": "invoice"
+    }
+  },
+  "3881": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:26",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3881",
+      "operation_type": "invoice"
+    }
+  },
+  "3885": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-07-22T16:55:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3885",
+      "operation_type": "invoice"
+    }
+  },
+  "3914": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3914",
+      "operation_type": "invoice"
+    }
+  },
+  "3919": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:36",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3919",
+      "operation_type": "invoice"
+    }
+  },
+  "3936": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-07-22T16:55:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3936",
+      "operation_type": "invoice"
+    }
+  },
+  "3536": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:47:12",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3536",
+      "operation_type": "invoice"
+    }
+  },
+  "3272": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3272",
+      "operation_type": "invoice"
+    }
+  },
+  "3412": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3412",
+      "operation_type": "invoice"
+    }
+  },
+  "3120": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:21",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3120",
+      "operation_type": "invoice"
+    }
+  },
+  "3819": {
+    "status": "error",
+    "message": "Progetto 3819 non ha un cliente associato",
+    "timestamp": "2025-10-24T12:30:13",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3819",
+      "operation_type": "invoice"
+    }
+  },
+  "3720": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3720",
+      "operation_type": "invoice"
+    }
+  },
+  "3634": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:08",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3634",
+      "operation_type": "invoice"
+    }
+  },
+  "3775": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:15",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3775",
+      "operation_type": "invoice"
+    }
+  },
+  "3742": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:22",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3742",
+      "operation_type": "invoice"
+    }
+  },
+  "3792": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3792",
+      "operation_type": "invoice"
+    }
+  },
+  "3822": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:03",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3822",
+      "operation_type": "invoice"
+    }
+  },
+  "3876": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:29",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3876",
+      "operation_type": "invoice"
+    }
+  },
+  "3891": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:30",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3891",
+      "operation_type": "invoice"
+    }
+  },
+  "3893": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:30",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3893",
+      "operation_type": "invoice"
+    }
+  },
+  "3886": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:30",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3886",
+      "operation_type": "invoice"
+    }
+  },
+  "3972": {
+    "status": "error",
+    "message": "Progetto 3972 non ha un cliente associato",
+    "timestamp": "2025-10-24T12:30:38",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3972",
+      "operation_type": "invoice"
+    }
+  },
+  "3915": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:37",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3915",
+      "operation_type": "invoice"
+    }
+  },
+  "3981": {
+    "status": "error",
+    "message": "Progetto 3981 non ha un cliente associato",
+    "timestamp": "2025-10-24T12:30:40",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3981",
+      "operation_type": "invoice"
+    }
+  },
+  "3941": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:40",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3941",
+      "operation_type": "invoice"
+    }
+  },
+  "3944": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:41",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3944",
+      "operation_type": "invoice"
+    }
+  },
+  "3969": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:43",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3969",
+      "operation_type": "invoice"
+    }
+  },
+  "3977": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:44",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3977",
+      "operation_type": "invoice"
+    }
+  },
+  "3968": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T12:30:44",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3968",
+      "operation_type": "invoice"
+    }
+  },
+  "3466": {
+    "status": "error",
+    "message": "Sub-customer non trovato/creato",
+    "timestamp": "2025-10-24T13:53:26",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3466",
+      "operation_type": "invoice"
+    }
+  },
+  "3198": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:32:01",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3198",
+      "operation_type": "invoice"
+    }
+  },
+  "3288": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:09",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3288",
+      "operation_type": "invoice"
+    }
+  },
+  "3373": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3373",
+      "operation_type": "invoice"
+    }
+  },
+  "3504": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3504",
+      "operation_type": "invoice"
+    }
+  },
+  "3527": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:01",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3527",
+      "operation_type": "invoice"
+    }
+  },
+  "3435": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:00",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3435",
+      "operation_type": "invoice"
+    }
+  },
+  "3446": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:02",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3446",
+      "operation_type": "invoice"
+    }
+  },
+  "3343": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:02",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3343",
+      "operation_type": "invoice"
+    }
+  },
+  "3607": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:32:15",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3607",
+      "operation_type": "invoice"
+    }
+  },
+  "3579": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3579",
+      "operation_type": "invoice"
+    }
+  },
+  "3678": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3678",
+      "operation_type": "invoice"
+    }
+  },
+  "3617": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3617",
+      "operation_type": "invoice"
+    }
+  },
+  "3663": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:32",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3663",
+      "operation_type": "invoice"
+    }
+  },
+  "3701": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3701",
+      "operation_type": "invoice"
+    }
+  },
+  "3682": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:12",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3682",
+      "operation_type": "invoice"
+    }
+  },
+  "3725": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3725",
+      "operation_type": "invoice"
+    }
+  },
+  "3892": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3892",
+      "operation_type": "invoice"
+    }
+  },
+  "3835": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:21",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3835",
+      "operation_type": "invoice"
+    }
+  },
+  "3895": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:25",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3895",
+      "operation_type": "invoice"
+    }
+  },
+  "3910": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:31",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3910",
+      "operation_type": "invoice"
+    }
+  },
+  "3967": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:47:31",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3967",
+      "operation_type": "invoice"
+    }
+  },
+  "3993": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:31",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3993",
+      "operation_type": "invoice"
+    }
+  },
+  "3984": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:32",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3984",
+      "operation_type": "invoice"
+    }
+  },
+  "3995": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3995",
+      "operation_type": "invoice"
+    }
+  },
+  "3994": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:33",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3994",
+      "operation_type": "invoice"
+    }
+  },
+  "3912": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3912",
+      "operation_type": "invoice"
+    }
+  },
+  "3965": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:26",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3965",
+      "operation_type": "invoice"
+    }
+  },
+  "4006": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:47:38",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4006",
+      "operation_type": "invoice"
+    }
+  },
+  "4007": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:35",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4007",
+      "operation_type": "invoice"
+    }
+  },
+  "4026": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:37",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4026",
+      "operation_type": "invoice"
+    }
+  },
+  "4022": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4022",
+      "operation_type": "invoice"
+    }
+  },
+  "4031": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4031",
+      "operation_type": "invoice"
+    }
+  },
+  "4036": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:40",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4036",
+      "operation_type": "invoice"
+    }
+  },
+  "4037": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:40",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4037",
+      "operation_type": "invoice"
+    }
+  },
+  "4043": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:42",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4043",
+      "operation_type": "invoice"
+    }
+  },
+  "4012": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4012",
+      "operation_type": "invoice"
+    }
+  },
+  "4027": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4027",
+      "operation_type": "invoice"
+    }
+  },
+  "4047": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:44",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4047",
+      "operation_type": "invoice"
+    }
+  },
+  "4051": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:47:48",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4051",
+      "operation_type": "invoice"
+    }
+  },
+  "4057": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:48",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4057",
+      "operation_type": "invoice"
+    }
+  },
+  "4053": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:45",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4053",
+      "operation_type": "invoice"
+    }
+  },
+  "4056": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:46",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4056",
+      "operation_type": "invoice"
+    }
+  },
+  "4069": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:47:47",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4069",
+      "operation_type": "invoice"
+    }
+  },
+  "4013": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:35",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4013",
+      "operation_type": "invoice"
+    }
+  },
+  "3543": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T13:47:13",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3543",
+      "operation_type": "invoice"
+    }
+  },
+  "3323": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3323",
+      "operation_type": "invoice"
+    }
+  },
+  "3283": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3283",
+      "operation_type": "invoice"
+    }
+  },
+  "3227": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3227",
+      "operation_type": "invoice"
+    }
+  },
+  "3349": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3349",
+      "operation_type": "invoice"
+    }
+  },
+  "3064": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3064",
+      "operation_type": "invoice"
+    }
+  },
+  "3371": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:12",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3371",
+      "operation_type": "invoice"
+    }
+  },
+  "3238": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:12",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3238",
+      "operation_type": "invoice"
+    }
+  },
+  "3413": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:13",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3413",
+      "operation_type": "invoice"
+    }
+  },
+  "3455": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:18",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3455",
+      "operation_type": "invoice"
+    }
+  },
+  "3534": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3534",
+      "operation_type": "invoice"
+    }
+  },
+  "3463": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3463",
+      "operation_type": "invoice"
+    }
+  },
+  "3486": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3486",
+      "operation_type": "invoice"
+    }
+  },
+  "3495": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:54",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3495",
+      "operation_type": "invoice"
+    }
+  },
+  "3498": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:20",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3498",
+      "operation_type": "invoice"
+    }
+  },
+  "3676": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:59",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3676",
+      "operation_type": "invoice"
+    }
+  },
+  "3901": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:29",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3901",
+      "operation_type": "invoice"
+    }
+  },
+  "3905": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:29",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3905",
+      "operation_type": "invoice"
+    }
+  },
+  "3924": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:28",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3924",
+      "operation_type": "invoice"
+    }
+  },
+  "3982": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3982",
+      "operation_type": "invoice"
+    }
+  },
+  "3932": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:07",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3932",
+      "operation_type": "invoice"
+    }
+  },
+  "4010": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:35",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4010",
+      "operation_type": "invoice"
+    }
+  },
+  "4090": {
+    "status": "error",
+    "message": "Progetto 4090 non ha un cliente associato",
+    "timestamp": "2025-10-24T13:53:38",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4090",
+      "operation_type": "invoice"
+    }
+  },
+  "4023": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:13",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4023",
+      "operation_type": "invoice"
+    }
+  },
+  "4075": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4075",
+      "operation_type": "invoice"
+    }
+  },
+  "4050": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:14",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4050",
+      "operation_type": "invoice"
+    }
+  },
+  "4065": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:17",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4065",
+      "operation_type": "invoice"
+    }
+  },
+  "4077": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:41",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4077",
+      "operation_type": "invoice"
+    }
+  },
+  "4084": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:41",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4084",
+      "operation_type": "invoice"
+    }
+  },
+  "4086": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:42",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4086",
+      "operation_type": "invoice"
+    }
+  },
+  "4088": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:42",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4088",
+      "operation_type": "invoice"
+    }
+  },
+  "4094": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:44",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4094",
+      "operation_type": "invoice"
+    }
+  },
+  "4097": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:45",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4097",
+      "operation_type": "invoice"
+    }
+  },
+  "4099": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:46",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4099",
+      "operation_type": "invoice"
+    }
+  },
+  "4104": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4104",
+      "operation_type": "invoice"
+    }
+  },
+  "4103": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:47",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4103",
+      "operation_type": "invoice"
+    }
+  },
+  "4109": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:53:49",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4109",
+      "operation_type": "invoice"
+    }
+  },
+  "3538": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:53",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3538",
+      "operation_type": "invoice"
+    }
+  },
+  "3335": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:55",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3335",
+      "operation_type": "invoice"
+    }
+  },
+  "3432": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:55",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3432",
+      "operation_type": "invoice"
+    }
+  },
+  "3550": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:55",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3550",
+      "operation_type": "invoice"
+    }
+  },
+  "3585": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:55",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3585",
+      "operation_type": "invoice"
+    }
+  },
+  "3360": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:56",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3360",
+      "operation_type": "invoice"
+    }
+  },
+  "3605": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:56",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3605",
+      "operation_type": "invoice"
+    }
+  },
+  "3394": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:57:57",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3394",
+      "operation_type": "invoice"
+    }
+  },
+  "3688": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:02",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3688",
+      "operation_type": "invoice"
+    }
+  },
+  "3787": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:04",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3787",
+      "operation_type": "invoice"
+    }
+  },
+  "3856": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:05",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3856",
+      "operation_type": "invoice"
+    }
+  },
+  "3868": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:07",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3868",
+      "operation_type": "invoice"
+    }
+  },
+  "3931": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:08",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3931",
+      "operation_type": "invoice"
+    }
+  },
+  "3986": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3986",
+      "operation_type": "invoice"
+    }
+  },
+  "3987": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:10",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3987",
+      "operation_type": "invoice"
+    }
+  },
+  "4008": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:11",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4008",
+      "operation_type": "invoice"
+    }
+  },
+  "3990": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:12",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3990",
+      "operation_type": "invoice"
+    }
+  },
+  "4033": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:15",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4033",
+      "operation_type": "invoice"
+    }
+  },
+  "4018": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:16",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4018",
+      "operation_type": "invoice"
+    }
+  },
+  "4068": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4068",
+      "operation_type": "invoice"
+    }
+  },
+  "4052": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4052",
+      "operation_type": "invoice"
+    }
+  },
+  "4062": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:29",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4062",
+      "operation_type": "invoice"
+    }
+  },
+  "4087": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:19",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4087",
+      "operation_type": "invoice"
+    }
+  },
+  "4064": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:20",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4064",
+      "operation_type": "invoice"
+    }
+  },
+  "4125": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:23",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4125",
+      "operation_type": "invoice"
+    }
+  },
+  "4162": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T14:05:41",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4162",
+      "operation_type": "invoice"
+    }
+  },
+  "4106": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4106",
+      "operation_type": "invoice"
+    }
+  },
+  "4128": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:26",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4128",
+      "operation_type": "invoice"
+    }
+  },
+  "4135": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4135",
+      "operation_type": "invoice"
+    }
+  },
+  "4143": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4143",
+      "operation_type": "invoice"
+    }
+  },
+  "4131": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4131",
+      "operation_type": "invoice"
+    }
+  },
+  "4134": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4134",
+      "operation_type": "invoice"
+    }
+  },
+  "4136": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4136",
+      "operation_type": "invoice"
+    }
+  },
+  "4139": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T13:58:27",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4139",
+      "operation_type": "invoice"
+    }
+  },
+  "4173": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4173",
+      "operation_type": "invoice"
+    }
+  },
+  "3374": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T14:05:28",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "3374",
+      "operation_type": "invoice"
+    }
+  },
+  "3560": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:22",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3560",
+      "operation_type": "invoice"
+    }
+  },
+  "3276": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:23",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3276",
+      "operation_type": "invoice"
+    }
+  },
+  "3679": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:23",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3679",
+      "operation_type": "invoice"
+    }
+  },
+  "3375": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3375",
+      "operation_type": "invoice"
+    }
+  },
+  "3449": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:24",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3449",
+      "operation_type": "invoice"
+    }
+  },
+  "3764": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:25",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3764",
+      "operation_type": "invoice"
+    }
+  },
+  "4111": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:32",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4111",
+      "operation_type": "invoice"
+    }
+  },
+  "4020": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:32",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4020",
+      "operation_type": "invoice"
+    }
+  },
+  "4105": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:33",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4105",
+      "operation_type": "invoice"
+    }
+  },
+  "4073": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:33",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4073",
+      "operation_type": "invoice"
+    }
+  },
+  "4059": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:33",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4059",
+      "operation_type": "invoice"
+    }
+  },
+  "4024": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:34",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4024",
+      "operation_type": "invoice"
+    }
+  },
+  "4127": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:36",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4127",
+      "operation_type": "invoice"
+    }
+  },
+  "4133": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:37",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4133",
+      "operation_type": "invoice"
+    }
+  },
+  "4165": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:39",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4165",
+      "operation_type": "invoice"
+    }
+  },
+  "4174": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:40",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4174",
+      "operation_type": "invoice"
+    }
+  },
+  "4192": {
+    "status": "error",
+    "message": "Progetto 4192 non ha un cliente associato",
+    "timestamp": "2025-10-24T14:05:44",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4192",
+      "operation_type": "invoice"
+    }
+  },
+  "4166": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:42",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4166",
+      "operation_type": "invoice"
+    }
+  },
+  "4181": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:42",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4181",
+      "operation_type": "invoice"
+    }
+  },
+  "4175": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:43",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4175",
+      "operation_type": "invoice"
+    }
+  },
+  "4180": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:43",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4180",
+      "operation_type": "invoice"
+    }
+  },
+  "4185": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:45",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4185",
+      "operation_type": "invoice"
+    }
+  },
+  "4182": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:46",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4182",
+      "operation_type": "invoice"
+    }
+  },
+  "4212": {
+    "status": "error",
+    "message": "Customer non trovato/creato",
+    "timestamp": "2025-10-24T14:05:56",
+    "details": {
+      "processing_method": "direct_import",
+      "error_details": null,
+      "qb_response": null,
+      "project_id": "4212",
+      "operation_type": "invoice"
+    }
+  },
+  "4187": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:49",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4187",
+      "operation_type": "invoice"
+    }
+  },
+  "4186": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:49",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4186",
+      "operation_type": "invoice"
+    }
+  },
+  "4191": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:50",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4191",
+      "operation_type": "invoice"
+    }
+  },
+  "4195": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:50",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4195",
+      "operation_type": "invoice"
+    }
+  },
+  "4199": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:51",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4199",
+      "operation_type": "invoice"
+    }
+  },
+  "4194": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:52",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4194",
+      "operation_type": "invoice"
+    }
+  },
+  "4198": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:53",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4198",
+      "operation_type": "invoice"
+    }
+  },
+  "4213": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:54",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4213",
+      "operation_type": "invoice"
+    }
+  },
+  "4217": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:55",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4217",
+      "operation_type": "invoice"
+    }
+  },
+  "4235": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:56",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4235",
+      "operation_type": "invoice"
+    }
+  },
+  "4219": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:05:58",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "4219",
+      "operation_type": "invoice"
+    }
+  },
+  "3772": {
+    "status": "success",
+    "message": "Fattura elaborata con successo",
+    "timestamp": "2025-10-24T14:08:53",
+    "details": {
+      "processing_method": "direct_import",
+      "is_simulated": false,
+      "qb_response": null,
+      "invoice_id": null,
+      "amount": null,
+      "project_id": "3772",
+      "operation_type": "invoice"
+    }
+  }
+}

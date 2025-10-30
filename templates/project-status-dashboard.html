@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Cambi di Stato Progetti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .status-change-card {
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 1rem;
+        }
+        .status-change-card.automated {
+            border-left-color: #198754;
+        }
+        .status-change-card.error {
+            border-left-color: #dc3545;
+        }
+        .status-badge {
+            font-size: 0.8em;
+            padding: 0.25rem 0.5rem;
+        }
+        .automation-result {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9em;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        .filter-panel {
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3">
+                        <i class="fas fa-exchange-alt text-primary"></i>
+                        Dashboard Cambi di Stato Progetti
+                    </h1>
+                    <div>
+                        <a href="/" class="btn btn-outline-secondary">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/webhook-manager.html" class="btn btn-outline-primary">
+                            <i class="fas fa-webhook"></i> Webhook Manager
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Statistiche -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-exchange-alt fa-2x mb-2"></i>
+                                <h4 id="total-changes">-</h4>
+                                <p class="mb-0">Cambi Totali</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-robot fa-2x mb-2"></i>
+                                <h4 id="automated-changes">-</h4>
+                                <p class="mb-0">Automazioni Attivate</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stats-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-project-diagram fa-2x mb-2"></i>
+                                <h4 id="unique-projects">-</h4>
+                                <p class="mb-0">Progetti Coinvolti</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtri -->
+                <div class="filter-panel">
+                    <h5><i class="fas fa-filter"></i> Filtri</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="project-id-filter" class="form-label">ID Progetto</label>
+                            <input type="number" class="form-control" id="project-id-filter" placeholder="Es: 12345">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date-from-filter" class="form-label">Data Da</label>
+                            <input type="date" class="form-control" id="date-from-filter">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date-to-filter" class="form-label">Data A</label>
+                            <input type="date" class="form-control" id="date-to-filter">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="automation-filter" class="form-label">Automazioni</label>
+                            <select class="form-select" id="automation-filter">
+                                <option value="all">Tutte</option>
+                                <option value="triggered">Solo Attivate</option>
+                                <option value="not_triggered">Solo Non Attivate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-primary" onclick="applyFilters()">
+                                <i class="fas fa-search"></i> Applica Filtri
+                            </button>
+                            <button class="btn btn-outline-secondary ms-2" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> Pulisci
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lista Cambi di Stato -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list"></i> Storico Cambi di Stato
+                        </h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshData()">
+                            <i class="fas fa-sync"></i> Aggiorna
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="loading" class="text-center py-4" style="display: none;">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                            <p class="mt-2">Caricamento...</p>
+                        </div>
+                        
+                        <div id="no-data" class="text-center py-4" style="display: none;">
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                            <p class="mt-2">Nessun cambio di stato trovato</p>
+                        </div>
+                        
+                        <div id="status-changes-container">
+                            <!-- I cambi di stato verranno inseriti qui -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Paginazione -->
+                <nav aria-label="Paginazione cambi di stato" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Paginazione verrà inserita qui -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        
+        function showLoading(show = true) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('status-changes-container').style.display = show ? 'none' : 'block';
+            document.getElementById('no-data').style.display = 'none';
+        }
+        
+        function loadStatusChanges(page = 1) {
+            showLoading(true);
+            
+            const params = new URLSearchParams({
+                page: page,
+                per_page: 20
+            });
+            
+            // Aggiungi filtri
+            const projectId = document.getElementById('project-id-filter').value;
+            const dateFrom = document.getElementById('date-from-filter').value;
+            const dateTo = document.getElementById('date-to-filter').value;
+            const automationFilter = document.getElementById('automation-filter').value;
+            
+            if (projectId) params.append('project_id', projectId);
+            if (dateFrom) params.append('date_from', dateFrom);
+            if (dateTo) params.append('date_to', dateTo);
+            if (automationFilter !== 'all') params.append('automation_status', automationFilter);
+            
+            fetch(`/api/project-status-changes?${params}`)
+                .then(response => response.json())
+                .then(data => {
+                    showLoading(false);
+                    
+                    if (data.success) {
+                        displayStatusChanges(data.changes);
+                        updatePagination(data.pagination);
+                        updateStats(data.stats);
+                        currentPage = data.pagination.page;
+                        totalPages = data.pagination.total_pages;
+                    } else {
+                        console.error('Errore caricamento:', data.error);
+                        document.getElementById('no-data').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    showLoading(false);
+                    console.error('Errore:', error);
+                    document.getElementById('no-data').style.display = 'block';
+                });
+        }
+        
+        function displayStatusChanges(changes) {
+            const container = document.getElementById('status-changes-container');
+            
+            if (changes.length === 0) {
+                document.getElementById('no-data').style.display = 'block';
+                container.innerHTML = '';
+                return;
+            }
+            
+            const html = changes.map(change => {
+                const cardClass = change.automation_triggered ? 'automated' : (change.automation_error ? 'error' : '');
+                const automationIcon = change.automation_triggered ? 
+                    '<i class="fas fa-robot text-success"></i>' : 
+                    '<i class="fas fa-minus-circle text-muted"></i>';
+                
+                return `
+                    <div class="card status-change-card ${cardClass}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-project-diagram text-primary"></i>
+                                        Progetto ${change.project_id}
+                                    </h6>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-secondary status-badge me-2">
+                                            ${change.old_status_name || 'N/A'}
+                                        </span>
+                                        <i class="fas fa-arrow-right mx-2"></i>
+                                        <span class="badge bg-primary status-badge">
+                                            ${change.new_status_name}
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock"></i>
+                                        ${new Date(change.changed_at).toLocaleString('it-IT')}
+                                        • Rilevato via ${change.detected_via}
+                                    </small>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="mb-2">
+                                        ${automationIcon}
+                                        <span class="ms-1">
+                                            ${change.automation_triggered ? 'Automazione Attiva' : 'Nessuna Automazione'}
+                                        </span>
+                                    </div>
+                                    ${change.automation_result ? `
+                                        <div class="automation-result">
+                                            <small><strong>Risultati:</strong><br>
+                                            ${change.automation_result.replace(/\|/g, '<br>')}</small>
+                                        </div>
+                                    ` : ''}
+                                    ${change.automation_error ? `
+                                        <div class="automation-result bg-danger text-white">
+                                            <small><strong>Errore:</strong><br>
+                                            ${change.automation_error}</small>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        function updateStats(stats) {
+            document.getElementById('total-changes').textContent = stats.total_changes || 0;
+            document.getElementById('automated-changes').textContent = stats.automated_changes || 0;
+            document.getElementById('unique-projects').textContent = stats.unique_projects || 0;
+        }
+        
+        function updatePagination(pagination) {
+            const paginationEl = document.getElementById('pagination');
+            const { page, total_pages } = pagination;
+            
+            if (total_pages <= 1) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Pulsante Precedente
+            html += `
+                <li class="page-item ${page <= 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadStatusChanges(${page - 1})">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Numeri di pagina
+            for (let i = Math.max(1, page - 2); i <= Math.min(total_pages, page + 2); i++) {
+                html += `
+                    <li class="page-item ${i === page ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadStatusChanges(${i})">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Pulsante Successivo
+            html += `
+                <li class="page-item ${page >= total_pages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadStatusChanges(${page + 1})">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            paginationEl.innerHTML = html;
+        }
+        
+        function applyFilters() {
+            loadStatusChanges(1);
+        }
+        
+        function clearFilters() {
+            document.getElementById('project-id-filter').value = '';
+            document.getElementById('date-from-filter').value = '';
+            document.getElementById('date-to-filter').value = '';
+            document.getElementById('automation-filter').value = 'all';
+            loadStatusChanges(1);
+        }
+        
+        function refreshData() {
+            loadStatusChanges(currentPage);
+        }
+        
+        // Carica i dati al caricamento della pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatusChanges();
+        });
+        
+        // Auto-refresh ogni 30 secondi
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>

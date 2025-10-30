@@ -1,0 +1,1622 @@
+{
+  "2366:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 19h 41m",
+    "timestamp": "2025-06-27T07:49:27",
+    "details": {
+      "hours": 19,
+      "minutes": 41,
+      "activity_date": "2025-05-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3500",
+      "project_id": "2366",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "2366:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 8h 44m",
+    "timestamp": "2025-06-27T07:49:34",
+    "details": {
+      "hours": 8,
+      "minutes": 44,
+      "activity_date": "2025-05-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3501",
+      "project_id": "2366",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "2366:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 2h 0m",
+    "timestamp": "2025-06-27T07:49:41",
+    "details": {
+      "hours": 2,
+      "minutes": 0,
+      "activity_date": "2025-05-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3502",
+      "project_id": "2366",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "2366:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 11h 57m",
+    "timestamp": "2025-06-27T07:49:49",
+    "details": {
+      "hours": 11,
+      "minutes": 57,
+      "activity_date": "2025-05-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3503",
+      "project_id": "2366",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "2366:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 2h 0m",
+    "timestamp": "2025-06-27T07:49:56",
+    "details": {
+      "hours": 2,
+      "minutes": 0,
+      "activity_date": "2025-05-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3504",
+      "project_id": "2366",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3156:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 8h 5m",
+    "timestamp": "2025-06-27T07:52:49",
+    "details": {
+      "hours": 8,
+      "minutes": 5,
+      "activity_date": "2025-01-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3505",
+      "project_id": "3156",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3156:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 8h 1m",
+    "timestamp": "2025-06-27T07:52:57",
+    "details": {
+      "hours": 8,
+      "minutes": 1,
+      "activity_date": "2025-01-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3506",
+      "project_id": "3156",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3156:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 7h 45m",
+    "timestamp": "2025-06-27T07:53:04",
+    "details": {
+      "hours": 7,
+      "minutes": 45,
+      "activity_date": "2025-01-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3507",
+      "project_id": "3156",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3156:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 7h 40m",
+    "timestamp": "2025-06-27T07:53:14",
+    "details": {
+      "hours": 7,
+      "minutes": 40,
+      "activity_date": "2025-01-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3508",
+      "project_id": "3156",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3156:Anna Pinto": {
+    "status": "success",
+    "message": "Importate 3h 11m",
+    "timestamp": "2025-06-27T07:53:22",
+    "details": {
+      "hours": 3,
+      "minutes": 11,
+      "activity_date": "2025-01-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3509",
+      "project_id": "3156",
+      "employee_name": "Anna Pinto",
+      "operation_type": "time_activity"
+    }
+  },
+  "3226:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 9h 49m",
+    "timestamp": "2025-06-27T08:12:40",
+    "details": {
+      "hours": 9,
+      "minutes": 49,
+      "activity_date": "2025-01-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3516",
+      "project_id": "3226",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3226:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 13h 9m",
+    "timestamp": "2025-06-27T08:12:47",
+    "details": {
+      "hours": 13,
+      "minutes": 9,
+      "activity_date": "2025-01-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3517",
+      "project_id": "3226",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3226:Ciro Russo": {
+    "status": "success",
+    "message": "Importate 12h 46m",
+    "timestamp": "2025-06-27T08:12:55",
+    "details": {
+      "hours": 12,
+      "minutes": 46,
+      "activity_date": "2025-01-22",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3518",
+      "project_id": "3226",
+      "employee_name": "Ciro Russo",
+      "operation_type": "time_activity"
+    }
+  },
+  "3274:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 15h 33m",
+    "timestamp": "2025-06-27T08:15:51",
+    "details": {
+      "hours": 15,
+      "minutes": 33,
+      "activity_date": "2025-06-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3519",
+      "project_id": "3274",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3274:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 6h 24m",
+    "timestamp": "2025-06-27T08:15:59",
+    "details": {
+      "hours": 6,
+      "minutes": 24,
+      "activity_date": "2025-06-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3520",
+      "project_id": "3274",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3274:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 6h 37m",
+    "timestamp": "2025-06-27T08:16:07",
+    "details": {
+      "hours": 6,
+      "minutes": 37,
+      "activity_date": "2025-06-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3521",
+      "project_id": "3274",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3274:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 2h 49m",
+    "timestamp": "2025-06-27T08:16:14",
+    "details": {
+      "hours": 2,
+      "minutes": 49,
+      "activity_date": "2025-06-01",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3522",
+      "project_id": "3274",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3293:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 45h 31m",
+    "timestamp": "2025-06-27T08:19:58",
+    "details": {
+      "hours": 45,
+      "minutes": 31,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3523",
+      "project_id": "3293",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3293:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 17h 50m",
+    "timestamp": "2025-06-27T08:20:10",
+    "details": {
+      "hours": 17,
+      "minutes": 50,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3524",
+      "project_id": "3293",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3303:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 13h 29m",
+    "timestamp": "2025-06-27T08:23:03",
+    "details": {
+      "hours": 13,
+      "minutes": 29,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3525",
+      "project_id": "3303",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3303:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 6h 30m",
+    "timestamp": "2025-06-27T08:23:12",
+    "details": {
+      "hours": 6,
+      "minutes": 30,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3526",
+      "project_id": "3303",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3303:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 6h 30m",
+    "timestamp": "2025-06-27T08:23:20",
+    "details": {
+      "hours": 6,
+      "minutes": 30,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3527",
+      "project_id": "3303",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3303:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 3h 47m",
+    "timestamp": "2025-06-27T08:23:28",
+    "details": {
+      "hours": 3,
+      "minutes": 47,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3528",
+      "project_id": "3303",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3303:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 6h 55m",
+    "timestamp": "2025-06-27T08:23:36",
+    "details": {
+      "hours": 6,
+      "minutes": 55,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3529",
+      "project_id": "3303",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3322:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 17h 41m",
+    "timestamp": "2025-06-27T09:00:25",
+    "details": {
+      "hours": 17,
+      "minutes": 41,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3533",
+      "project_id": "3322",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3322:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 17h 58m",
+    "timestamp": "2025-06-27T09:00:36",
+    "details": {
+      "hours": 17,
+      "minutes": 58,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3534",
+      "project_id": "3322",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3322:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 13h 50m",
+    "timestamp": "2025-06-27T09:00:48",
+    "details": {
+      "hours": 13,
+      "minutes": 50,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3535",
+      "project_id": "3322",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3332:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 17h 41m",
+    "timestamp": "2025-06-27T09:03:53",
+    "details": {
+      "hours": 17,
+      "minutes": 41,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3536",
+      "project_id": "3332",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3332:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 17h 58m",
+    "timestamp": "2025-06-27T09:04:06",
+    "details": {
+      "hours": 17,
+      "minutes": 58,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3537",
+      "project_id": "3332",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3332:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 13h 50m",
+    "timestamp": "2025-06-27T09:04:20",
+    "details": {
+      "hours": 13,
+      "minutes": 50,
+      "activity_date": "2025-05-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3538",
+      "project_id": "3332",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3354:Mino Pellegrino": {
+    "status": "success",
+    "message": "Importate 21h 44m",
+    "timestamp": "2025-06-27T09:09:25",
+    "details": {
+      "hours": 21,
+      "minutes": 44,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3544",
+      "project_id": "3354",
+      "employee_name": "Mino Pellegrino",
+      "operation_type": "time_activity"
+    }
+  },
+  "3354:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 30h 11m",
+    "timestamp": "2025-06-27T09:09:33",
+    "details": {
+      "hours": 30,
+      "minutes": 11,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3545",
+      "project_id": "3354",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3354:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 17h 19m",
+    "timestamp": "2025-06-27T09:09:41",
+    "details": {
+      "hours": 17,
+      "minutes": 19,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3546",
+      "project_id": "3354",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3354:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 14h 59m",
+    "timestamp": "2025-06-27T09:09:49",
+    "details": {
+      "hours": 14,
+      "minutes": 59,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3547",
+      "project_id": "3354",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3354:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 1h 35m",
+    "timestamp": "2025-06-27T09:09:57",
+    "details": {
+      "hours": 1,
+      "minutes": 35,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3548",
+      "project_id": "3354",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Anna Pinto": {
+    "status": "success",
+    "message": "Importate 8h 35m",
+    "timestamp": "2025-06-27T09:16:37",
+    "details": {
+      "hours": 8,
+      "minutes": 35,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3549",
+      "project_id": "3410",
+      "employee_name": "Anna Pinto",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 6h 39m",
+    "timestamp": "2025-06-27T09:16:45",
+    "details": {
+      "hours": 6,
+      "minutes": 39,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3550",
+      "project_id": "3410",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 7h 12m",
+    "timestamp": "2025-06-27T09:16:52",
+    "details": {
+      "hours": 7,
+      "minutes": 12,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3551",
+      "project_id": "3410",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 12h 23m",
+    "timestamp": "2025-06-27T09:17:00",
+    "details": {
+      "hours": 12,
+      "minutes": 23,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3552",
+      "project_id": "3410",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 4h 24m",
+    "timestamp": "2025-06-27T09:17:08",
+    "details": {
+      "hours": 4,
+      "minutes": 24,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3553",
+      "project_id": "3410",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Mino Pellegrino": {
+    "status": "success",
+    "message": "Importate 5h 0m",
+    "timestamp": "2025-06-27T09:17:16",
+    "details": {
+      "hours": 5,
+      "minutes": 0,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3554",
+      "project_id": "3410",
+      "employee_name": "Mino Pellegrino",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Angelo Ruggieri": {
+    "status": "success",
+    "message": "Importate 10h 30m",
+    "timestamp": "2025-06-27T09:17:25",
+    "details": {
+      "hours": 10,
+      "minutes": 30,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3555",
+      "project_id": "3410",
+      "employee_name": "Angelo Ruggieri",
+      "operation_type": "time_activity"
+    }
+  },
+  "3410:Tatiana Veronesi": {
+    "status": "success",
+    "message": "Importate 8h 0m",
+    "timestamp": "2025-06-27T09:17:32",
+    "details": {
+      "hours": 8,
+      "minutes": 0,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3556",
+      "project_id": "3410",
+      "employee_name": "Tatiana Veronesi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3422:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 3h 0m",
+    "timestamp": "2025-06-27T10:53:08",
+    "details": {
+      "hours": 3,
+      "minutes": 0,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3557",
+      "project_id": "3422",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3424:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 3h 0m",
+    "timestamp": "2025-06-30T07:13:36",
+    "details": {
+      "hours": 3,
+      "minutes": 0,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3558",
+      "project_id": "3424",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 15h 25m",
+    "timestamp": "2025-06-30T07:55:55",
+    "details": {
+      "hours": 15,
+      "minutes": 25,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3560",
+      "project_id": "3475",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 26h 3m",
+    "timestamp": "2025-06-30T07:56:03",
+    "details": {
+      "hours": 26,
+      "minutes": 3,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3561",
+      "project_id": "3475",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 15h 20m",
+    "timestamp": "2025-06-30T07:56:12",
+    "details": {
+      "hours": 15,
+      "minutes": 20,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3562",
+      "project_id": "3475",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 15h 13m",
+    "timestamp": "2025-06-30T07:56:20",
+    "details": {
+      "hours": 15,
+      "minutes": 13,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3563",
+      "project_id": "3475",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 26h 42m",
+    "timestamp": "2025-06-30T07:56:29",
+    "details": {
+      "hours": 26,
+      "minutes": 42,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3564",
+      "project_id": "3475",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 14h 47m",
+    "timestamp": "2025-06-30T07:56:38",
+    "details": {
+      "hours": 14,
+      "minutes": 47,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3565",
+      "project_id": "3475",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3475:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 7h 31m",
+    "timestamp": "2025-06-30T07:57:07",
+    "details": {
+      "hours": 7,
+      "minutes": 31,
+      "activity_date": "2025-05-11",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3566",
+      "project_id": "3475",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3485:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 38h 39m",
+    "timestamp": "2025-06-30T07:59:48",
+    "details": {
+      "hours": 38,
+      "minutes": 39,
+      "activity_date": "2025-03-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3567",
+      "project_id": "3485",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3485:Ciro Russo": {
+    "status": "success",
+    "message": "Importate 12h 36m",
+    "timestamp": "2025-06-30T07:59:56",
+    "details": {
+      "hours": 12,
+      "minutes": 36,
+      "activity_date": "2025-03-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3568",
+      "project_id": "3485",
+      "employee_name": "Ciro Russo",
+      "operation_type": "time_activity"
+    }
+  },
+  "3485:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 15h 4m",
+    "timestamp": "2025-06-30T08:00:06",
+    "details": {
+      "hours": 15,
+      "minutes": 4,
+      "activity_date": "2025-03-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3569",
+      "project_id": "3485",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3485:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 14h 36m",
+    "timestamp": "2025-06-30T08:00:14",
+    "details": {
+      "hours": 14,
+      "minutes": 36,
+      "activity_date": "2025-03-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3570",
+      "project_id": "3485",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3485:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 13h 40m",
+    "timestamp": "2025-06-30T08:00:22",
+    "details": {
+      "hours": 13,
+      "minutes": 40,
+      "activity_date": "2025-03-30",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3571",
+      "project_id": "3485",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3540:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 9h 16m",
+    "timestamp": "2025-06-30T08:04:40",
+    "details": {
+      "hours": 9,
+      "minutes": 16,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3572",
+      "project_id": "3540",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3540:Mino Pellegrino": {
+    "status": "success",
+    "message": "Importate 8h 43m",
+    "timestamp": "2025-06-30T08:04:48",
+    "details": {
+      "hours": 8,
+      "minutes": 43,
+      "activity_date": "2025-05-26",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3573",
+      "project_id": "3540",
+      "employee_name": "Mino Pellegrino",
+      "operation_type": "time_activity"
+    }
+  },
+  "3569:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 21h 39m",
+    "timestamp": "2025-06-30T08:06:33",
+    "details": {
+      "hours": 21,
+      "minutes": 39,
+      "activity_date": "2025-05-31",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3574",
+      "project_id": "3569",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3569:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 30h 17m",
+    "timestamp": "2025-06-30T08:06:41",
+    "details": {
+      "hours": 30,
+      "minutes": 17,
+      "activity_date": "2025-05-31",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3575",
+      "project_id": "3569",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3569:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 11h 45m",
+    "timestamp": "2025-06-30T08:06:49",
+    "details": {
+      "hours": 11,
+      "minutes": 45,
+      "activity_date": "2025-05-31",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3576",
+      "project_id": "3569",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3569:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 23h 29m",
+    "timestamp": "2025-06-30T08:06:57",
+    "details": {
+      "hours": 23,
+      "minutes": 29,
+      "activity_date": "2025-05-31",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3577",
+      "project_id": "3569",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3569:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 15h 57m",
+    "timestamp": "2025-06-30T08:07:05",
+    "details": {
+      "hours": 15,
+      "minutes": 57,
+      "activity_date": "2025-05-31",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3578",
+      "project_id": "3569",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 62h 5m",
+    "timestamp": "2025-06-30T08:09:23",
+    "details": {
+      "hours": 62,
+      "minutes": 5,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3579",
+      "project_id": "3588",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 57h 41m",
+    "timestamp": "2025-06-30T08:09:36",
+    "details": {
+      "hours": 57,
+      "minutes": 41,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3580",
+      "project_id": "3588",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Angelo Ruggieri": {
+    "status": "success",
+    "message": "Importate 41h 34m",
+    "timestamp": "2025-06-30T08:09:51",
+    "details": {
+      "hours": 41,
+      "minutes": 34,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3581",
+      "project_id": "3588",
+      "employee_name": "Angelo Ruggieri",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 63h 21m",
+    "timestamp": "2025-06-30T08:10:04",
+    "details": {
+      "hours": 63,
+      "minutes": 21,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3582",
+      "project_id": "3588",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 48h 21m",
+    "timestamp": "2025-06-30T08:10:19",
+    "details": {
+      "hours": 48,
+      "minutes": 21,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3583",
+      "project_id": "3588",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 4h 20m",
+    "timestamp": "2025-06-30T08:10:34",
+    "details": {
+      "hours": 4,
+      "minutes": 20,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3584",
+      "project_id": "3588",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3588:Anna Pinto": {
+    "status": "success",
+    "message": "Importate 25h 37m",
+    "timestamp": "2025-06-30T08:10:50",
+    "details": {
+      "hours": 25,
+      "minutes": 37,
+      "activity_date": "2025-04-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3585",
+      "project_id": "3588",
+      "employee_name": "Anna Pinto",
+      "operation_type": "time_activity"
+    }
+  },
+  "3592:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 19h 50m",
+    "timestamp": "2025-06-30T08:58:10",
+    "details": {
+      "hours": 19,
+      "minutes": 50,
+      "activity_date": "2025-05-10",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3586",
+      "project_id": "3592",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3592:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 1h 36m",
+    "timestamp": "2025-06-30T08:58:17",
+    "details": {
+      "hours": 1,
+      "minutes": 36,
+      "activity_date": "2025-05-10",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3587",
+      "project_id": "3592",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3592:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 10h 0m",
+    "timestamp": "2025-06-30T08:58:24",
+    "details": {
+      "hours": 10,
+      "minutes": 0,
+      "activity_date": "2025-05-10",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3588",
+      "project_id": "3592",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 32h 11m",
+    "timestamp": "2025-06-30T11:02:55",
+    "details": {
+      "hours": 32,
+      "minutes": 11,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3589",
+      "project_id": "3614",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Angelo Semeraro": {
+    "status": "success",
+    "message": "Importate 23h 49m",
+    "timestamp": "2025-06-30T11:03:02",
+    "details": {
+      "hours": 23,
+      "minutes": 49,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3590",
+      "project_id": "3614",
+      "employee_name": "Angelo Semeraro",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Mino Pellegrino": {
+    "status": "success",
+    "message": "Importate 21h 7m",
+    "timestamp": "2025-06-30T11:03:09",
+    "details": {
+      "hours": 21,
+      "minutes": 7,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3591",
+      "project_id": "3614",
+      "employee_name": "Mino Pellegrino",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 25h 10m",
+    "timestamp": "2025-06-30T11:03:16",
+    "details": {
+      "hours": 25,
+      "minutes": 10,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3592",
+      "project_id": "3614",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 39h 12m",
+    "timestamp": "2025-06-30T11:03:23",
+    "details": {
+      "hours": 39,
+      "minutes": 12,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3593",
+      "project_id": "3614",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 25h 33m",
+    "timestamp": "2025-06-30T11:03:31",
+    "details": {
+      "hours": 25,
+      "minutes": 33,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3594",
+      "project_id": "3614",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 10h 37m",
+    "timestamp": "2025-06-30T11:03:39",
+    "details": {
+      "hours": 10,
+      "minutes": 37,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3595",
+      "project_id": "3614",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3614:Angelo Ruggieri": {
+    "status": "success",
+    "message": "Importate 6h 37m",
+    "timestamp": "2025-06-30T11:03:46",
+    "details": {
+      "hours": 6,
+      "minutes": 37,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3596",
+      "project_id": "3614",
+      "employee_name": "Angelo Ruggieri",
+      "operation_type": "time_activity"
+    }
+  },
+  "3618:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 3h 29m",
+    "timestamp": "2025-06-30T11:09:24",
+    "details": {
+      "hours": 3,
+      "minutes": 29,
+      "activity_date": "2025-05-25",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3597",
+      "project_id": "3618",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3618:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 8h 10m",
+    "timestamp": "2025-06-30T11:09:31",
+    "details": {
+      "hours": 8,
+      "minutes": 10,
+      "activity_date": "2025-05-25",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3598",
+      "project_id": "3618",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3618:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 13h 6m",
+    "timestamp": "2025-06-30T11:09:38",
+    "details": {
+      "hours": 13,
+      "minutes": 6,
+      "activity_date": "2025-05-25",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3599",
+      "project_id": "3618",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3618:Fabio De Carolis": {
+    "status": "success",
+    "message": "Importate 4h 44m",
+    "timestamp": "2025-06-30T11:09:45",
+    "details": {
+      "hours": 4,
+      "minutes": 44,
+      "activity_date": "2025-05-25",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3601",
+      "project_id": "3618",
+      "employee_name": "Fabio De Carolis",
+      "operation_type": "time_activity"
+    }
+  },
+  "3649:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 6h 40m",
+    "timestamp": "2025-06-30T11:14:03",
+    "details": {
+      "hours": 6,
+      "minutes": 40,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3602",
+      "project_id": "3649",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3649:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 1h 1m",
+    "timestamp": "2025-06-30T11:14:10",
+    "details": {
+      "hours": 1,
+      "minutes": 1,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3603",
+      "project_id": "3649",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3649:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 1h 1m",
+    "timestamp": "2025-06-30T11:14:17",
+    "details": {
+      "hours": 1,
+      "minutes": 1,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3604",
+      "project_id": "3649",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3649:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 6h 21m",
+    "timestamp": "2025-06-30T11:14:25",
+    "details": {
+      "hours": 6,
+      "minutes": 21,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3605",
+      "project_id": "3649",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3649:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 2h 0m",
+    "timestamp": "2025-06-30T11:14:36",
+    "details": {
+      "hours": 2,
+      "minutes": 0,
+      "activity_date": "2025-05-18",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3606",
+      "project_id": "3649",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3660:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 17h 51m",
+    "timestamp": "2025-06-30T12:04:35",
+    "details": {
+      "hours": 17,
+      "minutes": 51,
+      "activity_date": "2025-05-16",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3607",
+      "project_id": "3660",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3660:Angelo Ruggieri": {
+    "status": "success",
+    "message": "Importate 2h 15m",
+    "timestamp": "2025-06-30T12:04:42",
+    "details": {
+      "hours": 2,
+      "minutes": 15,
+      "activity_date": "2025-05-16",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3608",
+      "project_id": "3660",
+      "employee_name": "Angelo Ruggieri",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 4h 17m",
+    "timestamp": "2025-06-30T12:23:12",
+    "details": {
+      "hours": 4,
+      "minutes": 17,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3609",
+      "project_id": "3669",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Angelo Ruggieri": {
+    "status": "success",
+    "message": "Importate 5h 22m",
+    "timestamp": "2025-06-30T12:23:19",
+    "details": {
+      "hours": 5,
+      "minutes": 22,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3610",
+      "project_id": "3669",
+      "employee_name": "Angelo Ruggieri",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 1h 0m",
+    "timestamp": "2025-06-30T12:23:26",
+    "details": {
+      "hours": 1,
+      "minutes": 0,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3611",
+      "project_id": "3669",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 2h 39m",
+    "timestamp": "2025-06-30T12:23:33",
+    "details": {
+      "hours": 2,
+      "minutes": 39,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3612",
+      "project_id": "3669",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 2h 25m",
+    "timestamp": "2025-06-30T12:23:40",
+    "details": {
+      "hours": 2,
+      "minutes": 25,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3613",
+      "project_id": "3669",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3669:Flavio Vito Ricci": {
+    "status": "success",
+    "message": "Importate 1h 0m",
+    "timestamp": "2025-06-30T12:23:46",
+    "details": {
+      "hours": 1,
+      "minutes": 0,
+      "activity_date": "2025-05-21",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3614",
+      "project_id": "3669",
+      "employee_name": "Flavio Vito Ricci",
+      "operation_type": "time_activity"
+    }
+  },
+  "3681:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 7h 33m",
+    "timestamp": "2025-06-30T12:26:24",
+    "details": {
+      "hours": 7,
+      "minutes": 33,
+      "activity_date": "2025-05-10",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3615",
+      "project_id": "3681",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3681:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 7h 22m",
+    "timestamp": "2025-06-30T12:26:31",
+    "details": {
+      "hours": 7,
+      "minutes": 22,
+      "activity_date": "2025-05-10",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3616",
+      "project_id": "3681",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3683:Donato Laviola": {
+    "status": "success",
+    "message": "Importate 4h 53m",
+    "timestamp": "2025-06-30T12:39:07",
+    "details": {
+      "hours": 4,
+      "minutes": 53,
+      "activity_date": "2025-05-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3617",
+      "project_id": "3683",
+      "employee_name": "Donato Laviola",
+      "operation_type": "time_activity"
+    }
+  },
+  "3683:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 36h 14m",
+    "timestamp": "2025-06-30T12:39:18",
+    "details": {
+      "hours": 36,
+      "minutes": 14,
+      "activity_date": "2025-05-28",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3618",
+      "project_id": "3683",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3687:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 11h 34m",
+    "timestamp": "2025-06-30T13:06:42",
+    "details": {
+      "hours": 11,
+      "minutes": 34,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3619",
+      "project_id": "3687",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  },
+  "3687:Anxhelo Cjapi": {
+    "status": "success",
+    "message": "Importate 15h 30m",
+    "timestamp": "2025-06-30T13:06:49",
+    "details": {
+      "hours": 15,
+      "minutes": 30,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3620",
+      "project_id": "3687",
+      "employee_name": "Anxhelo Cjapi",
+      "operation_type": "time_activity"
+    }
+  },
+  "3687:Tonio Calianno": {
+    "status": "success",
+    "message": "Importate 15h 13m",
+    "timestamp": "2025-06-30T13:06:57",
+    "details": {
+      "hours": 15,
+      "minutes": 13,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3621",
+      "project_id": "3687",
+      "employee_name": "Tonio Calianno",
+      "operation_type": "time_activity"
+    }
+  },
+  "3687:Pasquale Donnaloia": {
+    "status": "success",
+    "message": "Importate 4h 0m",
+    "timestamp": "2025-06-30T13:07:06",
+    "details": {
+      "hours": 4,
+      "minutes": 0,
+      "activity_date": "2025-05-17",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3622",
+      "project_id": "3687",
+      "employee_name": "Pasquale Donnaloia",
+      "operation_type": "time_activity"
+    }
+  },
+  "3703:Gentian  Deda": {
+    "status": "success",
+    "message": "Importate 11h 18m",
+    "timestamp": "2025-06-30T13:09:47",
+    "details": {
+      "hours": 11,
+      "minutes": 18,
+      "activity_date": "2025-05-25",
+      "import_method": "excel_auto",
+      "qb_timeactivity_id": "3623",
+      "project_id": "3703",
+      "employee_name": "Gentian  Deda",
+      "operation_type": "time_activity"
+    }
+  }
+}

@@ -123,6 +123,17 @@
       box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
     }
     
+    .btn-danger {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+    }
+    
     .btn:disabled {
       background: #6c757d;
       cursor: not-allowed;
@@ -310,6 +321,8 @@
         <div style="display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 1rem;">
           <label for="excelFile" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📄 Importa ore da Excel</label>
           <input type="file" id="excelFile" name="excelFile" accept=".xlsx,.xls" style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; background: white;">
+          <label for="excelDataAttivita" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📅 Data Attività</label>
+          <input type="date" id="excelDataAttivita" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
           <button id="importExcelBtn" class="btn btn-success" type="button" style="white-space:nowrap; min-width:170px; align-self: flex-start;"><span>⬆️</span> Importa Ore da Excel</button>
         </div>        <div id="importExcelMsg" style="margin-bottom:1rem;font-size:1rem;font-weight:600;min-height:24px;"></div>
         
@@ -329,9 +342,12 @@
         
         <div class="btn-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
           <button id="listProjectsBtn" class="btn btn-secondary" type="button"><span>📋</span> Recupera Lista Progetti</button>
-          <button id="processSelectedBtn" class="btn btn-success" disabled><span>⚡</span> Elabora Selezionati (<span id="selectedCount">0</span>)</button>
-        </div>
+          <button id="processSelectedBtn" class="btn btn-success" disabled><span>⚡</span> Elabora Selezionati (<span id="selectedCount">0</span>)</button>        </div>
         <button id="xmlToCsvBtn" class="btn btn-primary" type="button" style="margin-top:1rem;">🔄 Converti XML in CSV</button>
+        <button id="searchBillsBtn" class="btn btn-info" type="button" style="margin-top:0.5rem;">🔍 Ricerca Fatture Database</button>
+        <button id="deleteTimeActivitiesBtn" class="btn btn-danger" type="button" style="margin-top:0.5rem;">🗑️ Elimina Ore QB</button>
+        <button id="excelStatsBtn" class="btn btn-warning" type="button" style="margin-top:0.5rem;">📊 Statistiche Excel Import</button>
+        <button id="webhookManagerBtn" class="btn btn-secondary" type="button" style="margin-top:0.5rem;">🔗 Gestione Webhook</button>
       </form>
     </aside>
     <!-- Main content: stats + tabella -->
@@ -1101,9 +1117,9 @@
           msgDiv.style.color = '#e74c3c';
           return;
         }
-        const dataAttivita = document.getElementById('toDate').value;
+        const dataAttivita = document.getElementById('excelDataAttivita').value;
         if (!dataAttivita) {
-          msgDiv.textContent = '❌ Data attività obbligatoria';
+          msgDiv.textContent = '❌ Data attività obbligatoria per l\'importazione Excel';
           msgDiv.style.color = '#e74c3c';
           return;
         }
@@ -1136,11 +1152,29 @@
           msgDiv.textContent = '❌ Errore: ' + err;
           msgDiv.style.color = '#e74c3c';
         });
-      });
-
-      // Pulsante per aprire la pagina di conversione XML → CSV
+      });      // Pulsante per aprire la pagina di conversione XML → CSV
       document.getElementById('xmlToCsvBtn').addEventListener('click', function() {
         window.location.href = 'xml-to-csv.html'; // Apri nella stessa scheda
+      });
+      
+      // Pulsante per aprire la pagina di ricerca fatture
+      document.getElementById('searchBillsBtn').addEventListener('click', function() {
+        window.location.href = 'search-bills.html'; // Apri nella stessa scheda
+      });
+      
+      // Pulsante per aprire la pagina di eliminazione ore
+      document.getElementById('deleteTimeActivitiesBtn').addEventListener('click', function() {
+        window.location.href = 'delete-time-activities.html'; // Apri nella stessa scheda
+      });
+      
+      // Listener per pulsante statistiche Excel
+      document.getElementById('excelStatsBtn').addEventListener('click', function() {
+        window.location.href = 'excel-import-stats.html'; // Apri nella stessa scheda
+      });
+      
+      // Listener per pulsante gestione webhook
+      document.getElementById('webhookManagerBtn').addEventListener('click', function() {
+        window.location.href = 'webhook-manager.html'; // Apri nella stessa scheda
       });
     });
     

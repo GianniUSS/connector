@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FatturaElettronicaBody>
+    <FatturaElettronicaHeader>
+        <CedentePrestatore>
+            <DatiAnagrafici>
+                <Anagrafica>
+                    <Denominazione>Test Fornitore S.r.l.</Denominazione>
+                </Anagrafica>
+            </DatiAnagrafici>
+        </CedentePrestatore>
+    </FatturaElettronicaHeader>
+    <DatiGenerali>
+        <DatiGeneraliDocumento>
+            <Numero>2025-001</Numero>
+            <Data>2025-01-15</Data>
+        </DatiGeneraliDocumento>
+        <DatiBeniServizi>
+            <DettaglioLinee>
+                <Descrizione>Servizio di consulenza informatica</Descrizione>
+                <Quantita>5</Quantita>
+                <PrezzoUnitario>150.00</PrezzoUnitario>
+                <AliquotaIVA>22.00</AliquotaIVA>
+            </DettaglioLinee>
+            <DettaglioLinee>
+                <Descrizione>Licenza software</Descrizione>
+                <Quantita>2</Quantita>
+                <PrezzoUnitario>200.00</PrezzoUnitario>
+                <AliquotaIVA>22.00</AliquotaIVA>
+            </DettaglioLinee>
+        </DatiBeniServizi>
+    </DatiGenerali>
+</FatturaElettronicaBody>
