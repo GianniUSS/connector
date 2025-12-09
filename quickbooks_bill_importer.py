@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import re
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 import config
@@ -19,16 +20,34 @@ class QuickBooksBillImporter:
             "Content-Type": "application/json"
         }
         self.item_cache: Dict[str, Optional[str]] = {}
+        self.account_cache: Dict[str, Optional[str]] = {}
         self.default_item_id = getattr(config, 'DEFAULT_QB_ITEM_ID', None)
-        if self.default_item_id == '':
-            self.default_item_id = None
+        if isinstance(self.default_item_id, str):
+            self.default_item_id = self.default_item_id.strip() or None
         self.default_item_name = getattr(config, 'DEFAULT_QB_ITEM_NAME', None)
         if self.default_item_name:
             self.default_item_name = self.default_item_name.strip() or None
-        self.default_item_expense_account_id = getattr(config, 'DEFAULT_QB_ITEM_EXPENSE_ACCOUNT_ID', '1') or '1'
+        self.default_item_type = getattr(config, 'DEFAULT_QB_ITEM_TYPE', 'Service') or 'Service'
+        self.default_item_expense_account_id = getattr(config, 'DEFAULT_QB_ITEM_EXPENSE_ACCOUNT_ID', None)
+        if isinstance(self.default_item_expense_account_id, str):
+            self.default_item_expense_account_id = self.default_item_expense_account_id.strip() or None
+        self.default_item_expense_account_name = getattr(config, 'DEFAULT_QB_ITEM_EXPENSE_ACCOUNT_NAME', None)
+        if self.default_item_expense_account_name:
+            self.default_item_expense_account_name = self.default_item_expense_account_name.strip() or None
         self.default_item_income_account_id = getattr(config, 'DEFAULT_QB_ITEM_INCOME_ACCOUNT_ID', None)
-        if self.default_item_income_account_id == '':
-            self.default_item_income_account_id = None
+        if isinstance(self.default_item_income_account_id, str):
+            self.default_item_income_account_id = self.default_item_income_account_id.strip() or None
+        self.default_item_income_account_name = getattr(config, 'DEFAULT_QB_ITEM_INCOME_ACCOUNT_NAME', None)
+        if self.default_item_income_account_name:
+            self.default_item_income_account_name = self.default_item_income_account_name.strip() or None
+        self.default_item_purchase_tax_code_id = getattr(config, 'DEFAULT_QB_ITEM_PURCHASE_TAX_CODE_ID', None)
+        if isinstance(self.default_item_purchase_tax_code_id, str):
+            self.default_item_purchase_tax_code_id = self.default_item_purchase_tax_code_id.strip() or None
+        self.default_item_sales_tax_code_id = getattr(config, 'DEFAULT_QB_ITEM_SALES_TAX_CODE_ID', None)
+        if isinstance(self.default_item_sales_tax_code_id, str):
+            self.default_item_sales_tax_code_id = self.default_item_sales_tax_code_id.strip() or None
+        self._tax_code_cache: Dict[str, List[Dict[str, Any]]] = {}
+        self._tax_code_cache_loaded = False
         self._default_item_checked = False
     
     def create_bill(self, bill_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -69,12 +88,11 @@ class QuickBooksBillImporter:
             return None
         # Log bill creation details
         #logging.info(f"[create_bill] Preparing to create bill: vendor_id={bill_data.get('vendor_id')} ref_number={bill_data.get('ref_number')} txn_date={bill_data.get('txn_date')} line_items={len(bill_data.get('line_items', []))}")
-        payload = self._build_bill_payload(bill_data)        # Debug log full payload - ATTIVATO PER DEBUG VENDOR
-        # logging.info(f"[create_bill] Payload: {json.dumps(payload, ensure_ascii=False, indent=2)}")
-        # NON stampare più il payload
+        payload = self._build_bill_payload(bill_data)
+        # 🔍 LOG PAYLOAD COMPLETO PER DEBUG
+        logging.info(f"[create_bill] PAYLOAD QuickBooks:\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
         try:
-            #logging.info(f"[create_bill] Invio richiesta a: {url}")
-            # logging.debug(f"[create_bill] Payload: {json.dumps(payload, indent=2)}")  # RIMOSSO
+            logging.info(f"[create_bill] Invio richiesta a: {url}")
             response = requests.post(url, headers=self.headers, json=payload)
             # print(f"[create_bill] Risposta ricevuta: {response.status_code}")
             if response.status_code == 200:
@@ -199,7 +217,13 @@ class QuickBooksBillImporter:
         if bill_data.get('memo'):
             bill_payload["PrivateNote"] = bill_data['memo']
         # --- INTEGRAZIONE TAXCODE ---
-        if bill_data.get('taxcode_id'):
+        # NON aggiungere TxnTaxDetail se le righe usano ItemBasedExpenseLineDetail
+        # Il TaxCode deve essere solo sulle righe, altrimenti QuickBooks va in errore 6000
+        has_item_based_lines = any(
+            (item.get('item_id') or item.get('item_name') or item.get('quantity') is not None)
+            for item in bill_data.get('line_items', [])
+        )
+        if bill_data.get('taxcode_id') and not has_item_based_lines:
             bill_payload["TxnTaxDetail"] = {
                 "TxnTaxCodeRef": {"value": str(bill_data['taxcode_id'])}
             }
@@ -226,15 +250,18 @@ class QuickBooksBillImporter:
         if item_id:
             line_item['item_id'] = item_id
             line["DetailType"] = "ItemBasedExpenseLineDetail"
-            line["ItemBasedExpenseLineDetail"] = {
+            item_detail: Dict[str, Any] = {
                 "ItemRef": {
                     "value": str(item_id)
                 }
             }
             if line_item.get('quantity') is not None:
-                line["ItemBasedExpenseLineDetail"]["Qty"] = float(line_item['quantity'])
+                item_detail["Qty"] = float(line_item['quantity'])
             if line_item.get('unit_price') is not None:
-                line["ItemBasedExpenseLineDetail"]["UnitPrice"] = float(line_item['unit_price'])
+                item_detail["UnitPrice"] = float(line_item['unit_price'])
+            if line_item.get('taxcode_id'):
+                item_detail["TaxCodeRef"] = {"value": str(line_item['taxcode_id'])}
+            line["ItemBasedExpenseLineDetail"] = item_detail
         else:
             line["AccountBasedExpenseLineDetail"] = {
                 "AccountRef": {
@@ -250,9 +277,11 @@ class QuickBooksBillImporter:
             line["Description"] = line_item['description']
         if line_item.get('customer_id'):
             if "ItemBasedExpenseLineDetail" in line:
-                line["ItemBasedExpenseLineDetail"]["CustomerRef"] = {
+                item_detail = line.get("ItemBasedExpenseLineDetail") or {}
+                item_detail["CustomerRef"] = {
                     "value": str(line_item['customer_id'])
                 }
+                line["ItemBasedExpenseLineDetail"] = item_detail
             else:
                 line["AccountBasedExpenseLineDetail"]["CustomerRef"] = {
                     "value": str(line_item['customer_id'])
@@ -274,7 +303,11 @@ class QuickBooksBillImporter:
         if self.default_item_id:
             return str(self.default_item_id)
         if self.default_item_name:
-            resolved_id = self._ensure_default_item_exists(unit_price=line_item.get('unit_price'))
+            resolved_id = self._ensure_default_item_exists(
+                unit_price=line_item.get('unit_price'),
+                taxcode_id=line_item.get('taxcode_id'),
+                tax_percent=line_item.get('tax_percent')
+            )
             if resolved_id:
                 return resolved_id
         return None
@@ -296,7 +329,12 @@ class QuickBooksBillImporter:
         self.item_cache[key] = None
         return None
 
-    def _ensure_default_item_exists(self, unit_price: Optional[Any] = None) -> Optional[str]:
+    def _ensure_default_item_exists(
+        self,
+        unit_price: Optional[Any] = None,
+        taxcode_id: Optional[Any] = None,
+        tax_percent: Optional[Any] = None
+    ) -> Optional[str]:
         if not self.default_item_name:
             return None
         if self.default_item_id:
@@ -310,8 +348,13 @@ class QuickBooksBillImporter:
                 key = self.default_item_name.strip().lower()
                 self.item_cache[key] = item_id
                 return str(item_id)
-            if not self.default_item_income_account_id:
-                logging.warning("DEFAULT_QB_ITEM_NAME configurato ma DEFAULT_QB_ITEM_INCOME_ACCOUNT_ID non impostato: impossibile creare automaticamente l'articolo.")
+            expense_account_id = self._resolve_account_id('expense')
+            income_account_id = self._resolve_account_id('income')
+            if not income_account_id:
+                logging.warning("DEFAULT_QB_ITEM_NAME configurato ma nessun conto entrate disponibile: impossibile creare automaticamente l'articolo.")
+                return None
+            if not expense_account_id:
+                logging.warning("DEFAULT_QB_ITEM_NAME configurato ma nessun conto spese disponibile: impossibile creare automaticamente l'articolo.")
                 return None
             purchase_cost = None
             if unit_price is not None:
@@ -321,9 +364,11 @@ class QuickBooksBillImporter:
                     purchase_cost = None
             created_id = self._create_item(
                 self.default_item_name,
-                expense_account_id=self.default_item_expense_account_id,
-                income_account_id=self.default_item_income_account_id,
-                purchase_cost=purchase_cost
+                expense_account_id=expense_account_id,
+                income_account_id=income_account_id,
+                purchase_cost=purchase_cost,
+                purchase_tax_code_id=str(taxcode_id).strip() if taxcode_id else None,
+                purchase_tax_percent=tax_percent
             )
             if created_id:
                 self.default_item_id = created_id
@@ -332,24 +377,47 @@ class QuickBooksBillImporter:
                 return str(created_id)
         return str(self.default_item_id) if self.default_item_id else None
 
-    def _create_item(self, name: str, expense_account_id: Optional[str] = None,
-                     income_account_id: Optional[str] = None, purchase_cost: Optional[Any] = None) -> Optional[str]:
-        if not name or not income_account_id:
+    def _create_item(
+        self,
+        name: str,
+        expense_account_id: Optional[str] = None,
+        income_account_id: Optional[str] = None,
+        purchase_cost: Optional[Any] = None,
+        purchase_tax_code_id: Optional[Any] = None,
+        purchase_tax_percent: Optional[Any] = None,
+        sales_tax_code_id: Optional[Any] = None,
+        sales_tax_percent: Optional[Any] = None
+    ) -> Optional[str]:
+        if not name:
             return None
+        expense_account_id = expense_account_id or self._resolve_account_id('expense')
+        income_account_id = income_account_id or self._resolve_account_id('income')
+        if not income_account_id:
+            logging.warning("[create_item] Nessun conto entrate valido identificato: impossibile creare l'articolo.")
+            return None
+        if not expense_account_id:
+            logging.warning("[create_item] Nessun conto spese valido identificato: impossibile creare l'articolo.")
+            return None
+        purchase_tax_code_id = self._resolve_tax_code_id('purchase', purchase_tax_code_id, purchase_tax_percent)
+        sales_tax_code_id = self._resolve_tax_code_id('sales', sales_tax_code_id, sales_tax_percent or purchase_tax_percent)
         payload: Dict[str, Any] = {
             "Name": name[:100],
-            "Type": "Service",
+            "Type": self.default_item_type or 'Service',
             "TrackQtyOnHand": False,
             "PurchaseDesc": name[:100],
-            "ExpenseAccountRef": {"value": str(expense_account_id or '1')},
             "Active": True
         }
+        payload["ExpenseAccountRef"] = {"value": str(expense_account_id)}
         if purchase_cost is not None:
             try:
                 payload["PurchaseCost"] = float(purchase_cost)
             except (TypeError, ValueError):
                 pass
         payload["IncomeAccountRef"] = {"value": str(income_account_id)}
+        if purchase_tax_code_id:
+            payload["PurchaseTaxCodeRef"] = {"value": str(purchase_tax_code_id)}
+        if sales_tax_code_id:
+            payload["SalesTaxCodeRef"] = {"value": str(sales_tax_code_id)}
         url = f"{self.base_url}/v3/company/{self.realm_id}/item"
         try:
             response = requests.post(url, headers=self.headers, json=payload)
@@ -371,6 +439,210 @@ class QuickBooksBillImporter:
             logging.error(f"[create_item] Errore nella creazione dell'articolo '{name}': {e}")
         return None
 
+    def _resolve_account_id(self, kind: str) -> Optional[str]:
+        if kind not in ("expense", "income"):
+            return None
+        id_attr = 'default_item_expense_account_id' if kind == 'expense' else 'default_item_income_account_id'
+        name_attr = 'default_item_expense_account_name' if kind == 'expense' else 'default_item_income_account_name'
+        fallback_types = [
+            'Cost of Goods Sold',
+            'CostOfGoodsSold',
+            'Expense',
+            'Other Expense',
+            'OtherExpense'
+        ] if kind == 'expense' else [
+            'Income',
+            'Other Income',
+            'OtherIncome'
+        ]
+        current_id = getattr(self, id_attr, None)
+        if current_id:
+            return str(current_id)
+        account_name = getattr(self, name_attr, None)
+        if account_name:
+            account_id = self._get_account_id_by_name(account_name)
+            if account_id:
+                setattr(self, id_attr, account_id)
+                return str(account_id)
+        account_id = self._find_account_id_by_type(fallback_types)
+        if account_id:
+            setattr(self, id_attr, account_id)
+            return str(account_id)
+        return None
+
+    def _get_account_id_by_name(self, name: str) -> Optional[str]:
+        if not name:
+            return None
+        key = f"name::{name.strip().lower()}"
+        if key in self.account_cache:
+            cached = self.account_cache[key]
+            return str(cached) if cached else None
+        account = self.get_account_by_name(name)
+        if account:
+            account_id = account.get('Id')
+            self.account_cache[key] = account_id
+            return str(account_id) if account_id else None
+        self.account_cache[key] = None
+        return None
+
+    def _find_account_id_by_type(self, account_types: List[str]) -> Optional[str]:
+        for account_type in account_types:
+            if not account_type:
+                continue
+            key = f"type::{account_type.strip().lower()}"
+            if key in self.account_cache:
+                cached = self.account_cache[key]
+                if cached:
+                    return str(cached)
+                continue
+            account = self._get_first_account_by_type(account_type)
+            if account:
+                account_id = account.get('Id')
+                self.account_cache[key] = account_id
+                if account_id:
+                    return str(account_id)
+            else:
+                self.account_cache[key] = None
+        return None
+
+    def _get_first_account_by_type(self, account_type: str) -> Optional[Dict[str, Any]]:
+        if not account_type:
+            return None
+        url = f"{self.base_url}/v3/company/{self.realm_id}/query"
+        safe_type = account_type.replace("'", "\\'")
+        query = (
+            "SELECT Id, Name, AccountType FROM Account "
+            f"WHERE AccountType = '{safe_type}' AND Active = true "
+            "ORDER BY FullyQualifiedName ASC"
+        )
+        params = {"query": query}
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                accounts = data.get("QueryResponse", {}).get("Account", [])
+                if isinstance(accounts, dict):
+                    accounts = [accounts]
+                if accounts:
+                    return accounts[0]
+            else:
+                logging.error(f"[_get_first_account_by_type] Errore {response.status_code}: {response.text}")
+        except Exception as e:
+            logging.error(f"[_get_first_account_by_type] Errore: {e}")
+        return None
+
+    def _resolve_tax_code_id(
+        self,
+        kind: str,
+        prefer_id: Optional[Any] = None,
+        fallback_percent: Optional[Any] = None
+    ) -> Optional[str]:
+        if kind not in ("purchase", "sales"):
+            return None
+
+        def normalize(value: Optional[Any]) -> Optional[str]:
+            if value is None:
+                return None
+            if isinstance(value, str):
+                value = value.strip()
+            return str(value) if value else None
+
+        attr = 'default_item_purchase_tax_code_id' if kind == 'purchase' else 'default_item_sales_tax_code_id'
+        preferred = normalize(prefer_id)
+        if preferred:
+            setattr(self, attr, preferred)
+            return preferred
+
+        existing = normalize(getattr(self, attr, None))
+        if existing:
+            return existing
+
+        percent = self._extract_percent_str(fallback_percent)
+        self._ensure_tax_codes_loaded()
+        candidates = self._tax_code_cache.get(kind, []) if isinstance(self._tax_code_cache, dict) else []
+        if not candidates:
+            return None
+
+        if percent:
+            for tax in candidates:
+                text = f"{tax.get('Name', '')} {tax.get('Description', '')}"
+                if percent in text:
+                    selected = normalize(tax.get('Id'))
+                    if selected:
+                        setattr(self, attr, selected)
+                        return selected
+
+        keywords = ['Acquisti'] if kind == 'purchase' else ['Vendite', 'Sales']
+        for tax in candidates:
+            text_lower = f"{tax.get('Name', '')} {tax.get('Description', '')}".lower()
+            if any(keyword.lower() in text_lower for keyword in keywords):
+                selected = normalize(tax.get('Id'))
+                if selected:
+                    setattr(self, attr, selected)
+                    return selected
+
+        for tax in candidates:
+            if tax.get('Taxable'):
+                selected = normalize(tax.get('Id'))
+                if selected:
+                    setattr(self, attr, selected)
+                    return selected
+
+        for tax in candidates:
+            selected = normalize(tax.get('Id'))
+            if selected:
+                setattr(self, attr, selected)
+                return selected
+
+        return None
+
+    def _ensure_tax_codes_loaded(self) -> None:
+        if self._tax_code_cache_loaded:
+            return
+        url = f"{self.base_url}/v3/company/{self.realm_id}/query"
+        query = (
+            "SELECT Id, Name, Description, Active, Taxable, PurchaseTaxRateList, SalesTaxRateList "
+            "FROM TaxCode WHERE Active = true"
+        )
+        params = {"query": query}
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                tax_codes = data.get("QueryResponse", {}).get("TaxCode", [])
+                if isinstance(tax_codes, dict):
+                    tax_codes = [tax_codes]
+                purchase_codes = []
+                sales_codes = []
+                for tax in tax_codes:
+                    if tax.get('PurchaseTaxRateList'):
+                        purchase_codes.append(tax)
+                    if tax.get('SalesTaxRateList'):
+                        sales_codes.append(tax)
+                self._tax_code_cache = {
+                    'purchase': purchase_codes,
+                    'sales': sales_codes,
+                    'all': tax_codes
+                }
+            else:
+                logging.error(f"[_ensure_tax_codes_loaded] Errore {response.status_code}: {response.text}")
+                self._tax_code_cache = {}
+        except Exception as e:
+            logging.error(f"[_ensure_tax_codes_loaded] Errore: {e}")
+            self._tax_code_cache = {}
+        finally:
+            self._tax_code_cache_loaded = True
+
+    @staticmethod
+    def _extract_percent_str(value: Optional[Any]) -> Optional[str]:
+        if value is None:
+            return None
+        value_str = str(value).strip()
+        if not value_str:
+            return None
+        match = re.search(r"\d+", value_str)
+        return match.group(0) if match else None
+
     def get_item_by_name(self, name: str) -> Optional[Dict[str, Any]]:
         url = f"{self.base_url}/v3/company/{self.realm_id}/query"
         safe_name = name.replace("'", "\\'")
@@ -389,6 +661,31 @@ class QuickBooksBillImporter:
             logging.error(f"[get_item_by_name] Errore: {e}")
         return None
 
+    def get_account_by_name(self, name: str) -> Optional[Dict[str, Any]]:
+        if not name:
+            return None
+        url = f"{self.base_url}/v3/company/{self.realm_id}/query"
+        safe_name = name.replace("'", "\\'")
+        query = (
+            "SELECT Id, Name, AccountType, AccountSubType FROM Account "
+            f"WHERE Name = '{safe_name}' AND Active = true"
+        )
+        params = {"query": query}
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                accounts = data.get("QueryResponse", {}).get("Account", [])
+                if isinstance(accounts, dict):
+                    accounts = [accounts]
+                if accounts:
+                    return accounts[0]
+            else:
+                logging.error(f"[get_account_by_name] Errore {response.status_code}: {response.text}")
+        except Exception as e:
+            logging.error(f"[get_account_by_name] Errore: {e}")
+        return None
+
     def _handle_error(self, response: requests.Response, operation: str):
         try:
             error_data = response.json()
@@ -402,6 +699,72 @@ class QuickBooksBillImporter:
                 logging.error(f"[{operation}] Errore {response.status_code} - {response.text}")
         except:
             logging.error(f"[{operation}] Errore {response.status_code} - {response.text}")
+
+    def find_bill_by_docnumber(self, vendor_id: str, doc_number: str) -> Optional[Dict[str, Any]]:
+        if not vendor_id or not doc_number:
+            return None
+        url = f"{self.base_url}/v3/company/{self.realm_id}/query"
+        safe_doc = doc_number.replace("'", "\\'")
+        query = (
+            "SELECT Id, SyncToken, DocNumber FROM Bill "
+            f"WHERE DocNumber = '{safe_doc}' AND VendorRef = '{vendor_id}' "
+            "ORDER BY Metadata.LastUpdatedTime DESC"
+        )
+        params = {"query": query}
+        try:
+            response = requests.get(url, headers=self.headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                bills = data.get("QueryResponse", {}).get("Bill", [])
+                if isinstance(bills, dict):
+                    bills = [bills]
+                if bills:
+                    bill = bills[0]
+                    return {
+                        "Id": bill.get("Id"),
+                        "SyncToken": bill.get("SyncToken"),
+                        "DocNumber": bill.get("DocNumber") or bill.get("DocNum"),
+                        "Bill": bill
+                    }
+            else:
+                logging.error(f"[find_bill_by_docnumber] Errore {response.status_code}: {response.text}")
+        except Exception as e:
+            logging.error(f"[find_bill_by_docnumber] Errore: {e}")
+        return None
+
+    def update_bill(self, bill_id: str, sync_token: str, bill_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not bill_id or sync_token is None:
+            return {"error": "Bill Id o SyncToken mancanti"}
+        url = f"{self.base_url}/v3/company/{self.realm_id}/bill"
+        payload = self._build_bill_payload(bill_data)
+        payload["Id"] = str(bill_id)
+        payload["SyncToken"] = str(sync_token)
+        payload["sparse"] = False
+        # 🔍 LOG PAYLOAD UPDATE PER DEBUG
+        logging.info(f"[update_bill] PAYLOAD QuickBooks (update Bill {bill_id}):\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
+        try:
+            response = requests.post(url, headers=self.headers, json=payload)
+            if response.status_code == 200:
+                result = response.json()
+                bill_updated = result.get("Bill")
+                if isinstance(bill_updated, list) and bill_updated:
+                    bill_updated = bill_updated[0]
+                if bill_updated:
+                    logging.info(f"[update_bill] Fattura {bill_id} aggiornata con successo")
+                    return result
+                logging.error(f"[update_bill] Risposta senza dati Bill: {result}")
+                return {"error": result}
+            else:
+                try:
+                    error_data = response.json()
+                except Exception:
+                    error_data = response.text
+                logging.error(f"[update_bill] Errore {response.status_code}: {error_data}")
+                self._handle_error(response, "update_bill")
+                return {"error": error_data, "status_code": response.status_code}
+        except Exception as e:
+            logging.error(f"[update_bill] Errore durante l'aggiornamento: {e}")
+            return {"error": str(e)}
 
     def find_or_create_vendor(self, vendor_name: str, vendor_data: Optional[Dict[str, Any]] = None) -> Optional[str]:
         """

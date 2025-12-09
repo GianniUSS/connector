@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, jsonify, send_from_directory, render_template, session
 from rentman_api import get_project_and_customer
 from qb_customer import set_qb_import_status, get_qb_import_status
 from create_or_update_invoice_for_project import create_or_update_invoice_for_project
@@ -68,6 +68,54 @@ except ImportError as e:
     HOURS_IMPORT_SUCCESS = False
 
 app = Flask(__name__)
+app.secret_key = getattr(config, "APP_SECRET_KEY", os.getenv("APP_SECRET_KEY", "change-me"))
+
+LOGIN_ENABLED = getattr(config, "APP_LOGIN_ENABLED", True)
+LOGIN_USERNAME = getattr(config, "APP_LOGIN_USERNAME", "admin")
+LOGIN_PASSWORD = getattr(config, "APP_LOGIN_PASSWORD", "password")
+
+AUTH_WHITELIST = {
+    '/',
+    '/api/auth/login',
+    '/api/auth/logout',
+    '/api/auth/status',
+    '/api/token-status',
+    '/xml-to-csv.html',
+    '/search-bills.html',
+    '/delete-time-activities.html',
+    '/excel-import-stats.html',
+    '/webhook-manager.html',
+    '/project-status-dashboard.html'
+}
+
+
+def is_authenticated():
+    return bool(session.get('auth_user'))
+
+
+@app.before_request
+def require_login():
+    if not LOGIN_ENABLED:
+        return
+
+    if request.method == 'OPTIONS':
+        return
+
+    path = request.path
+    if path in AUTH_WHITELIST or path.startswith('/static'):
+        return
+
+    # Consenti favicon e file sorgente
+    if path.endswith(('.ico', '.png', '.jpg', '.jpeg', '.svg', '.css', '.js')):
+        return
+
+    if is_authenticated():
+        return
+
+    if path.startswith('/api'):
+        return jsonify({'success': False, 'authenticated': False, 'error': 'Autenticazione richiesta'}), 401
+
+    return jsonify({'success': False, 'authenticated': False, 'error': 'Autenticazione richiesta'}), 401
 
 @app.route('/')
 def home():
@@ -77,6 +125,38 @@ def home():
 def serve_static(path):
     """Serve file statici dalla cartella static"""
     return send_from_directory('static', path)
+
+
+@app.route('/api/auth/status')
+def auth_status():
+    return jsonify({
+        'authenticated': is_authenticated(),
+        'loginEnabled': LOGIN_ENABLED,
+        'user': session.get('auth_user')
+    })
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def auth_login():
+    if not LOGIN_ENABLED:
+        session['auth_user'] = 'disabled'
+        return jsonify({'success': True, 'authenticated': True, 'loginEnabled': False})
+
+    data = request.get_json(silent=True) or {}
+    username = (data.get('username') or '').strip()
+    password = data.get('password') or ''
+
+    if username == LOGIN_USERNAME and password == LOGIN_PASSWORD:
+        session['auth_user'] = username
+        return jsonify({'success': True, 'authenticated': True})
+
+    return jsonify({'success': False, 'authenticated': False, 'error': 'Credenziali non valide'}), 401
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def auth_logout():
+    session.pop('auth_user', None)
+    return jsonify({'success': True, 'authenticated': False})
 
 @app.route('/api/token-status')
 def token_status():
@@ -982,11 +1062,21 @@ def parse_csv_to_bills(csv_data):
     default_item_id = getattr(config, 'DEFAULT_QB_ITEM_ID', None)
     if default_item_id:
         default_item_id = str(default_item_id).strip() or None
-    bills = []
+    
+    # Raggruppa righe per (Supplier, BillNo)
+    bills_dict = {}
+    
     for row in reader:
         file_name = row.get('Filename', '')
+        supplier = row.get('Supplier', '')
+        bill_no = row.get('BillNo', '')
+        
+        # Chiave univoca per raggruppare
+        key = (supplier, bill_no)
+        
         m = percent_re.search(row.get('LineTaxCode', ''))
-        taxcode_id = get_taxcode_id(m.group(1)) if m else None
+        tax_percent = m.group(1) if m else None
+        taxcode_id = get_taxcode_id(tax_percent) if tax_percent else None
         amount = safe_float_conversion(row.get('LineAmount', '0'))
         quantity_raw = row.get('Quantity')
         unit_price_raw = row.get('UnitPrice')
@@ -1006,7 +1096,8 @@ def parse_csv_to_bills(csv_data):
             'amount': amount,
             'description': row.get('LineDescription', ''),
             'account_id': '1',
-            'taxcode_id': taxcode_id
+            'taxcode_id': taxcode_id,
+            'tax_percent': tax_percent
         }
         if quantity is not None:
             line_item['quantity'] = quantity
@@ -1016,16 +1107,26 @@ def parse_csv_to_bills(csv_data):
             line_item['item_id'] = default_item_id
         if item_name:
             line_item['item_name'] = item_name.strip()
-        bills.append({
-            'vendor_id': row.get('Supplier', ''),
-            'txn_date': row.get('BillDate', ''),
-            'due_date': row.get('DueDate', ''),
-            'ref_number': row.get('BillNo', ''),
-            'memo': row.get('Memo', ''),
-            'file_name': file_name,
-            'taxcode_id': taxcode_id,
-            'line_items': [line_item]
-        })
+        
+        # Se la fattura non esiste ancora, creala
+        if key not in bills_dict:
+            bills_dict[key] = {
+                'vendor_id': supplier,
+                'txn_date': row.get('BillDate', ''),
+                'due_date': row.get('DueDate', ''),
+                'ref_number': bill_no,
+                'memo': row.get('Memo', ''),
+                'file_name': file_name,
+                'taxcode_id': taxcode_id,
+                'line_items': []
+            }
+        
+        # Aggiungi la riga alla fattura esistente
+        bills_dict[key]['line_items'].append(line_item)
+    
+    # Converti il dizionario in lista
+    bills = list(bills_dict.values())
+    logging.info('📋 Raggruppate %d fatture da %d righe CSV', len(bills), sum(len(b['line_items']) for b in bills))
     return bills
 
 def bill_exists(importer, ref_number, vendor_id):
@@ -1069,13 +1170,86 @@ def upload_to_qb():
         else:
             logging.error('Impossibile creare vendor: %s', name)
             return jsonify({'success': False, 'error': f"Impossibile creare vendor {name}"}), 500
-    logging.info('Starting batch import of %d bills (standard)', len(bills))
-    result = importer.batch_import_bills(bills)
-    logging.info('Finished standard import: %d success, %d errors', result.get('success_count',0), result.get('error_count',0))
-    # Se ci sono errori, restituisci success False e dettaglio errori
-    if result['error_count'] > 0:
-        return jsonify({'success': False, 'result': result, 'error': result['errors']})
-    return jsonify({'success': True, 'result': result})
+    update_existing = bool(data.get('update_existing') or data.get('allow_update'))
+    logging.info('🔧 FLAG update_existing ricevuto: %s (data.get: update_existing=%s, allow_update=%s)', 
+                 update_existing, data.get('update_existing'), data.get('allow_update'))
+    created_docs = []
+    updated_docs = []
+    skipped_docs = []
+    errors = []
+    bills_to_create = []
+
+    for bill in bills:
+        ref_number = bill.get('ref_number')
+        existing_bill = None
+        if ref_number:
+            existing_bill = importer.find_bill_by_docnumber(bill['vendor_id'], ref_number)
+        if existing_bill:
+            doc_number = existing_bill.get('DocNumber') or ref_number or existing_bill.get('Id')
+            logging.info("Bill già presente in QuickBooks: vendor=%s ref=%s (Id=%s)", bill['vendor_id'], ref_number, existing_bill.get('Id'))
+            if update_existing:
+                logging.info("🔄 Tentativo di AGGIORNAMENTO per Bill DocNumber=%s (Id=%s)", doc_number, existing_bill.get('Id'))
+                update_result = importer.update_bill(existing_bill.get('Id'), existing_bill.get('SyncToken'), bill)
+                if update_result and not update_result.get('error'):
+                    logging.info("✅ Bill %s aggiornata con successo", doc_number)
+                    updated_docs.append(doc_number)
+                else:
+                    error_detail = update_result.get('error') if isinstance(update_result, dict) else update_result
+                    logging.error("❌ Aggiornamento fallito per Bill %s: %s", doc_number, error_detail)
+                    errors.append(f"Aggiornamento fallito per {doc_number}: {error_detail}")
+            else:
+                logging.info("⏭️ Bill %s SALTATA (update_existing=False)", doc_number)
+                skipped_docs.append(doc_number)
+        else:
+            bills_to_create.append(bill)
+
+    logging.info('Starting creation of %d new bills (standard)', len(bills_to_create))
+    create_result = None
+    if bills_to_create:
+        create_result = importer.batch_import_bills(bills_to_create)
+        logging.info('Finished standard import: %d success, %d errors', create_result.get('success_count', 0), create_result.get('error_count', 0))
+        if create_result.get('created_bills'):
+            for created_bill in create_result['created_bills']:
+                bill_entity = created_bill.get('Bill') if isinstance(created_bill, dict) else None
+                if isinstance(bill_entity, list) and bill_entity:
+                    bill_entity = bill_entity[0]
+                if isinstance(bill_entity, dict):
+                    doc_number = bill_entity.get('DocNumber') or bill_entity.get('DocNum') or bill_entity.get('Id')
+                    if doc_number:
+                        created_docs.append(doc_number)
+        for err in create_result.get('errors', []):
+            errors.append(err)
+    else:
+        logging.info('Nessuna nuova fattura da creare (tutte trovate esistenti)')
+
+    total_created = len(created_docs)
+    total_updated = len(updated_docs)
+    total_skipped = len(skipped_docs)
+    total_errors = len(errors)
+    summary_parts = [
+        f"create: {total_created}",
+        f"aggiornate: {total_updated}",
+        f"saltate: {total_skipped}",
+        f"errori: {total_errors}"
+    ]
+    message = "Import QuickBooks completato - " + ", ".join(summary_parts)
+
+    result_payload = {
+        'created': created_docs,
+        'updated': updated_docs,
+        'skipped': skipped_docs,
+        'errors': errors
+    }
+
+    success = total_errors == 0
+    response = {
+        'success': success,
+        'message': message,
+        'result': result_payload
+    }
+
+    status_code = 200 if success else 207
+    return jsonify(response), status_code
 
 @app.route('/upload-to-qb-grouped', methods=['POST'])
 def upload_to_qb_grouped():

@@ -4,6 +4,8 @@ from mysql.connector import Error
 import logging
 import requests
 import config
+import os
+from datetime import datetime
 
 # === CONFIGURAZIONE EMAIL PER AUTOMAZIONI ===
 # PERSONALIZZA QUESTI VALORI per attivare le notifiche email reali
@@ -255,13 +257,22 @@ def save_bills_to_db(bills_data):
         saved_count = 0
         duplicate_count = 0
         error_count = 0
+        duplicate_details = []
         
         for bill in bills_data:
             try:
                 # Verifica duplicati basati su chiavi univoche
                 if check_bill_duplicate(cursor, bill):
                     duplicate_count += 1
-                    logging.info(f"Fattura duplicata saltata: {bill.get('BillNo', 'N/A')} - {bill.get('Supplier', 'N/A')}")
+                    detail = (
+                        f"BillNo={bill.get('BillNo','N/A')} | "
+                        f"Supplier={bill.get('Supplier','N/A')} | "
+                        f"Desc={bill.get('LineDescription','N/A')} | "
+                        f"Qty={bill.get('Quantity','')} | UnitPrice={bill.get('UnitPrice','')} | "
+                        f"Amount={bill.get('LineAmount','')} | File={bill.get('Filename','')}"
+                    )
+                    duplicate_details.append(detail)
+                    logging.info(f"Fattura duplicata saltata: {detail}")
                     continue
                 
                 # Converte le date dal formato DD/MM/YYYY a YYYY-MM-DD
@@ -311,6 +322,15 @@ def save_bills_to_db(bills_data):
         message = f"Salvate {saved_count} fatture"
         if duplicate_count > 0:
             message += f", {duplicate_count} duplicate saltate"
+            try:
+                log_path = os.path.join(os.getcwd(), "duplicate_bills.log")
+                with open(log_path, "a", encoding="utf-8") as dup_log:
+                    dup_log.write(f"\n=== Duplicati {datetime.now().isoformat()} ===\n")
+                    for d in duplicate_details:
+                        dup_log.write(d + "\n")
+                logging.info(f"Dettaglio duplicati scritto in {log_path}")
+            except Exception as e:
+                logging.warning(f"Impossibile scrivere il log dei duplicati: {e}")
         if error_count > 0:
             message += f", {error_count} errori"
             
@@ -328,16 +348,27 @@ def save_bills_to_db(bills_data):
 def check_bill_duplicate(cursor, bill):
     """Verifica se una fattura esiste già nel database"""
     try:
-        # Controlla duplicati basati su bill_no, supplier e line_description
+        # Normalizza quantità e prezzo unitario per il confronto (se presenti)
+        qty = safe_decimal_conversion(bill.get('Quantity', ''))
+        unit_price = safe_decimal_conversion(bill.get('UnitPrice', ''))
+
+        # Controlla duplicati basati su bill_no, supplier, descrizione, quantità, prezzo unitario
+        # ma solo se provengono da un file diverso (filename diverso). In questo modo
+        # non scartiamo righe identiche presenti nello stesso file/fattura.
         check_query = """
         SELECT COUNT(*) FROM bills 
         WHERE bill_no = %s AND supplier = %s AND line_description = %s
+            AND quantity = %s AND unit_price = %s
+            AND filename <> %s
         """
         
         cursor.execute(check_query, (
             bill.get('BillNo', ''),
             bill.get('Supplier', ''),
-            bill.get('LineDescription', '')
+            bill.get('LineDescription', ''),
+            qty,
+            unit_price,
+            bill.get('Filename', '')
         ))
         
         count = cursor.fetchone()[0]
@@ -418,9 +449,10 @@ def search_bills(search_term="", date_from=None, date_to=None, supplier="",
         
         # Costruisci la query base
         base_query = """
-        SELECT id, filename, supplier, bill_date, due_date, bill_no, 
-               location, memo, account, line_description, line_amount, 
-               created_at, updated_at
+         SELECT id, filename, supplier, bill_date, due_date, bill_no, 
+             location, memo, account, line_description, line_amount,
+             quantity, unit_price,
+             created_at, updated_at
         FROM bills
         WHERE 1=1
         """

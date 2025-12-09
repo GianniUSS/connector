@@ -4,7 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rentman Project Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #f5f6fb;
+      --bg-soft: #eef1f7;
+      --panel: #ffffff;
+      --card: #ffffff;
+      --border: #d8deea;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-2: #1d4ed8;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --info: #0ea5e9;
+      --radius: 14px;
+      --shadow: 0 15px 45px rgba(31,41,55,0.14);
+      --shadow-soft: 0 10px 28px rgba(31,41,55,0.12);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -12,48 +34,73 @@
     }
     
     body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(37,99,235,0.12), transparent 30%),
+                  radial-gradient(circle at 80% 0%, rgba(14,165,233,0.1), transparent 28%),
+                  linear-gradient(135deg, #f7f9fd 0%, #eef1f7 100%);
+      color: var(--text);
       min-height: 100vh;
-      padding: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    body.auth-blocked {
+      overflow: hidden;
     }
     
     .container { 
       display: flex;
       flex-direction: row;
-      max-width: 1800px;
+      gap: 1.25rem;
+      max-width: 1600px;
       margin: 0 auto;
       align-items: flex-start;
     }
     
     .header {
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      background: linear-gradient(120deg, #2563eb, #0ea5e9);
       color: white;
-      padding: 0 1rem 0 1rem;
-      margin-bottom: 0;
-      text-align: center;
+      padding: 1.05rem 1.35rem;
+      margin-bottom: 0.6rem;
       width: 100%;
-      border-radius: 12px 12px 0 0;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
     
     .header h1 {
-      font-size: 2rem;
-      font-weight: 300;
-      margin-bottom: 0.5rem;
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+      letter-spacing: -0.01em;
     }
     
     .header p {
-      opacity: 0.8;
-      font-size: 1rem;
+      opacity: 0.9;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
     
     .token-status {
-      margin-top: 10px;
-      padding: 8px 15px;
-      border-radius: 20px;
-      display: inline-block;
-      font-size: 0.85rem;
-      font-weight: 500;
+      margin-top: 0;
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
     }
     
     .token-valid {
@@ -75,25 +122,27 @@
     }
     
     .btn {
-      padding: 0.6rem 1rem;
+      padding: 0.65rem 1rem;
       border: none; 
-      border-radius: 8px; 
-      font-weight: 600; 
+      border-radius: 10px; 
+      font-weight: 700; 
       font-size: 0.95rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
+      transition: all 0.25s ease;
+      text-transform: none;
+      letter-spacing: 0.2px;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+      width: 100%;
+      min-height: 46px;
     }
     
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: white;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.28);
     }
     
     .btn-primary:hover {
@@ -102,9 +151,21 @@
     }
     
     .btn-secondary {
-      background: linear-gradient(135deg, #2196F3 0%, #21CBF3 100%);
+      background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
       color: white;
-      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+      box-shadow: 0 6px 18px rgba(6, 182, 212, 0.26);
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+      color: white;
+      box-shadow: 0 6px 18px rgba(14, 165, 233, 0.26);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      color: #111827;
+      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.24);
     }
     
     .btn-secondary:hover {
@@ -113,9 +174,9 @@
     }
     
     .btn-success {
-      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
       color: white;
-      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.24);
     }
     
     .btn-success:hover {
@@ -124,9 +185,9 @@
     }
     
     .btn-danger {
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
       color: white;
-      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+      box-shadow: 0 6px 18px rgba(220, 38, 38, 0.24);
     }
     
     .btn-danger:hover {
@@ -135,21 +196,29 @@
     }
     
     .btn:disabled {
-      background: #6c757d;
+      background: #cbd5e1;
       cursor: not-allowed;
       transform: none !important;
       box-shadow: none !important;
+      color: #475569;
     }
     
     .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .stats-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      box-shadow: var(--shadow-soft);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      padding: 0.5rem;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      border-radius: 6px;
-      border-left: 4px solid #667eea;
+      flex-direction: column;
+      gap: 0.25rem;
     }
     
     .stats-item {
@@ -157,25 +226,27 @@
     }
     
     .stats-number {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #2c3e50;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0f172a;
     }
     
     .stats-label {
-      font-size: 0.8rem;
-      color: #6c757d;
+      font-size: 0.85rem;
+      color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      font-weight: 600;
     }
     
     .table-container { 
       height: 700px; 
       overflow-y: auto; 
-      border: 2px solid #e9ecef;
-      border-radius: 8px;
-      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #ffffff;
       margin-top: 0.2rem;
+      box-shadow: var(--shadow-soft);
     }
     
     table { 
@@ -183,32 +254,34 @@
       border-collapse: separate; 
       border-spacing: 0; 
       font-size: 0.9rem; 
+      color: var(--text);
     }
-    
+
     th, td { 
-      padding: 0.5rem 0.4rem;
+      padding: 0.65rem 0.5rem;
       text-align: left; 
-      border-bottom: 1px solid #e9ecef;
+      border-bottom: 1px solid var(--border);
     }
-    
+
     th { 
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      font-weight: 600;
-      color: #495057;
+      background: linear-gradient(180deg, #f8fafc, #eef2f7);
+      font-weight: 700;
+      color: #1f2937;
       position: sticky; 
       top: 0; 
       z-index: 10;
       text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.5px;
+      font-size: 0.78rem;
+      letter-spacing: 0.55px;
+      backdrop-filter: blur(8px);
     }
-    
+
     tbody tr {
       transition: all 0.2s ease;
     }
-    
+
     tbody tr:hover { 
-      background-color: #f8f9fa;
+      background: #f8fafc;
     }
     
     input[type="checkbox"] {
@@ -216,7 +289,7 @@
       height: 18px;
       margin: 0;
       cursor: pointer;
-      accent-color: #667eea;
+      accent-color: var(--primary);
     }
     
     th:first-child, td:first-child {
@@ -225,8 +298,8 @@
     }
     
     .selected-row {
-      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
-      border-left: 4px solid #2196F3;
+      background: linear-gradient(135deg, rgba(37,99,235,0.12) 0%, rgba(14,165,233,0.1) 100%) !important;
+      border-left: 4px solid var(--primary);
     }
     
     .badge {
@@ -239,10 +312,10 @@
       letter-spacing: 0.5px;
     }
     
-    .badge-success { background: #d4edda; color: #155724; }
-    .badge-warning { background: #fff3cd; color: #856404; }
-    .badge-info { background: #d1ecf1; color: #0c5460; }
-    .badge-secondary { background: #e2e3e5; color: #383d41; }
+    .badge-success { background: rgba(22,163,74,0.12); color: #166534; }
+    .badge-warning { background: rgba(217,119,6,0.12); color: #92400e; }
+    .badge-info { background: rgba(14,165,233,0.12); color: #0f4b6e; }
+    .badge-secondary { background: rgba(31,41,55,0.08); color: #1f2937; }
     
     @media (max-width: 768px) {
       body {
@@ -280,29 +353,190 @@
     .sidebar-config {
       width: 340px;
       min-width: 280px;
-      max-width: 400px;
-      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-      border-radius: 12px;
-      border: 1px solid #e9ecef;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin-right: 1rem;
-      padding: 1rem 0.7rem;
+      max-width: 380px;
+      background: var(--panel);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.1rem 1rem;
       position: sticky;
-      top: 0.5rem;
-      height: calc(100vh - 1rem);
-      min-height: calc(100vh - 1rem);
+      top: 1rem;
+      height: calc(100vh - 2rem);
       align-self: stretch;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      gap: 1rem;
+    }
+
+    .section-title {
+      color: #e5e7eb;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-soft {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 0.9rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .sidebar-config label {
+      color: #0f172a !important;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .sidebar-config input,
+    .sidebar-config select,
+    .sidebar-config textarea {
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-height: 42px;
+      padding: 0.65rem 0.75rem;
+    }
+
+    .sidebar-config input:focus,
+    .sidebar-config select:focus,
+    .sidebar-config textarea:focus {
+      outline: 2px solid var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.18);
+    }
+
+    /* Login overlay */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(37,99,235,0.18), transparent 32%),
+                  radial-gradient(circle at 80% 10%, rgba(14,165,233,0.16), transparent 30%),
+                  rgba(15,23,42,0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 12000;
+      padding: 1.5rem;
+    }
+
+    .login-card {
+      background: #0b1220;
+      color: #e5e7eb;
+      width: min(420px, 95vw);
+      border-radius: 14px;
+      padding: 1.75rem 1.5rem;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .login-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .login-subtitle {
+      color: #cbd5e1;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: #e5e7eb;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .login-input:focus {
+      outline: 2px solid #60a5fa;
+      border-color: #60a5fa;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .login-submit {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(37,99,235,0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 0.35rem;
+    }
+
+    .login-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .login-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(37,99,235,0.5);
+    }
+
+    .login-error {
+      color: #fca5a5;
+      font-weight: 700;
+      min-height: 20px;
+      margin-top: 0.35rem;
+    }
+
+    .session-info {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.32);
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .session-info button {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-title">Accesso richiesto</div>
+      <div class="login-subtitle">Inserisci le credenziali per continuare</div>
+      <form id="loginForm" autocomplete="off">
+        <input id="loginUsername" class="login-input" type="text" name="username" placeholder="Username" required>
+        <input id="loginPassword" class="login-input" type="password" name="password" placeholder="Password" required>
+        <button id="loginSubmit" class="login-submit" type="submit">Accedi</button>
+        <div id="loginError" class="login-error"></div>
+      </form>
+    </div>
+  </div>
+  <div id="appShell" class="container" style="visibility:hidden;">
     <!-- Sidebar configurazione -->
-    <aside class="sidebar-config" style="width: 340px; min-width: 280px; max-width: 400px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 12px; border: 1px solid #e9ecef; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-right: 1rem; padding: 1rem 0.7rem; height: fit-content; align-self: flex-start;">
-      <h3 style="color: #2c3e50; margin-bottom: 1.5rem; font-weight: 500; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">⚙️ Configurazione Sistema</h3>
+    <aside class="sidebar-config">
+      <h3 class="section-title">⚙️ Configurazione Sistema</h3>
       <form id="importForm" enctype="multipart/form-data">
         <div class="config-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
           <div>
@@ -327,9 +561,9 @@
         </div>        <div id="importExcelMsg" style="margin-bottom:1rem;font-size:1rem;font-weight:600;min-height:24px;"></div>
         
         <!-- Opzioni caricamento progetti (semplificata: solo paginata) -->
-        <div style="margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
-          <label style="font-weight: 600; color: #495057; margin-bottom: 0.5rem; display: block;">🚀 Modalità Caricamento:</label>
-          <div style="display: flex; gap: 1rem; align-items: center;">
+        <div class="card-soft" style="margin-bottom: 1rem;">
+          <label style="margin-bottom: 0.5rem; display: block;">🚀 Modalità Caricamento:</label>
+          <div style="display: flex; gap: 1rem; align-items: center; color: var(--text);">
             <span style="font-weight:600;color:#2196F3;">⚡ Paginata</span>
             <select id="pageSize" style="margin-left: auto; padding: 0.25rem; opacity: 1; min-width: 120px;">
               <option value="10">10 per pagina</option>
@@ -340,39 +574,49 @@
           </div>
         </div>
         
-        <div class="btn-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
-          <button id="listProjectsBtn" class="btn btn-secondary" type="button"><span>📋</span> Recupera Lista Progetti</button>
-          <button id="processSelectedBtn" class="btn btn-success" disabled><span>⚡</span> Elabora Selezionati (<span id="selectedCount">0</span>)</button>        </div>
-        <button id="xmlToCsvBtn" class="btn btn-primary" type="button" style="margin-top:1rem;">🔄 Converti XML in CSV</button>
-        <button id="searchBillsBtn" class="btn btn-info" type="button" style="margin-top:0.5rem;">🔍 Ricerca Fatture Database</button>
-        <button id="deleteTimeActivitiesBtn" class="btn btn-danger" type="button" style="margin-top:0.5rem;">🗑️ Elimina Ore QB</button>
-        <button id="excelStatsBtn" class="btn btn-warning" type="button" style="margin-top:0.5rem;">📊 Statistiche Excel Import</button>
-        <button id="webhookManagerBtn" class="btn btn-secondary" type="button" style="margin-top:0.5rem;">🔗 Gestione Webhook</button>
+        <div class="btn-grid" style="display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-top: 0.25rem;">
+          <button id="listProjectsBtn" class="btn btn-secondary" type="button">📋 Recupera Lista Progetti</button>
+          <button id="processSelectedBtn" class="btn btn-success" disabled>⚡ Elabora Selezionati (<span id="selectedCount">0</span>)</button>
+          <button id="xmlToCsvBtn" class="btn btn-primary" type="button">🔄 Converti XML in CSV</button>
+          <button id="searchBillsBtn" class="btn btn-info" type="button">🔍 Ricerca Fatture Database</button>
+          <button id="deleteTimeActivitiesBtn" class="btn btn-danger" type="button">🗑️ Elimina Ore QB</button>
+        </div>
       </form>
     </aside>
     <!-- Main content: stats + tabella -->
     <main style="flex: 1 1 0; min-width: 0;">
       <div class="header">
-        <h1>🚀 Project integration Manager</h1>
-        <p>importazione  Progetti e Ore su QuickBooks</p>
-        <div id="token-status" class="token-status">Verifica token in corso...</div>
+        <div class="header-inner">
+          <div>
+            <h1>Project Integration Desk</h1>
+            <p>Dashboard centrale per progetti e ore QuickBooks</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end;">
+            <div id="token-status" class="token-status">Verifica token in corso...</div>
+            <div id="sessionInfo" class="session-info">
+              <span id="sessionUser">-</span>
+              <button id="logoutBtn" type="button">Logout</button>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- Stats e tabella subito sotto header, senza margini -->
-      <div class="stats" style="margin-top:0;">        <div class="stats-item">
-          <div class="stats-number" id="totalProjects">0</div>
+      <div class="stats" style="margin-top:0;">
+        <div class="stats-card">
           <div class="stats-label">Progetti Totali</div>
+          <div class="stats-number" id="totalProjects">0</div>
         </div>
-        <div class="stats-item">
-          <div class="stats-number" id="selectedProjects">0</div>
+        <div class="stats-card">
           <div class="stats-label">Selezionati</div>
+          <div class="stats-number" id="selectedProjects">0</div>
         </div>
-        <div class="stats-item">
-          <div class="stats-number" id="activeProjects">0</div>
+        <div class="stats-card">
           <div class="stats-label">Attivi</div>
+          <div class="stats-number" id="activeProjects">0</div>
         </div>
-        <div class="stats-item">
-          <div class="stats-number" id="loadTime">-</div>
+        <div class="stats-card">
           <div class="stats-label">Tempo Caricamento</div>
+          <div class="stats-number" id="loadTime">-</div>
         </div>
       </div>
       
@@ -422,7 +666,149 @@
   <div id="excelImportResult" style="margin:2rem 0 0 0;"></div>
 
   <script src="/static/js/token-status.js"></script>
-  <script>    // Imposta data odierna
+  <script>
+    let loginState = { authenticated: false, enabled: true, user: null };
+    let appInitialized = false;
+
+    function showLoginOverlay(message) {
+      const overlay = document.getElementById('loginOverlay');
+      const subtitle = document.querySelector('.login-subtitle');
+      if (!overlay) return;
+      if (message && subtitle) subtitle.textContent = message;
+      overlay.style.display = 'flex';
+      document.body.classList.add('auth-blocked');
+      const errorBox = document.getElementById('loginError');
+      if (errorBox) errorBox.textContent = '';
+      const userInput = document.getElementById('loginUsername');
+      if (userInput) userInput.focus();
+    }
+
+    function hideLoginOverlay() {
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) overlay.style.display = 'none';
+      document.body.classList.remove('auth-blocked');
+      const errorBox = document.getElementById('loginError');
+      if (errorBox) errorBox.textContent = '';
+    }
+
+    function showAppShell() {
+      const shell = document.getElementById('appShell');
+      if (shell) shell.style.visibility = 'visible';
+    }
+
+    function updateSessionInfo(userLabel) {
+      const info = document.getElementById('sessionInfo');
+      const userSpan = document.getElementById('sessionUser');
+      if (!info || !userSpan) return;
+      if (userLabel) {
+        info.style.display = 'inline-flex';
+        userSpan.textContent = '👤 ' + userLabel;
+      } else {
+        info.style.display = 'none';
+        userSpan.textContent = '-';
+      }
+    }
+
+    async function fetchAuthStatus() {
+      try {
+        const res = await fetch('/api/auth/status');
+        const data = res.ok ? await res.json() : {};
+        loginState.authenticated = !!data.authenticated;
+        loginState.enabled = data.loginEnabled !== false;
+        loginState.user = data.user || null;
+        return loginState;
+      } catch (e) {
+        loginState.authenticated = false;
+        return loginState;
+      }
+    }
+
+    async function ensureAuthThenInit() {
+      await fetchAuthStatus();
+      if (!loginState.enabled) {
+        hideLoginOverlay();
+        updateSessionInfo('Accesso libero');
+        showAppShell();
+        initAppOnce();
+        return;
+      }
+      if (loginState.authenticated) {
+        hideLoginOverlay();
+        updateSessionInfo(loginState.user || 'Utente');
+        showAppShell();
+        initAppOnce();
+        return;
+      }
+      showLoginOverlay('Accedi per continuare');
+    }
+
+    function setupLoginUI() {
+      const form = document.getElementById('loginForm');
+      if (form && !form.dataset.bound) {
+        form.dataset.bound = '1';
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const usernameInput = document.getElementById('loginUsername');
+          const passwordInput = document.getElementById('loginPassword');
+          const submitBtn = document.getElementById('loginSubmit');
+          const errorBox = document.getElementById('loginError');
+          const username = (usernameInput.value || '').trim();
+          const password = passwordInput.value || '';
+          if (!username || !password) {
+            if (errorBox) errorBox.textContent = 'Inserisci username e password';
+            return;
+          }
+          const originalText = submitBtn ? submitBtn.innerHTML : '';
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Accesso...';
+          }
+          try {
+            const res = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username: username, password: password })
+            });
+            const data = await res.json();
+            if (res.ok && data.authenticated) {
+              loginState = { authenticated: true, enabled: true, user: username };
+              hideLoginOverlay();
+              updateSessionInfo(username);
+              showAppShell();
+              initAppOnce();
+            } else {
+              if (errorBox) errorBox.textContent = data.error || 'Credenziali non valide';
+            }
+          } catch (err) {
+            if (errorBox) errorBox.textContent = 'Errore di connessione';
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalText || 'Accedi';
+            }
+          }
+        });
+      }
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn && !logoutBtn.dataset.bound) {
+        logoutBtn.dataset.bound = '1';
+        logoutBtn.addEventListener('click', async function() {
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+          } catch (err) {}
+          loginState.authenticated = false;
+          loginState.user = null;
+          updateSessionInfo(null);
+          const shell = document.getElementById('appShell');
+          if (shell) shell.style.visibility = 'hidden';
+          showLoginOverlay('Sessione terminata, accedi di nuovo');
+        });
+      }
+    }
+
+    // Imposta data odierna
+    
     function setDefaultDates() {
       const today = new Date();
       const todayString = today.toISOString().split('T')[0];
@@ -683,7 +1069,10 @@
         alert('❌ Errore: ' + err);
       });
     }    // Event Listeners
-    document.addEventListener('DOMContentLoaded', function() {
+    function initAppOnce() {
+      if (appInitialized) return;
+      appInitialized = true;
+
       setDefaultDates();
       
       // Event listeners per suggerimento automatico modalità
@@ -1167,15 +1556,11 @@
         window.location.href = 'delete-time-activities.html'; // Apri nella stessa scheda
       });
       
-      // Listener per pulsante statistiche Excel
-      document.getElementById('excelStatsBtn').addEventListener('click', function() {
-        window.location.href = 'excel-import-stats.html'; // Apri nella stessa scheda
-      });
-      
-      // Listener per pulsante gestione webhook
-      document.getElementById('webhookManagerBtn').addEventListener('click', function() {
-        window.location.href = 'webhook-manager.html'; // Apri nella stessa scheda
-      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      setupLoginUI();
+      ensureAuthThenInit();
     });
     
     function renderQbImportStatus(qbImport) {

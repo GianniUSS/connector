@@ -249,6 +249,15 @@
                 <label style="margin-right: 12px;"><input type="radio" name="sendMode" value="normal" checked> Standard</label>
                 <label><input type="radio" name="sendMode" value="grouped"> Raggruppato</label>
             </div>
+            <div class="update-existing-option" style="margin: 8px 0 16px 0; font-size: 0.95em;">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <input type="checkbox" id="updateExistingBills">
+                    Aggiorna fatture esistenti (stesso numero) in QuickBooks
+                </label>
+                <div style="font-size: 0.85em; color: #4a5568; margin-left: 22px;">
+                    Se selezionato, le fatture già presenti verranno sovrascritte con i nuovi dettagli.
+                </div>
+            </div>
             <div id="groupingOptions" style="display:none; margin-bottom: 12px; padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
                 <label style="display:block; margin-bottom:4px;"><input type="checkbox" id="mergeAccounts"> Unisci conti simili</label>
                 <label>Max linee per fattura: <input type="number" id="maxLines" value="50" min="1" style="width:60px;"></label>
@@ -514,9 +523,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = document.getElementById('copyBtn');
     const downloadLink = document.getElementById('downloadLink');
     const statusMsg = document.getElementById('statusMsg');
-    const csvOutput = document.getElementById('csvOutput');    const sendToQbBtn = document.getElementById('sendToQbBtn');
+    const csvOutput = document.getElementById('csvOutput');
+    const sendToQbBtn = document.getElementById('sendToQbBtn');
     const saveToDbBtn = document.getElementById('saveToDbBtn');
     const convertQtyBtn = document.getElementById('convertQtyBtn');
+    const updateExistingCheckbox = document.getElementById('updateExistingBills');
     if (!xmlFilesInput || !fileInfo || !convertBtn || !copyBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn || !saveToDbBtn || !convertQtyBtn) {
         console.error('Elemento DOM mancante durante linizializzazione dei controlli requisiti');
     } else {
@@ -555,15 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
             convertBtn.disabled = true;
             convertQtyBtn.disabled = true;
         } else {
-            fileInfo.innerHTML = `<p>${files.length} file XML selezionati:</p>`;
-            const list = document.createElement('ul');
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const item = document.createElement('li');
-                item.textContent = file.name;
-                list.appendChild(item);
-            }
-            fileInfo.appendChild(list);
+            fileInfo.innerHTML = `<p><strong>${files.length}</strong> file XML selezionati</p>`;
             convertBtn.disabled = false;
             convertQtyBtn.disabled = false;
         }
@@ -784,6 +787,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('[QuickBooks] Regole di raggruppamento:', body.grouping_rules);
             }
 
+            if (updateExistingCheckbox) {
+                body.update_existing = updateExistingCheckbox.checked;
+            }
+
             console.log('[QuickBooks] Endpoint:', endpoint);
             console.log('[QuickBooks] Payload:', body);
 
@@ -797,10 +804,33 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('[QuickBooks] Risposta ricevuta:', result);
             if (result.result) {
                 if (result.result.created) console.log(`[QuickBooks] Fatture create:`, result.result.created);
+                if (result.result.updated) console.log(`[QuickBooks] Fatture aggiornate:`, result.result.updated);
                 if (result.result.skipped) console.log(`[QuickBooks] Fatture saltate (già esistenti):`, result.result.skipped);
                 if (result.result.errors) console.log(`[QuickBooks] Errori:`, result.result.errors);
             }
-            if (result.success) showStatus('✅ Dati inviati a QuickBooks con successo!', 'success'); else showStatus('❌ Errore invio a QuickBooks: ' + (result.error || result.message), 'error');
+
+            if (result.success) {
+                let summary = '✅ Dati inviati a QuickBooks con successo!';
+                if (result.result) {
+                    const parts = [];
+                    if (Array.isArray(result.result.created) && result.result.created.length) {
+                        parts.push(`create: ${result.result.created.length}`);
+                    }
+                    if (Array.isArray(result.result.updated) && result.result.updated.length) {
+                        parts.push(`aggiornate: ${result.result.updated.length}`);
+                    }
+                    if (Array.isArray(result.result.skipped) && result.result.skipped.length) {
+                        parts.push(`saltate: ${result.result.skipped.length}`);
+                    }
+                    if (parts.length) {
+                        summary += ` (${parts.join(' | ')})`;
+                    }
+                }
+                showStatus(summary, 'success');
+            } else {
+                const errorMessage = result.error || result.message || 'Errore sconosciuto';
+                showStatus('❌ Errore invio a QuickBooks: ' + errorMessage, 'error');
+            }
         } catch (err) {
             console.error('[QuickBooks] Errore:', err);
             showStatus('❌ Errore di esecuzione: ' + err.message, 'error');

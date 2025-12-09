@@ -57,6 +57,7 @@ env/
 credentials.json
 secrets.py
 api_keys.py
+.refresh_token
 
 # ===== OUTPUT BUILD =====
 dist/
