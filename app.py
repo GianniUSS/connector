@@ -2728,4 +2728,6 @@ if __name__ == '__main__':
         print(f"⚠️ Errore inizializzazione database: {e}")
         print("⚠️ La funzionalità di salvataggio database sarà disabilitata")
     
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # Porta configurabile via env/config, default 5001
+    app_port = int(os.getenv("APP_PORT", getattr(config, "APP_PORT", 5001)))
+    app.run(host="0.0.0.0", port=app_port, debug=True)
