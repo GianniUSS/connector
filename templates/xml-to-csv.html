@@ -611,6 +611,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Registra i numeri di fattura per gestire i duplicati
             const invoiceNumbers = {};
+            const failedFiles = [];
+            const failedFiles = [];
             
             // Elabora ogni file
             let successCount = 0;
@@ -632,6 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } catch (error) {
                     console.error(`Errore nell'elaborazione di ${file.name}:`, error);
                     errorCount++;
+                    failedFiles.push(`${file.name} (${error.message || 'errore sconosciuto'})`);
                 }
             }
             
@@ -649,8 +652,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Crea un URL per il download
             updateDownloadLink(csvText);
             
-            // Mostra messaggio di successo
-            showStatus(`Conversione completata: ${successCount} file elaborati con successo${errorCount > 0 ? `, ${errorCount} falliti` : ''}.`, 'success');
+            // Mostra messaggio di successo con dettaglio falliti
+            const failInfo = errorCount > 0 ? `, ${errorCount} falliti: ${failedFiles.join('; ')}` : '';
+            showStatus(`Conversione completata: ${successCount} file elaborati con successo${failInfo}.`, errorCount > 0 ? 'warning' : 'success');
         } catch (error) {
             // Mostra errore
             showStatus(`Errore durante la conversione: ${error.message}`, 'error');
@@ -725,6 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } catch (error) {
                     console.error(`Errore nell'elaborazione di ${file.name}:`, error);
                     errorCount++;
+                    failedFiles.push(`${file.name} (${error.message || 'errore sconosciuto'})`);
                 }
             }
             
@@ -742,8 +747,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Crea un URL per il download
             updateDownloadLink(csvText, "fatture_quickbooks_con_quantita.csv");
             
-            // Mostra messaggio di successo
-            showStatus(`Conversione con quantità completata: ${successCount} file elaborati con successo${errorCount > 0 ? `, ${errorCount} falliti` : ''}.`, 'success');
+            // Mostra messaggio di successo con dettaglio falliti
+            const failInfo = errorCount > 0 ? `, ${errorCount} falliti: ${failedFiles.join('; ')}` : '';
+            showStatus(`Conversione con quantità completata: ${successCount} file elaborati con successo${failInfo}.`, errorCount > 0 ? 'warning' : 'success');
         } catch (error) {
             // Mostra errore
             showStatus(`Errore durante la conversione con quantità: ${error.message}`, 'error');
