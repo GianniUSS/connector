@@ -263,8 +263,8 @@
                 <label>Max linee per fattura: <input type="number" id="maxLines" value="50" min="1" style="width:60px;"></label>
             </div>
             <div class="button-row">
-                <button id="convertBtn" class="button" disabled style="display:none;">Converti in CSV</button>
-                <button id="convertQtyBtn" class="button" disabled style="background: #8e44ad; color: #fff; border: 2px solid #7d3c98;">Converti CSV + Quantità</button>
+                <button id="convertBtn" class="button">Converti in CSV</button>
+                <button id="convertQtyBtn" class="button" style="background: #8e44ad; color: #fff; border: 2px solid #7d3c98;">Converti CSV + Quantità</button>
                 <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none; text-align:center;">Scarica CSV</a>
                 <button id="saveToDbBtn" class="button" style="background: #27ae60; color: #fff; border: 2px solid #229954;" disabled>Salva in Database</button>
                 <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks</button>
@@ -281,6 +281,19 @@
     </div>
     <script>
 // --- FUNZIONI GLOBALI ---
+// Utility: sanitizza XML problematici (es. namespace con spazi doppi)
+function sanitizeXml(xmlString) {
+    try {
+        // Rimuove eventuali BOM e trimma
+        let cleaned = xmlString.replace(/^\uFEFF/, '').trim();
+        // Corregge attributi xmlns:xsd con spazi/concatenazioni non valide
+        cleaned = cleaned.replace(/xmlns:xsd="[^"]+"/gi, 'xmlns:xsd="http://www.w3.org/2001/XMLSchema"');
+        return cleaned;
+    } catch (e) {
+        return xmlString;
+    }
+}
+
 // Utility: ottieni testo da un elemento XML usando XPath
 function getXPath(xmlDoc, xpath) {
     try {
@@ -311,12 +324,31 @@ function getNodeXPath(node, xpath) {
     }
     return "";
 }
+// Formatta un campo per il CSV (gestisce virgole, virgolette)
+function formatCsvField(value) {
+    if (typeof value === 'undefined' || value === null) {
+        return '""';
+    }
+    value = value.toString().trim();
+    // Gestione virgolette
+    if (value.indexOf('"') !== -1) {
+        value = value.replace(/"/g, '""');
+    }
+    // Aggiungi virgolette esterne se necessario
+    if (value.indexOf(',') !== -1 || value.indexOf('\n') !== -1 || value.indexOf('"') !== -1) {
+        value = `"${value}"`;
+    }
+    return value;
+}
 function processXmlWithQuantity(xmlString, invoiceNumbers) {
     try {
+        const cleanedXml = sanitizeXml(xmlString);
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        const xmlDoc = parser.parseFromString(cleanedXml, "text/xml");
         if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-            throw new Error("File XML non valido");
+            const pe = xmlDoc.getElementsByTagName("parsererror")[0];
+            const detail = pe && pe.textContent ? pe.textContent : "File XML non valido";
+            throw new Error(detail);
         }
         const fornitoreNome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Nome") || 
                              getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome");
@@ -343,7 +375,7 @@ function processXmlWithQuantity(xmlString, invoiceNumbers) {
             }
         }
         const dettagliLineeElements = xmlDoc.querySelectorAll("DettaglioLinee") || 
-                                     xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
+                         xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
         if (!dettagliLineeElements || dettagliLineeElements.length === 0) {
             throw new Error("Nessun dettaglio linee trovato nella fattura");
         }
@@ -369,20 +401,20 @@ function processXmlWithQuantity(xmlString, invoiceNumbers) {
             const descrizioneSanificata = descrizione.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
             // CSV con quantità inclusa come colonna separata
             const csvFields = [
-                `"${numeroFatturaEffettivo}"`,
-                `"${fornitore}"`,
-                `"${dataParsed}"`,
-                `"${dataParsed}"`,
-                `"Net30"`,
-                `""`,
-                `""`,
-                `"Uncategorized Expense"`,
-                `"${descrizioneSanificata}"`,
-                `"${quantita}"`,  // Quantità come colonna separata
-                `"${prezzoUnitario}"`,  // Prezzo unitario
-                `"${importo}"`,
-                `"${aliquotaIva}"`,
-                `"${(parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2)}"`
+                formatCsvField(numeroFatturaEffettivo),
+                formatCsvField(fornitore),
+                formatCsvField(dataParsed),
+                formatCsvField(dataParsed),
+                formatCsvField("Net30"),
+                formatCsvField(""),
+                formatCsvField(""),
+                formatCsvField("Uncategorized Expense"),
+                formatCsvField(descrizioneSanificata),
+                formatCsvField(quantita),  // Quantità come colonna separata
+                formatCsvField(prezzoUnitario),  // Prezzo unitario
+                formatCsvField(importo),
+                formatCsvField(aliquotaIva),
+                formatCsvField((parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2))
             ];
             csvLines.push(csvFields.join(','));
         });
@@ -394,10 +426,13 @@ function processXmlWithQuantity(xmlString, invoiceNumbers) {
 }
 function processXml(xmlString, invoiceNumbers) {
     try {
+        const cleanedXml = sanitizeXml(xmlString);
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        const xmlDoc = parser.parseFromString(cleanedXml, "text/xml");
         if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-            throw new Error("File XML non valido");
+            const pe = xmlDoc.getElementsByTagName("parsererror")[0];
+            const detail = pe && pe.textContent ? pe.textContent : "File XML non valido";
+            throw new Error(detail);
         }
         const fornitoreNome = getXPath(xmlDoc, "//CedentePrestatore/DatiAnagrafici/Anagrafica/Nome") || 
                              getXPath(xmlDoc, "//FatturaElettronicaHeader/CedentePrestatore/DatiAnagrafici/Anagrafica/Nome");
@@ -424,7 +459,7 @@ function processXml(xmlString, invoiceNumbers) {
             }
         }
         const dettagliLineeElements = xmlDoc.querySelectorAll("DettaglioLinee") || 
-                                     xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
+                         xmlDoc.querySelectorAll("FatturaElettronicaBody DatiGenerali DatiBeniServizi DettaglioLinee");
         if (!dettagliLineeElements || dettagliLineeElements.length === 0) {
             throw new Error("Nessun dettaglio linee trovato nella fattura");
         }
@@ -449,18 +484,18 @@ function processXml(xmlString, invoiceNumbers) {
             }
             const descrizioneSanificata = descrizione.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
             const csvFields = [
-                `"${numeroFatturaEffettivo}"`,
-                `"${fornitore}"`,
-                `"${dataParsed}"`,
-                `"${dataParsed}"`,
-                `"Net30"`,
-                `""`,
-                `""`,
-                `"Uncategorized Expense"`,
-                `"${descrizioneSanificata}"`,
-                `"${importo}"`,
-                `"${aliquotaIva}"`,
-                `"${(parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2)}"`
+                formatCsvField(numeroFatturaEffettivo),
+                formatCsvField(fornitore),
+                formatCsvField(dataParsed),
+                formatCsvField(dataParsed),
+                formatCsvField("Net30"),
+                formatCsvField(""),
+                formatCsvField(""),
+                formatCsvField("Uncategorized Expense"),
+                formatCsvField(descrizioneSanificata),
+                formatCsvField(importo),
+                formatCsvField(aliquotaIva),
+                formatCsvField((parseFloat(importo) * (parseFloat(aliquotaIva) / 100)).toFixed(2))
             ];
             csvLines.push(csvFields.join(','));
         });
@@ -523,23 +558,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadLink = document.getElementById('downloadLink');
     const statusMsg = document.getElementById('statusMsg');
     const csvOutput = document.getElementById('csvOutput');
+    const csvGridContainer = document.getElementById('csvGridContainer');
     const sendToQbBtn = document.getElementById('sendToQbBtn');
     const saveToDbBtn = document.getElementById('saveToDbBtn');
     const convertQtyBtn = document.getElementById('convertQtyBtn');
     const updateExistingCheckbox = document.getElementById('updateExistingBills');
-    if (!xmlFilesInput || !fileInfo || !convertBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn || !saveToDbBtn || !convertQtyBtn) {
+    // Prova comunque a inizializzare anche se manca qualche elemento, loggando l'errore
+    const domOk = xmlFilesInput && fileInfo && convertBtn && downloadLink && statusMsg && csvOutput && sendToQbBtn && saveToDbBtn && convertQtyBtn;
+    if (!domOk) {
         console.error('Elemento DOM mancante durante linizializzazione dei controlli requisiti');
-    } else {
-        appInit();
     }
+    appInit();
 
     function appInit() {
         // Event listeners
-        xmlFilesInput.addEventListener('change', updateFileInfo);
-        convertBtn.addEventListener('click', convertXmlToCsv);        
-        convertQtyBtn.addEventListener('click', convertXmlToCsvWithQuantity);
-        sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
-        saveToDbBtn.addEventListener('click', saveCsvToDatabase);
+        if (xmlFilesInput) {
+            xmlFilesInput.addEventListener('change', updateFileInfo);
+            xmlFilesInput.addEventListener('input', updateFileInfo);
+        }
+        if (convertBtn) convertBtn.addEventListener('click', convertXmlToCsv);        
+        if (convertQtyBtn) convertQtyBtn.addEventListener('click', convertXmlToCsvWithQuantity);
+        if (sendToQbBtn) sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
+        if (saveToDbBtn) saveToDbBtn.addEventListener('click', saveCsvToDatabase);
         
         // Pulsante per tornare alla pagina principale (index.html)
         document.getElementById('helpBtn').addEventListener('click', function() {
@@ -549,25 +589,44 @@ document.addEventListener('DOMContentLoaded', function() {
         // Gestione radio per la modalità di invio
         document.querySelectorAll('input[name="sendMode"]').forEach(radio => {
             radio.addEventListener('change', e => {
-                const selectedMode = e.target.value;
-                const groupingDiv = document.getElementById('groupingOptions');
-                if (groupingDiv) groupingDiv.style.display = (selectedMode === 'grouped') ? 'block' : 'none';
+                toggleGroupingOptions(e.target.value);
             });
         });
+
+        // Forza lo stato iniziale su pulsanti e grouping
+        updateFileInfo();
+        // Chiamata asincrona per assicurare lo stato anche dopo rendering lento
+        setTimeout(updateFileInfo, 50);
+        setTimeout(updateFileInfo, 200);
+        const initialMode = document.querySelector('input[name="sendMode"]:checked');
+        if (initialMode) toggleGroupingOptions(initialMode.value);
+
+        // Aggiorna lo stato dei pulsanti se ci sono già file selezionati
+        updateFileInfo();
     }
-    
+
+
+    function toggleGroupingOptions(mode) {
+        const groupingDiv = document.getElementById('groupingOptions');
+        if (groupingDiv) groupingDiv.style.display = (mode === 'grouped') ? 'block' : 'none';
+    }
+
     // Gestione selezione file
     function updateFileInfo() {
-        const files = Array.from(xmlFilesInput.files).filter(file => file.name.toLowerCase().endsWith('.xml'));
-        if (files.length === 0) {
-            fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
-            convertBtn.disabled = true;
-            convertQtyBtn.disabled = true;
-        } else {
-            fileInfo.innerHTML = `<p><strong>${files.length}</strong> file XML selezionati</p>`;
-            convertBtn.disabled = false;
-            convertQtyBtn.disabled = false;
+        if (!xmlFilesInput) return;
+        const files = Array.from(xmlFilesInput.files || []).filter(file => file.name.toLowerCase().endsWith('.xml'));
+        if (fileInfo) {
+            if (files.length === 0) {
+                fileInfo.innerHTML = '<p>Nessun file XML selezionato</p>';
+            } else {
+                fileInfo.innerHTML = `<p><strong>${files.length}</strong> file XML selezionati</p>`;
+            }
         }
+        const disable = files.length === 0;
+        if (convertBtn) convertBtn.disabled = disable;
+        if (convertQtyBtn) convertQtyBtn.disabled = disable;
+        if (sendToQbBtn) sendToQbBtn.disabled = disable;
+        if (saveToDbBtn) saveToDbBtn.disabled = disable;
     }
     
     // Converti i file XML in CSV
@@ -611,7 +670,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Registra i numeri di fattura per gestire i duplicati
             const invoiceNumbers = {};
-            const failedFiles = [];
             const failedFiles = [];
             
             // Elabora ogni file
@@ -708,6 +766,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Registra i numeri di fattura per gestire i duplicati
             const invoiceNumbers = {};
+            const failedFiles = [];
             
             // Elabora ogni file
             let successCount = 0;
@@ -889,26 +948,10 @@ document.addEventListener('DOMContentLoaded', function() {
         statusMsg.className = `status ${type}`;
     }
     
-    // Formatta un campo per il CSV (gestisce virgole, virgolette)
-    function formatCsvField(value) {
-        if (typeof value === 'undefined' || value === null) {
-            return '""';
-        }
-        value = value.toString().trim();
-        // Gestione virgolette
-        if (value.indexOf('"') !== -1) {
-            value = value.replace(/"/g, '""');
-        }
-        // Aggiungi virgolette esterne se necessario
-        if (value.indexOf(',') !== -1 || value.indexOf('\n') !== -1 || value.indexOf('"') !== -1) {
-            value = `"${value}"`;
-        }
-        return value;
-    }
-    
     // Visualizza il CSV in una tabella
     function renderCsvGrid(csvText) {
         // Pulisci il contenitore
+        if (!csvGridContainer) return;
         csvGridContainer.innerHTML = '';
         
         // Crea un elemento table
@@ -951,7 +994,8 @@ document.addEventListener('DOMContentLoaded', function() {
         table.appendChild(tbody);
         
         // Aggiungi la tabella al contenitore
-        csvGridContainer.appendChild(table);    }
+        csvGridContainer.appendChild(table);
+    }
     
     // Funzione per salvare i dati nel database MySQL
     async function saveCsvToDatabase() {
@@ -977,13 +1021,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const result = await response.json();
+            const errors = Array.isArray(result.errors) ? result.errors : [];
+            const errorBlock = errors.length ? `\nDettagli errori (max 10):\n${errors.slice(0,10).join('\n')}${errors.length > 10 ? '\n... altri ' + (errors.length-10) + ' ...' : ''}` : '';
             
             if (result.success) {
-                alert(`✅ ${result.message}`);
-                statusMsg.innerHTML = `<div style="color: green;">✅ ${result.message}</div>`;
+                alert(`✅ ${result.message}${errorBlock}`);
+                statusMsg.innerHTML = `<div style="color: green; white-space: pre-wrap;">✅ ${result.message}${errorBlock}</div>`;
             } else {
-                alert(`❌ Errore: ${result.message}`);
-                statusMsg.innerHTML = `<div style="color: red;">❌ Errore: ${result.message}</div>`;
+                alert(`❌ Errore: ${result.message}${errorBlock}`);
+                statusMsg.innerHTML = `<div style="color: red; white-space: pre-wrap;">❌ Errore: ${result.message}${errorBlock}</div>`;
             }
             
         } catch (error) {

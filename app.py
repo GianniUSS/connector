@@ -1376,14 +1376,19 @@ def save_to_database():
             return jsonify({'success': False, 'message': 'Nessun dato valido nel CSV'})
         
         # Salva nel database
-        success, message = save_bills_to_db(bills_data)
+        result = save_bills_to_db(bills_data)
+        if isinstance(result, tuple) and len(result) == 3:
+            success, message, errors = result
+        else:
+            success, message = result
+            errors = []
         
         if success:
             logging.info(f"Salvati {len(bills_data)} record nel database")
-            return jsonify({'success': True, 'message': message})
+            return jsonify({'success': True, 'message': message, 'errors': errors})
         else:
             logging.error(f"Errore salvataggio database: {message}")
-            return jsonify({'success': False, 'message': message})
+            return jsonify({'success': False, 'message': message, 'errors': errors})
             
     except Exception as e:
         error_msg = f"Errore interno durante il salvataggio: {str(e)}"

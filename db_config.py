@@ -205,10 +205,14 @@ def create_tables():
             connection.close()
 
 def save_bills_to_db(bills_data):
-    """Salva i dati delle fatture nel database con supporto per quantity e unit_price"""
+    """Salva i dati delle fatture nel database con supporto per quantity e unit_price.
+
+    Restituisce una tupla (success, message, errors) dove errors è una lista di stringhe
+    con il dettaglio delle righe fallite.
+    """
     connection = get_db_connection(use_database=True)
     if not connection:
-        return False, "Impossibile connettersi al database"
+        return False, "Impossibile connettersi al database", []
     
     try:
         cursor = connection.cursor()
@@ -257,10 +261,26 @@ def save_bills_to_db(bills_data):
         saved_count = 0
         duplicate_count = 0
         error_count = 0
+        skipped_filename_count = 0
         duplicate_details = []
+        error_details = []
+
+        # Non importare file già presenti (filename già salvati)
+        unique_filenames = set([bill.get('Filename', '') for bill in bills_data if bill.get('Filename', '')])
+        existing_filenames = set()
+        if unique_filenames:
+            placeholders = ','.join(['%s'] * len(unique_filenames))
+            cursor.execute(f"SELECT DISTINCT filename FROM bills WHERE filename IN ({placeholders})", tuple(unique_filenames))
+            existing_filenames = {row[0] for row in cursor.fetchall()}
         
         for bill in bills_data:
             try:
+                # Salta tutto il file se il filename è già presente
+                fname = bill.get('Filename', '')
+                if fname and fname in existing_filenames:
+                    skipped_filename_count += 1
+                    continue
+
                 # Verifica duplicati basati su chiavi univoche
                 if check_bill_duplicate(cursor, bill):
                     duplicate_count += 1
@@ -315,6 +335,10 @@ def save_bills_to_db(bills_data):
             except Exception as e:
                 error_count += 1
                 logging.warning(f"Errore salvando riga {bill.get('BillNo', 'N/A')}: {e}")
+                # colleziona dettagli per risposta API
+                error_details.append(
+                    f"BillNo={bill.get('BillNo','N/A')} | Supplier={bill.get('Supplier','N/A')} | File={bill.get('Filename','N/A')} | Err={e}"
+                )
                 continue
         
         connection.commit()
@@ -333,13 +357,15 @@ def save_bills_to_db(bills_data):
                 logging.warning(f"Impossibile scrivere il log dei duplicati: {e}")
         if error_count > 0:
             message += f", {error_count} errori"
+        if skipped_filename_count > 0:
+            message += f", {skipped_filename_count} righe saltate per filename già presente"
             
         logging.info(message)
-        return True, message
+        return True, message, error_details
         
     except Error as e:
         logging.error(f"Errore salvataggio database: {e}")
-        return False, f"Errore salvataggio: {str(e)}"
+        return False, f"Errore salvataggio: {str(e)}", []
     finally:
         if connection.is_connected():
             cursor.close()
