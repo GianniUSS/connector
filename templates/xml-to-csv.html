@@ -261,10 +261,10 @@
             <div id="groupingOptions" style="display:none; margin-bottom: 12px; padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
                 <label style="display:block; margin-bottom:4px;"><input type="checkbox" id="mergeAccounts"> Unisci conti simili</label>
                 <label>Max linee per fattura: <input type="number" id="maxLines" value="50" min="1" style="width:60px;"></label>
-            </div>            <div class="button-row">
-                <button id="convertBtn" class="button" disabled>Converti in CSV</button>
+            </div>
+            <div class="button-row">
+                <button id="convertBtn" class="button" disabled style="display:none;">Converti in CSV</button>
                 <button id="convertQtyBtn" class="button" disabled style="background: #8e44ad; color: #fff; border: 2px solid #7d3c98;">Converti CSV + Quantità</button>
-                <button id="copyBtn" class="button" disabled>Copia negli appunti</button>
                 <a id="downloadLink" class="button download-btn" style="display:none; text-decoration:none; text-align:center;">Scarica CSV</a>
                 <button id="saveToDbBtn" class="button" style="background: #27ae60; color: #fff; border: 2px solid #229954;" disabled>Salva in Database</button>
                 <button id="sendToQbBtn" class="button" style="background: #e67e22; color: #fff; border: 2px solid #d35400;">Invia a QuickBooks</button>
@@ -520,7 +520,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const xmlFilesInput = document.getElementById('xmlFiles');
     const fileInfo = document.getElementById('fileInfo');
     const convertBtn = document.getElementById('convertBtn');
-    const copyBtn = document.getElementById('copyBtn');
     const downloadLink = document.getElementById('downloadLink');
     const statusMsg = document.getElementById('statusMsg');
     const csvOutput = document.getElementById('csvOutput');
@@ -528,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveToDbBtn = document.getElementById('saveToDbBtn');
     const convertQtyBtn = document.getElementById('convertQtyBtn');
     const updateExistingCheckbox = document.getElementById('updateExistingBills');
-    if (!xmlFilesInput || !fileInfo || !convertBtn || !copyBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn || !saveToDbBtn || !convertQtyBtn) {
+    if (!xmlFilesInput || !fileInfo || !convertBtn || !downloadLink || !statusMsg || !csvOutput || !sendToQbBtn || !saveToDbBtn || !convertQtyBtn) {
         console.error('Elemento DOM mancante durante linizializzazione dei controlli requisiti');
     } else {
         appInit();
@@ -539,7 +538,6 @@ document.addEventListener('DOMContentLoaded', function() {
         xmlFilesInput.addEventListener('change', updateFileInfo);
         convertBtn.addEventListener('click', convertXmlToCsv);        
         convertQtyBtn.addEventListener('click', convertXmlToCsvWithQuantity);
-        copyBtn.addEventListener('click', copyToClipboard);
         sendToQbBtn.addEventListener('click', sendCsvToQuickBooks);
         saveToDbBtn.addEventListener('click', saveCsvToDatabase);
         
@@ -642,10 +640,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Mostra il CSV in grid (tabella)
             renderCsvGrid(csvText);
-            // Mostra anche nella textarea (nascosta) per copia/download
-            csvOutput.value = csvText;
-              // Abilita pulsanti di download/copia
-            copyBtn.disabled = false;
+                        // Mostra anche nella textarea (nascosta) per download
+                        csvOutput.value = csvText;
+                            // Abilita pulsanti di download
             sendToQbBtn.disabled = false;
             saveToDbBtn.disabled = false;
             
@@ -736,10 +733,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Mostra il CSV in grid (tabella)
             renderCsvGrid(csvText);
-            // Mostra anche nella textarea (nascosta) per copia/download
+            // Mostra anche nella textarea (nascosta) per download
             csvOutput.value = csvText;
-            // Abilita pulsanti di download/copia
-            copyBtn.disabled = false;
+            // Abilita pulsanti di download
             sendToQbBtn.disabled = false;
             saveToDbBtn.disabled = false;
             

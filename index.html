@@ -579,7 +579,6 @@
           <button id="processSelectedBtn" class="btn btn-success" disabled>⚡ Elabora Selezionati (<span id="selectedCount">0</span>)</button>
           <button id="xmlToCsvBtn" class="btn btn-primary" type="button">🔄 Converti XML in CSV</button>
           <button id="searchBillsBtn" class="btn btn-info" type="button">🔍 Ricerca Fatture Database</button>
-          <button id="deleteTimeActivitiesBtn" class="btn btn-danger" type="button">🗑️ Elimina Ore QB</button>
         </div>
       </form>
     </aside>
@@ -1550,12 +1549,6 @@
       document.getElementById('searchBillsBtn').addEventListener('click', function() {
         window.location.href = 'search-bills.html'; // Apri nella stessa scheda
       });
-      
-      // Pulsante per aprire la pagina di eliminazione ore
-      document.getElementById('deleteTimeActivitiesBtn').addEventListener('click', function() {
-        window.location.href = 'delete-time-activities.html'; // Apri nella stessa scheda
-      });
-      
     }
 
     document.addEventListener('DOMContentLoaded', function() {
