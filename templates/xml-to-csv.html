@@ -1020,7 +1020,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             });
             
-            const result = await response.json();
+            let result;
+            let rawText = '';
+            if (!response.ok) {
+                try { rawText = await response.text(); } catch (e) { rawText = '' + e; }
+                throw new Error(`HTTP ${response.status} ${response.statusText} - ${rawText.slice(0,500)}`);
+            }
+            try {
+                result = await response.json();
+            } catch (e) {
+                rawText = rawText || 'JSON parse error';
+                throw new Error(`Risposta non valida dal server: ${rawText.slice(0,500)}`);
+            }
             const errors = Array.isArray(result.errors) ? result.errors : [];
             const errorBlock = errors.length ? `\nDettagli errori (max 10):\n${errors.slice(0,10).join('\n')}${errors.length > 10 ? '\n... altri ' + (errors.length-10) + ' ...' : ''}` : '';
             
@@ -1034,8 +1045,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Errore durante il salvataggio:', error);
-            alert('❌ Errore durante il salvataggio nel database');
-            statusMsg.innerHTML = '<div style="color: red;">❌ Errore durante il salvataggio nel database</div>';
+            alert(`❌ Errore durante il salvataggio nel database:\n${error.message || error}`);
+            statusMsg.innerHTML = `<div style="color: red; white-space: pre-wrap;">❌ Errore durante il salvataggio nel database: ${error.message || error}</div>`;
         } finally {
             // Riabilita il pulsante
             saveToDbBtn.disabled = false;

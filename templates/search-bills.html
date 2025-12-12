@@ -367,7 +367,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
         
         // Event listeners
-        searchBtn.addEventListener('click', performSearch);
+        searchBtn.addEventListener('click', () => performSearch());
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 performSearch();
@@ -377,7 +377,7 @@
         // Auto-search quando cambiano i filtri
         document.querySelectorAll('.filter-input').forEach(input => {
             if (input.id !== 'clearFilters') {
-                input.addEventListener('change', performSearch);
+                input.addEventListener('change', () => performSearch());
             }
         });
         
@@ -434,9 +434,10 @@
         }
         
         // Mostra i risultati
-        function displayResults(data, total, page, totalPages) {
+        function displayResults(data, total, page, totalPagesValue) {
             currentPage = page;
-            this.totalPages = totalPages;
+            // Aggiorna il totale pagine globale per abilitare i pulsanti
+            totalPages = totalPagesValue;
             
             if (data.length === 0) {
                 showNoResults();
@@ -595,23 +596,35 @@
             // Crea CSV
             const headers = ['Data Fattura', 'Scadenza', 'Fornitore', 'N° Fattura', 'Descrizione', 'Quantità', 'Prezzo Unitario', 'Importo', 'File', 'Data Inserimento'];
             const csvContent = [
-                headers.join(','),
-                ...currentResults.map(row => [
-                    formatDate(row.bill_date),
-                    formatDate(row.due_date),
-                    `"${(row.supplier || '').replace(/"/g, '""')}"`,
-                    `"${(row.bill_no || '').replace(/"/g, '""')}"`,
-                    `"${(row.line_description || '').replace(/"/g, '""')}"`,
-                    row.quantity || '',
-                    row.unit_price || '',
-                    row.line_amount || '0',
-                    `"${(row.filename || '').replace(/"/g, '""')}"`,
-                    formatDateTime(row.created_at)
-                ].join(','))
+                                headers.join(';'),
+                                ...currentResults.map(row => {
+                                        const qty = row.quantity !== undefined && row.quantity !== null && row.quantity !== ''
+                                            ? formatNumber(row.quantity, 3)
+                                            : '';
+                                        const unitPrice = row.unit_price !== undefined && row.unit_price !== null && row.unit_price !== ''
+                                            ? formatNumber(row.unit_price, 2)
+                                            : '';
+                                        const amount = row.line_amount !== undefined && row.line_amount !== null && row.line_amount !== ''
+                                            ? formatAmount(row.line_amount)
+                                            : '0,00';
+                                        return [
+                                                formatDate(row.bill_date),
+                                                formatDate(row.due_date),
+                                                `"${(row.supplier || '').replace(/"/g, '""')}"`,
+                                                `"${(row.bill_no || '').replace(/"/g, '""')}"`,
+                                                `"${(row.line_description || '').replace(/"/g, '""')}"`,
+                                                qty,
+                                                unitPrice,
+                                                amount,
+                                                `"${(row.filename || '').replace(/"/g, '""')}"`,
+                                                formatDateTime(row.created_at)
+                                        ].join(';');
+                                })
             ].join('\n');
             
             // Download CSV
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            // Aggiunge BOM UTF-8 per evitare caratteri corrotti (es. "NÂ°" / "QuantitÃ ") in Excel
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);

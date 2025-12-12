@@ -552,13 +552,6 @@
             <input type="text" id="projectNumber" placeholder="Inserisci numero progetto" style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
           </div>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 1rem;">
-          <label for="excelFile" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📄 Importa ore da Excel</label>
-          <input type="file" id="excelFile" name="excelFile" accept=".xlsx,.xls" style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; background: white;">
-          <label for="excelDataAttivita" style="margin-bottom: 0; font-weight: 600; color: #495057; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; min-width: 120px;">📅 Data Attività</label>
-          <input type="date" id="excelDataAttivita" required style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; background: white;">
-          <button id="importExcelBtn" class="btn btn-success" type="button" style="white-space:nowrap; min-width:170px; align-self: flex-start;"><span>⬆️</span> Importa Ore da Excel</button>
-        </div>        <div id="importExcelMsg" style="margin-bottom:1rem;font-size:1rem;font-weight:600;min-height:24px;"></div>
         
         <!-- Opzioni caricamento progetti (semplificata: solo paginata) -->
         <div class="card-soft" style="margin-bottom: 1rem;">
@@ -1492,55 +1485,7 @@
           });
         }
       });
-      
-      // Importazione ore da Excel
-      document.getElementById('importExcelBtn').addEventListener('click', function() {
-        const fileInput = document.getElementById('excelFile');
-        const file = fileInput.files[0];
-        const msgDiv = document.getElementById('importExcelMsg');
-        msgDiv.textContent = '';
-        msgDiv.style.color = '';
-        if (!file) {
-          msgDiv.textContent = '❌ Seleziona un file Excel da importare';
-          msgDiv.style.color = '#e74c3c';
-          return;
-        }
-        const dataAttivita = document.getElementById('excelDataAttivita').value;
-        if (!dataAttivita) {
-          msgDiv.textContent = '❌ Data attività obbligatoria per l\'importazione Excel';
-          msgDiv.style.color = '#e74c3c';
-          return;
-        }
-        const btn = document.getElementById('importExcelBtn');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span>⏳</span> Importazione in corso...';
-        const formData = new FormData();
-        formData.append('excelFile', file);
-        formData.append('data_attivita', dataAttivita);
-        fetch('/importa-ore-excel', {
-          method: 'POST',
-          body: formData
-        })
-        .then(r => r.json())
-        .then(js => {
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-          if (js.success) {
-            msgDiv.textContent = '✅ Importazione completata: ' + js.message;
-            msgDiv.style.color = '#27ae60';
-          } else {
-            msgDiv.textContent = '❌ Errore importazione: ' + (js.error || js.message || 'Errore sconosciuto');
-            msgDiv.style.color = '#e74c3c';
-          }
-        })
-        .catch(err => {
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-          msgDiv.textContent = '❌ Errore: ' + err;
-          msgDiv.style.color = '#e74c3c';
-        });
-      });      // Pulsante per aprire la pagina di conversione XML → CSV
+      // Pulsante per aprire la pagina di conversione XML → CSV
       document.getElementById('xmlToCsvBtn').addEventListener('click', function() {
         window.location.href = 'xml-to-csv.html'; // Apri nella stessa scheda
       });
